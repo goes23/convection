@@ -1,0 +1,12 @@
+.test {
+    height: 420px;
+    overflow: scroll;
+}
+
+.swal-wide {
+    width: 850px !important;
+}
+
+.tn {
+    color: brown;
+}
