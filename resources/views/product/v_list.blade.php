@@ -37,6 +37,7 @@
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
+                                        <th>No</th>
                                         <th>kode</th>
                                         <th>Name</th>
                                         <th>Harga Modal</th>
@@ -64,7 +65,9 @@
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
         $(document).ready(function() {
-            $("#harga_modal").mask('000.000.000', {reverse: true});
+            $("#harga_modal").mask('000.000.000', {
+                reverse: true
+            });
 
             $("#stock").inputmask('Regex', {
                 regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
@@ -78,6 +81,12 @@
                     type: "GET"
                 },
                 columns: [{
+                        "data": null,
+                        "sortable": false,
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    }, {
                         data: 'kode',
                         name: 'kode'
                     },
@@ -88,7 +97,7 @@
                     {
                         data: 'harga_modal',
                         name: 'harga_modal',
-                        render: $.fn.dataTable.render.number( '.', ',', 2, 'Rp. ' )
+                        render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
                     },
                     {
                         data: 'stock',
@@ -125,7 +134,7 @@
                         $('#name').val(result.name);
                         $('#harga_modal').val(result.harga_modal);
                         $('#stock').val(result.stock);
-                        $("#status").val(result.status ).change();
+                        $("#status").val(result.status).change();
                         $('#modal-default').modal('show');
                     },
                     error: function(xhr, Status, err) {

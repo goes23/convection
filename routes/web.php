@@ -1,13 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ModuleController;
-use App\Http\Controllers\BahanController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ProduksiController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ChannelController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,6 +25,9 @@ Route::group(['middleware' => 'ceklogin'], function () {
     Route::get('logout', 'AuthController@logout')->name('logout');
 });
 
+
+Route::resource('user', 'UserController');
+Route::post('user/active', 'UserController@active');
 
 Route::resource('bahan', 'BahanController');
 Route::post('bahan/active', 'BahanController@active');

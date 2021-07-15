@@ -36,6 +36,7 @@
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
+                                        <th>No</th>
                                         <th>Parent</th>
                                         <th>Name</th>
                                         <th>Order No</th>
@@ -80,6 +81,12 @@
                     type: "GET"
                 },
                 columns: [{
+                        "data": null,
+                        "sortable": false,
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    }, {
                         data: 'parent_id',
                         name: 'parent_id'
                     },

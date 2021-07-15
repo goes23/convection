@@ -37,6 +37,7 @@
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
+                                        <th>No</th>
                                         <th>Name</th>
                                         <th>Status</th>
                                         <th>Action</th>
@@ -82,7 +83,13 @@
                     url: "{{ route('channel.index') }}",
                     type: "GET"
                 },
-                columns: [
+                columns: [{
+                        "data": null,
+                        "sortable": false,
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
                     {
                         data: 'name',
                         name: 'name',
@@ -108,7 +115,7 @@
 
         function edit(id) {
             if (id) {
-               
+
                 $.ajax({
                     url: "channel/" + id + "/edit",
                     type: "GET",
@@ -116,7 +123,7 @@
                     success: function(result) {
                         $("#id").val(result.id)
                         $('#name').val(result.name);
-                        $("#status").val(result.status ).change();
+                        $("#status").val(result.status).change();
                         $('#modal-default').modal('show');
                     },
                     error: function(xhr, Status, err) {

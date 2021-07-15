@@ -31,17 +31,15 @@
                         <div class="card-body">
                             <div style=" padding: 0px 0px 18px 0px;">
                                 <button type="button" class="btn btn-info btn-sm" onclick="add_btn()">Tambah
-                                    produksi</button>
+                                    user</button>
                             </div>
 
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Bahan</th>
-                                        <th>Product</th>
-                                        <th>Jumlah</th>
-                                        <th>Sisa</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
@@ -58,7 +56,7 @@
     </section>
 
     {{-- MODAL FORM ADD & EDIT --}}
-    @include('produksi.v_modal')
+    {{-- @include('user.v_modal') --}}
     {{-- MODAL FORM ADD & EDIT --}}
 
 
@@ -83,7 +81,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('produksi.index') }}",
+                    url: "{{ route('user.index') }}",
                     type: "GET"
                 },
                 columns: [{
@@ -94,20 +92,12 @@
                         }
                     },
                     {
-                        data: 'bahan',
-                        name: 'bahan',
+                        data: 'name',
+                        name: 'name',
                     },
                     {
-                        data: 'product',
-                        name: 'product',
-                    },
-                    {
-                        data: 'jumlah',
-                        name: 'jumlah'
-                    },
-                    {
-                        data: 'sisa',
-                        name: 'sisa'
+                        data: 'email',
+                        name: 'email',
                     },
                     {
                         data: 'status',
@@ -132,7 +122,7 @@
             if (id) {
 
                 $.ajax({
-                    url: "produksi/" + id + "/edit",
+                    url: "user/" + id + "/edit",
                     type: "GET",
                     dataType: "json",
                     success: function(result) {
@@ -173,7 +163,7 @@
             }
 
             $.ajax({
-                url: "{{ route('produksi.store') }}",
+                url: "{{ route('user.store') }}",
                 type: "post",
                 data: {
                     "id": id,
@@ -209,7 +199,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "produksi/" + id,
+                        url: "user/" + id,
                         type: "delete",
                         dataType: "json",
                         success: function(result) {
@@ -239,7 +229,7 @@
                 return false
             }
             $.ajax({
-                url: {!! json_encode(url('produksi/active')) !!},
+                url: {!! json_encode(url('user/active')) !!},
                 type: "POST",
                 data: {
                     "id": id,
