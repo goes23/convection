@@ -6,8 +6,8 @@ $.ajaxSetup({
 
 function required_fild(object) {
     for (const property in object) {
-        if (`${object[property]}` == "") {
-            console.log(`${property}`);
+        if (`${object[property]}` == "" || `${object[property]}` == 'null' || `${object[property]}` == 'undefined') {
+            console.log(`${object[property]}`);
             Swal.fire({
                 icon: "error",
                 text: "Mohon lengkapi file yang bertanda..!!",

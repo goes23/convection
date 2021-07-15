@@ -4,7 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\BahanController;
-
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProduksiController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChannelController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,16 +23,21 @@ use App\Http\Controllers\BahanController;
 
 Route::get('/', [DashboardController::class, 'index']);
 
+Route::get('/login', [AuthController::class, 'index']);
+
 Route::resource('bahan', 'BahanController');
 Route::post('bahan/active', [BahanController::class, 'active']);
 
 Route::resource('module', 'ModuleController');
 Route::post('module/active', [ModuleController::class, 'active']);
 
-// Route::prefix('role')->group(function () {
-//     Route::get('/', [RoleController::class, 'index']);
-//     Route::get('/list', [RoleController::class, 'list']);
-//     Route::get('/create', [RoleController::class, 'create']);
-//     Route::get('/edit', [RoleController::class, 'edit']);
-//     Route::get('/destroy', [RoleController::class, 'destroy']);
-// });
+Route::resource('product', 'ProductController');
+Route::post('product/active', [ProductController::class, 'active']);
+
+Route::resource('produksi', 'ProduksiController');
+Route::post('produksi/active', [ProduksiController::class, 'active']);
+
+Route::resource('channel', 'ChannelController');
+Route::post('channel/active', [ChannelController::class, 'active']);
+
+

@@ -33,8 +33,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="name">Nama <a class="tn">*</a></label>
-                                        <input type="text" class="form-control inputForm" id="name" name="nama"
-                                            aria-describedby="emailHelp" placeholder="Enter nama" required>
+                                        <input type="text" class="form-control inputForm" id="name" name="name"
+                                            aria-describedby="emailHelp" placeholder="Enter name" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="harga">Harga <a class="tn">*</a></label>
@@ -61,15 +61,6 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="sisa">Sisa <a class="tn">*</a></label>
-                                        <input type="text" class="form-control inputForm" id="sisa" name="sisa"
-                                            aria-describedby="emailHelp" placeholder="Enter sisa" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
                                         <label for="status">status <a class="tn">*</a></label>
                                         <select class="form-control" id="status">
                                             <option value="1">Active</option>
@@ -78,7 +69,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
 
                         <div class="add_input_form"></div>

@@ -21,6 +21,7 @@ class CreateProductTable extends Migration
             $table->integer('harga_modal');
             $table->integer('stock');
             $table->integer('status')->comment('active');
+            $table->integer('created_by');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -22,8 +22,8 @@ class CreateBahanTable extends Migration
             $table->integer('harga');
             $table->integer('panjang');
             $table->string('satuan');
-            $table->integer('sisa');
             $table->integer('status')->comment('active');
+            $table->integer('created_by');
             $table->timestamps();
             $table->softDeletes();
         });

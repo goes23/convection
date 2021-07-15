@@ -5,20 +5,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Bahan extends Model
+class Channel extends Model
 {
     use SoftDeletes;
 
-    protected $table = "bahan";
+    protected $table = "channel";
     protected $guarded = [];
     protected $dates = ['deleted_at'];
-
-
-    public function produksi()
-    {
-        return $this->hasMany('App\Produksi');
-    }
-
-
 }
-

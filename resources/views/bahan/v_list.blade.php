@@ -42,9 +42,8 @@
                                         <th>Harga</th>
                                         <th>Panjang</th>
                                         <th>Satuan</th>
-                                        <th>Sisa</th>
-                                        <th>status</th>
-                                        <th>action</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
 
@@ -66,13 +65,8 @@
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
         $(document).ready(function() {
-            $("#harga").inputmask('Regex', {
-                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
-            });
+            $("#harga").mask('000.000.000', {reverse: true});
             $("#panjang").inputmask('Regex', {
-                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
-            });
-            $("#sisa").inputmask('Regex', {
                 regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
             });
 
@@ -97,7 +91,8 @@
                     },
                     {
                         data: 'harga',
-                        name: 'harga'
+                        name: 'harga',
+                        render: $.fn.dataTable.render.number( '.', ',', 2, 'Rp. ' )
                     },
                     {
                         data: 'panjang',
@@ -106,10 +101,6 @@
                     {
                         data: 'satuan',
                         name: 'satuan'
-                    },
-                    {
-                        data: 'sisa',
-                        name: 'sisa'
                     },
                     {
                         data: 'status',
@@ -152,8 +143,7 @@
                         $('#harga').val(result.harga);
                         $('#panjang').val(result.panjang);
                         $('#satuan').val(result.satuan);
-                        $('#sisa').val(result.sisa);
-                        $('#status option[value=' + result.status + ']').attr('selected', 'selected');
+                        $("#status").val(result.status ).change();
                         $('#modal-xl').modal('show');
                     },
                     error: function(xhr, Status, err) {
@@ -169,22 +159,20 @@
 
             var id = $('#id').val();
             var kode = $('#kode').val();
-            var nama = $('#name').val();
+            var name = $('#name').val();
             var buy_at = $('#tgl').val();
             var harga = $('#harga').val();
             var panjang = $('#panjang').val();
             var satuan = $('#satuan').val();
-            var sisa = $('#sisa').val();
             var status = $('#status').val();
 
             var object = {
                 kode,
-                nama,
+                name,
                 buy_at,
                 harga,
                 panjang,
                 satuan,
-                sisa,
                 status,
             }
 

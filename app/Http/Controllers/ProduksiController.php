@@ -3,26 +3,50 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Produksi;
 use App\Bahan;
+use App\Product;
 
-class BahanController extends Controller
+class ProduksiController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource.        $all_data = Module::all();
      *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
+        // dd("po");
+        $data_bahan = Bahan::where('status', 1)
+            ->select('id', 'kode', 'name')
+            ->get();
+
+        $data_product = Product::where('status', 1)
+            ->select('id', 'kode', 'name')
+            ->get();
+
         $data_view            = array();
-        $data_view["title_h1"]               = "Data Bahan";
+        $data_view["title_h1"]               = "Data Produksi";
         $data_view["breadcrumb_item"]        = "Home";
-        $data_view["breadcrumb_item_active"] = "Bahan";
-        $data_view["modal_title"]            = "Form Bahan";
-        $data_view["card_title"]             = "Input & Update Data Bahan";
+        $data_view["breadcrumb_item_active"] = "Produksi";
+        $data_view["modal_title"]            = "Form Produksi";
+        $data_view["card_title"]             = "Input & Update Data Produksi";
+        $data_view["bahan"]                  = $data_bahan;
+        $data_view["product"]                = $data_product;
 
         if ($request->ajax()) {
-            return datatables()->of(Bahan::all())
+            $list = Produksi::with('bahan', 'product')->get();
+            return datatables()->of($list)
+                ->addColumn('bahan', function ($data) {
+                    $bahan = $data->bahan->kode . ' - ' . $data->bahan->name;
+                    return $bahan;
+                })
+                ->rawColumns(['bahan'])
+                ->addColumn('product', function ($data) {
+                    $product = $data->product->kode . ' - ' . $data->product->name;
+                    return $product;
+                })
+                ->rawColumns(['product'])
                 ->addColumn('status', function ($data) {
                     if ($data->status == 1) {
                         $button = '<center><button type="button" class="btn btn-warning btn-sm" onclick="active(' . $data->id . ',0)"> Active </button> </center>';
@@ -43,7 +67,7 @@ class BahanController extends Controller
                 ->make(true);
         }
 
-        return view('bahan/v_list', $data_view);
+        return view('produksi/v_list', $data_view);
     }
 
     /**
@@ -67,18 +91,17 @@ class BahanController extends Controller
             return "error request";
             exit;
         }
-        $id = $request["id"];
-        $harga = str_replace(".", "", $request["data"]["harga"]);
 
-        $post = Bahan::UpdateOrCreate(["id" => $id], [
-            'kode' => $request["data"]["kode"],
-            'name' => $request["data"]["name"],
-            'buy_at' => $request["data"]["buy_at"],
-            'harga' => $harga,
-            'panjang' => $request["data"]["panjang"],
-            'satuan' => $request["data"]["satuan"],
+        $id = $request["id"];
+
+        $post = Produksi::UpdateOrCreate(["id" => $id], [
+            'bahan_id' => $request["data"]["bahan"],
+            'product_id' => $request["data"]["product"],
+            'jumlah' => $request["data"]["jumlah"],
+            'sisa' => $request["data"]["jumlah"],
             'status' => $request["data"]["status"],
             'created_by' => 1
+
         ]);
 
 
@@ -109,7 +132,7 @@ class BahanController extends Controller
             exit;
         }
 
-        $data = Bahan::where(["id" => $id])->first();
+        $data = Produksi::where(["id" => $id])->first();
 
         return response()->json($data);
     }
@@ -138,7 +161,7 @@ class BahanController extends Controller
             return "error request";
             exit;
         }
-        $delete = Bahan::find($id)->delete();
+        $delete = Produksi::find($id)->delete();
 
         return response()->json($delete);
     }
@@ -150,7 +173,7 @@ class BahanController extends Controller
             exit;
         }
 
-        $update = Bahan::where(['id' => $request['id']])
+        $update = Produksi::where(['id' => $request['id']])
             ->update(['status' => $request['data']]);
 
         return response()->json($update);
