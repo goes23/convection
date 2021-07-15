@@ -13,7 +13,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="" role="button">
+            <a class="nav-link" href="{{ route('logout') }}" role="button">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </a>
         </li>

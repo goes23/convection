@@ -3,11 +3,57 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Validator;
+use Hash;
+use Session;
+use App\User;
 
 class AuthController extends Controller
 {
-    public function Index()
-    {
-      return view('auth/v_login');
+  public function Index(Request $request)
+  {
+    return view('auth/v_login');
+  }
+
+  public function login(Request $request)
+  {
+    $rules = [
+      'email'                 => 'required|email',
+      'password'              => 'required|string'
+    ];
+
+    $messages = [
+      'email.required'        => 'Email wajib diisi',
+      'email.email'           => 'Email tidak valid',
+      'password.required'     => 'Password wajib diisi',
+      'password.string'       => 'Password harus berupa string'
+    ];
+
+    $validator = Validator::make($request->all(), $rules, $messages);
+
+    if ($validator->fails()) {
+      return redirect()->back()->withErrors($validator)->withInput($request->all);
     }
+
+    $data = User::where('email', $request->email)->first();
+
+    if ($data) {
+      if (Hash::check($request->password, $data->password)) {
+        session(['login_true' => true]);
+        return redirect()->route('/');
+      } else {
+        Session::flash('error', 'Password salah !!');
+        return redirect()->route('login');
+      }
+    } else {
+      Session::flash('error', 'Email Tidak terdaftar !!');
+      return redirect()->route('login');
+    }
+  }
+
+  public function logout(Request $request)
+  {
+    $request->session()->flush();
+    return redirect()->route('login');
+  }
 }

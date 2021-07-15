@@ -21,23 +21,32 @@ use App\Http\Controllers\ChannelController;
 
 
 
-Route::get('/', [DashboardController::class, 'index']);
 
-Route::get('/login', [AuthController::class, 'index']);
+Route::get('login', 'AuthController@index')->name('login');
+Route::post('login', 'AuthController@login');
+// Route::post('login',[AuthController::class, 'login']);
+
+
+Route::group(['middleware' => 'ceklogin'], function () {
+    Route::get('/', 'DashboardController@index')->name('/');
+    
+});
+Route::get('logout', 'AuthController@logout')->name('logout');
+
 
 Route::resource('bahan', 'BahanController');
-Route::post('bahan/active', [BahanController::class, 'active']);
+Route::post('bahan/active', 'BahanController@active');
 
 Route::resource('module', 'ModuleController');
-Route::post('module/active', [ModuleController::class, 'active']);
+Route::post('module/active', 'ModuleController@active');
 
 Route::resource('product', 'ProductController');
-Route::post('product/active', [ProductController::class, 'active']);
+Route::post('product/active', 'ProductController@active');
 
 Route::resource('produksi', 'ProduksiController');
-Route::post('produksi/active', [ProduksiController::class, 'active']);
+Route::post('produksi/active', 'ProduksiController@active');
 
 Route::resource('channel', 'ChannelController');
-Route::post('channel/active', [ChannelController::class, 'active']);
+Route::post('channel/active', 'ChannelController@active');
 
 
