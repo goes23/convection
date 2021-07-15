@@ -6,6 +6,8 @@ use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\BahanController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProduksiController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChannelController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,6 +23,8 @@ use App\Http\Controllers\ProduksiController;
 
 Route::get('/', [DashboardController::class, 'index']);
 
+Route::get('/login', [AuthController::class, 'index']);
+
 Route::resource('bahan', 'BahanController');
 Route::post('bahan/active', [BahanController::class, 'active']);
 
@@ -32,5 +36,8 @@ Route::post('product/active', [ProductController::class, 'active']);
 
 Route::resource('produksi', 'ProduksiController');
 Route::post('produksi/active', [ProduksiController::class, 'active']);
+
+Route::resource('channel', 'ChannelController');
+Route::post('channel/active', [ChannelController::class, 'active']);
 
 
