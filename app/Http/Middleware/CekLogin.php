@@ -15,7 +15,7 @@ class CekLogin
      */
     public function handle($request, Closure $next)
     {
-        if(!session('login_true')){
+        if(!session('logged_in')){
             return redirect()->route('login');
         }
         return $next($request);

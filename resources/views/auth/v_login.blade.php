@@ -28,7 +28,7 @@
                 <p class="login-box-msg">Sign in to start your session</p>
 
                 <form action="{{ route('login') }}" method="post">
-                    
+
                     @csrf
                     @if (session('errors'))
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -57,7 +57,7 @@
 
 
                     <div class="input-group mb-3">
-                        <input type="email" class="form-control" placeholder="Email" name="email" required>
+                        <input type="email" class="form-control" placeholder="Email" id="email" name="email" required>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>
@@ -65,7 +65,7 @@
                         </div>
                     </div>
                     <div class="input-group mb-3">
-                        <input type="password" class="form-control" placeholder="Password" name="password" required>
+                        <input type="password" class="form-control" placeholder="Password" id="password" name="password" required>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
@@ -96,6 +96,25 @@
     <script src="{{ asset('assets/') }}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('assets/') }}/dist/js/adminlte.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: '{{ route('remember') }}',
+                type: "POST",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    remember: true
+                },
+                dataType: "json",
+                success: function(response) {
+                    $("#email").val(response.email);
+                    $("#password").val(response.password);
+                    $("#remember").prop('checked', true);
+                }
+            })
+        })
+
+    </script>
 </body>
 
 </html>

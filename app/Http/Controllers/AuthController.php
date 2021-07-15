@@ -39,7 +39,16 @@ class AuthController extends Controller
 
     if ($data) {
       if (Hash::check($request->password, $data->password)) {
-        session(['login_true' => true]);
+        if ($request->remember <> null) {
+          session(['remember' => [
+            "email" => $request->email,
+            "password" => $request->password,
+            "remember" => $request->remember
+          ]]);
+        } else {
+          $request->session()->forget('remember');
+        }
+        session(['logged_in' => true]);
         return redirect()->route('/');
       } else {
         Session::flash('error', 'Password salah !!');
@@ -50,6 +59,19 @@ class AuthController extends Controller
       return redirect()->route('login');
     }
   }
+
+  public function remember(Request $request)
+  {
+    if (!$request->ajax()) {
+      return "error request";
+      exit;
+    }
+    $data = session('remember');
+    if ($data != null) {
+      return response()->json($data);
+    }
+  }
+
 
   public function logout(Request $request)
   {

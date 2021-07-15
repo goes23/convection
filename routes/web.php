@@ -24,6 +24,7 @@ use App\Http\Controllers\ChannelController;
 
 Route::get('login', 'AuthController@index')->name('login');
 Route::post('login', 'AuthController@login');
+Route::post('remember', 'AuthController@remember')->name('remember');
 // Route::post('login',[AuthController::class, 'login']);
 
 
