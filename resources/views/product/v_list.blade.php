@@ -30,17 +30,19 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div style=" padding: 0px 0px 18px 0px;">
-                                <button type="button" class="btn btn-info btn-sm" onclick="add_btn()">Tambah Module</button>
+                                <button type="button" class="btn btn-info btn-sm" onclick="add_btn()">Tambah
+                                    Product</button>
                             </div>
 
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Parent</th>
+                                        <th>kode</th>
                                         <th>Name</th>
-                                        <th>Order No</th>
-                                        <th>Active</th>
-                                        <th>Action</th>
+                                        <th>Harga Modal</th>
+                                        <th>Stock</th>
+                                        <th>status</th>
+                                        <th>action</th>
                                     </tr>
                                 </thead>
 
@@ -55,20 +57,16 @@
     </section>
 
     {{-- MODAL FORM ADD & EDIT --}}
-    @include('module.v_modal')
+    @include('product.v_modal')
     {{-- MODAL FORM ADD & EDIT --}}
 
 
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
         $(document).ready(function() {
-            $("#harga").inputmask('Regex', {
-                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
-            });
-            $("#panjang").inputmask('Regex', {
-                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
-            });
-            $("#sisa").inputmask('Regex', {
+            $("#harga_modal").mask('000.000.000', {reverse: true});
+
+            $("#stock").inputmask('Regex', {
                 regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
             });
 
@@ -76,25 +74,30 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('module.index') }}",
+                    url: "{{ route('product.index') }}",
                     type: "GET"
                 },
                 columns: [{
-                        data: 'parent_id',
-                        name: 'parent_id'
+                        data: 'kode',
+                        name: 'kode'
                     },
                     {
                         data: 'name',
                         name: 'name'
                     },
                     {
-                        data: 'order_no',
-                        name: 'order_no'
+                        data: 'harga_modal',
+                        name: 'harga_modal',
+                        render: $.fn.dataTable.render.number( '.', ',', 2, 'Rp. ' )
                     },
                     {
-                        data: 'active',
-                        name: 'active',
-                        rderable: false,
+                        data: 'stock',
+                        name: 'stock'
+                    },
+                    {
+                        data: 'status',
+                        name: 'status',
+                        orderable: false,
                         searchable: false
                     },
                     {
@@ -113,27 +116,17 @@
         function edit(id) {
             if (id) {
                 $.ajax({
-                    url: "module/" + id + "/edit",
+                    url: "product/" + id + "/edit",
                     type: "GET",
                     dataType: "json",
                     success: function(result) {
-                        var currentDate = new Date(result.buy_at);
-                        var year = currentDate.getFullYear();
-                        var month = currentDate.getMonth() + 1 < 10 ? "0" + (parseInt(currentDate.getMonth()) +
-                                1) : currentDate
-                            .getMonth() + 1;
-                        var date = currentDate.getDate();
-                        var date_format = year + "-" + month + "-" + date
-
                         $("#id").val(result.id)
                         $('#kode').val(result.kode);
                         $('#name').val(result.name);
-                        $('#tgl').val(date_format);
-                        $('#harga').val(result.harga);
-                        $('#panjang').val(result.panjang);
-                        $('#satuan').val(result.satuan);
-                        $('#sisa').val(result.sisa);
-                        $('#modal-xl').modal('show');
+                        $('#harga_modal').val(result.harga_modal);
+                        $('#stock').val(result.stock);
+                        $("#status").val(result.status ).change();
+                        $('#modal-default').modal('show');
                     },
                     error: function(xhr, Status, err) {
                         $("Terjadi error : " + Status);
@@ -149,32 +142,35 @@
             var id = $('#id').val();
             var kode = $('#kode').val();
             var name = $('#name').val();
-            var buy_at = $('#tgl').val();
-            var harga = $('#harga').val();
-            var panjang = $('#panjang').val();
-            var satuan = $('#satuan').val();
-            var sisa = $('#sisa').val();
+            var harga_modal = $('#harga_modal').val();
+            var stock = $('#stock').val();
+            var status = $('#status').val();
 
             var object = {
                 kode,
                 name,
-                buy_at,
-                harga,
-                panjang,
-                satuan,
-                sisa
+                harga_modal,
+                status
             }
 
             if (required_fild(object) == false) {
                 return false;
             }
 
+            var dataInput = {
+                kode,
+                name,
+                harga_modal,
+                stock,
+                status
+            }
+
             $.ajax({
-                url: "{{ route('module.store') }}",
+                url: "{{ route('product.store') }}",
                 type: "post",
                 data: {
                     "id": id,
-                    "data": object,
+                    "data": dataInput,
                 },
                 dataType: "json",
                 success: function(result) {
@@ -182,7 +178,7 @@
                     $(".inputForm").val('');
                     $("#example1").DataTable().ajax.reload()
                     setTimeout(function() {
-                        $('#modal-xl').modal('hide');
+                        $('#modal-default').modal('hide');
                     }, 1500);
                 },
                 error: function(xhr, Status, err) {
@@ -206,7 +202,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "module/" + id,
+                        url: "product/" + id,
                         type: "delete",
                         dataType: "json",
                         success: function(result) {
@@ -236,7 +232,7 @@
                 return false
             }
             $.ajax({
-                url: {!! json_encode(url('module/active')) !!},
+                url: {!! json_encode(url('product/active')) !!},
                 type: "POST",
                 data: {
                     "id": id,

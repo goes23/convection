@@ -19,7 +19,9 @@ class CreateProduksiTable extends Migration
             $table->integer('bahan_id');
             $table->integer('product_id');
             $table->integer('jumlah');
+            $table->integer('sisa');
             $table->integer('status')->comment('active');
+            $table->integer('created_by');
             $table->timestamps();
             $table->softDeletes();
         });

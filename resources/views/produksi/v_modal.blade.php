@@ -1,0 +1,54 @@
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="form_add">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ $modal_title }}</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" class="form-control inputForm" id="id" name="id" value="">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="bahan">Bahan <a class="tn">*</a></label>
+                            <select class="form-control select2" id="bahan" data-placeholder="Select a bahan"
+                                data-dropdown-css-class="select2-purple" style="width: 100%;">
+                                @foreach ($bahan as $val)
+                                    <option value="{{ $val->id }}">{{ $val->kode }} - {{ $val->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="product">Product <a class="tn">*</a></label>
+                            <select class="form-control select2" id="product" data-placeholder="Select a product"
+                                data-dropdown-css-class="select2-purple" style="width: 100%;">
+                                @foreach ($product as $val)
+                                    <option value="{{ $val->id }}">{{ $val->kode }} - {{ $val->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="jumlah">Jumlah <a class="tn">*</a></label>
+                            <input type="text" class="form-control inputForm" id="jumlah" name="jumlah"
+                                aria-describedby="emailHelp" placeholder="Enter jumlah">
+                        </div>
+                        <div class="form-group">
+                            <label for="status">status <a class="tn">*</a></label>
+                            <select class="form-control status" id="status">
+                                <option value="1">Active</option>
+                                <option value="0">not Active</option>
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="add_edit()">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
