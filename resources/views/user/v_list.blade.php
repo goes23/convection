@@ -40,7 +40,7 @@
                                         <th>No</th>
                                         <th>Name</th>
                                         <th>Email</th>
-                                        <th>Status</th>
+                                        <th>Role</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -56,27 +56,13 @@
     </section>
 
     {{-- MODAL FORM ADD & EDIT --}}
-    {{-- @include('user.v_modal') --}}
+    @include('user.v_modal')
     {{-- MODAL FORM ADD & EDIT --}}
 
 
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
         $(document).ready(function() {
-            $('#bahan').select2({
-                dropdownParent: $('#modal-default')
-            });
-            $('#product').select2({
-                dropdownParent: $('#modal-default')
-            });
-
-            $("#jumlah").inputmask('Regex', {
-                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
-            });
-            $("#sisa").inputmask('Regex', {
-                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
-            });
-
             $("#example1").DataTable({
                 processing: true,
                 serverSide: true,
@@ -100,10 +86,8 @@
                         name: 'email',
                     },
                     {
-                        data: 'status',
-                        name: 'status',
-                        orderable: false,
-                        searchable: false
+                        data: 'role',
+                        name: 'role',
                     },
                     {
                         data: 'action',
@@ -120,17 +104,15 @@
 
         function edit(id) {
             if (id) {
-
                 $.ajax({
                     url: "user/" + id + "/edit",
                     type: "GET",
                     dataType: "json",
                     success: function(result) {
                         $("#id").val(result.id)
-                        $('#bahan').val(result.bahan_id).change();
-                        $('#product').val(result.product_id).change();
-                        $('#jumlah').val(result.jumlah);
-                        $("#status").val(result.status).change();
+                        $('#name').val(result.name);
+                        $('#email').val(result.email);
+                        $('#password').val(result.password);
                         $('#modal-default').modal('show');
                     },
                     error: function(xhr, Status, err) {
@@ -143,22 +125,43 @@
         }
 
         function add_edit() {
-
             var id = $('#id').val();
-            var bahan = $('#bahan').val();
-            var product = $('#product').val();
-            var jumlah = $('#jumlah').val();
-            var status = $('#status').val();
-
+            var name = $('#name').val();
+            var email = $('#email').val();
+            var password = $('#password').val();
+            var repassword = $('#repassword').val();
 
             var object = {
-                bahan,
-                product,
-                jumlah,
-                status
+                name,
+                email,
+                password,
+                repassword
             }
 
             if (required_fild(object) == false) {
+                return false;
+            }
+            var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            if (!regex.test(email)) {
+                Swal.fire({
+                    icon: "error",
+                    text: "Format email not valid",
+                });
+                return false;
+            }
+
+            if (password.length < 6) {
+                Swal.fire({
+                    icon: "error",
+                    text: "password minial 6 karakter",
+                });
+                return false;
+            }
+            if (password != repassword) {
+                Swal.fire({
+                    icon: "error",
+                    text: "password and repassword not match !!",
+                });
                 return false;
             }
 

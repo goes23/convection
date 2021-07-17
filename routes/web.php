@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ModuleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,10 +22,15 @@ Route::post('login', 'AuthController@login');
 Route::post('remember', 'AuthController@remember')->name('remember');
 
 Route::group(['middleware' => 'ceklogin'], function () {
+    Route::get('admin-page', function() {
+        return 'Halaman untuk Admin';
+    })->middleware('role:admin')->name('admin.page');
     Route::get('/', 'DashboardController@index')->name('/');
     Route::get('logout', 'AuthController@logout')->name('logout');
 });
 
+Route::resource('role', 'RoleController');
+Route::post('role/active', 'RoleController@active');
 
 Route::resource('user', 'UserController');
 Route::post('user/active', 'UserController@active');
@@ -34,6 +40,7 @@ Route::post('bahan/active', 'BahanController@active');
 
 Route::resource('module', 'ModuleController');
 Route::post('module/active', 'ModuleController@active');
+Route::post('module/dataparent', 'ModuleController@dataparent')->name('module.dataparent');
 
 Route::resource('product', 'ProductController');
 Route::post('product/active', 'ProductController@active');

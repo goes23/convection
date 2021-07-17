@@ -5,11 +5,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class User extends Model
+class Role extends Model
 {
     use SoftDeletes;
 
-    protected $table = "users";
+    protected $table = "role";
     protected $guarded = [];
     protected $dates = ['deleted_at'];
 }

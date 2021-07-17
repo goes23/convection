@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Role;
 
 class UserController extends Controller
 {
@@ -14,24 +15,17 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $role = Role::where('status',1)->get();
         $data_view            = array();
         $data_view["title_h1"]               = "Data User";
         $data_view["breadcrumb_item"]        = "Home";
         $data_view["breadcrumb_item_active"] = "User";
         $data_view["modal_title"]            = "Form User";
         $data_view["card_title"]             = "Input & Update Data User";
+        $data_view["role"]                   = $role;
 
         if ($request->ajax()) {
             return datatables()->of(User::all())
-                ->addColumn('status', function ($data) {
-                    if ($data->status == 1) {
-                        $button = '<center><button type="button" class="btn btn-warning btn-sm" onclick="active(' . $data->id . ',0)"> Active </button> </center>';
-                    } else {
-                        $button = '<center><button type="button" class="btn btn-sm" style="background-color: #cccccc;" onclick="active(' . $data->id . ',1)"> Not Active </button> </center>';
-                    }
-                    return $button;
-                })
-                ->rawColumns(['status'])
                 ->addColumn('action', function ($data) {
                     $button = '<center><button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
                     $button .= '&nbsp;&nbsp;';
@@ -71,13 +65,9 @@ class UserController extends Controller
         $id = $request["id"];
 
         $post = User::UpdateOrCreate(["id" => $id], [
-            'bahan_id' => $request["data"]["bahan"],
-            'product_id' => $request["data"]["product"],
-            'jumlah' => $request["data"]["jumlah"],
-            'sisa' => $request["data"]["jumlah"],
-            'status' => $request["data"]["status"],
-            'created_by' => 1
-
+            'name' => $request["data"]["name"],
+            'email' => $request["data"]["email"],
+            'password' => bcrypt($request["data"]["password"]),
         ]);
 
 
@@ -110,6 +100,7 @@ class UserController extends Controller
 
         $data = User::where(["id" => $id])->first();
 
+        // dd($data);
         return response()->json($data);
     }
 

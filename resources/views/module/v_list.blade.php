@@ -39,8 +39,9 @@
                                         <th>No</th>
                                         <th>Parent</th>
                                         <th>Name</th>
+                                        <th>Controller</th>
                                         <th>Order No</th>
-                                        <th>Active</th>
+                                        <th>status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -63,15 +64,30 @@
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
         $(document).ready(function() {
-            $("#harga").inputmask('Regex', {
+            $("#order").inputmask('Regex', {
                 regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
             });
-            $("#panjang").inputmask('Regex', {
-                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
-            });
-            $("#sisa").inputmask('Regex', {
-                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
-            });
+
+            var parent = $('#parent').val()
+
+            if (parent == null || parent == 0) {
+
+                $('#ctrl').hide()
+            } else {
+
+                $('#ctrl').show()
+            }
+
+            $('#parent').change(function() {
+                var parent = $('#parent').val()
+                if (parent == 0) {
+                    $('#ctrl').hide()
+                } else {
+                    $('#ctrl').show()
+                }
+            })
+
+            data_parent();
 
             $("#example1").DataTable({
                 processing: true,
@@ -95,12 +111,16 @@
                         name: 'name'
                     },
                     {
+                        data: 'controller',
+                        name: 'controller'
+                    },
+                    {
                         data: 'order_no',
                         name: 'order_no'
                     },
                     {
-                        data: 'active',
-                        name: 'active',
+                        data: 'status',
+                        name: 'status',
                         rderable: false,
                         searchable: false
                     },
@@ -117,6 +137,28 @@
             });
         })
 
+        function data_parent() {
+            $.ajax({
+                url: "{{ route('module.dataparent') }}",
+                type: "post",
+                data: 0,
+                dataType: "json",
+                success: function(result) {
+                    $("#parent > option").remove();
+
+                    var option = '';
+                    option += '<option value="0" > #Parent </option>'
+                    for (var i = 0; i < result.length; i++) {
+                        option += '<option value="' + result[i].id + '">' + result[i].name + '</option>'
+                    }
+                    $('#parent').append(option);
+                },
+                error: function(xhr, Status, err) {
+                    $("Terjadi error : " + Status);
+                }
+            });
+        }
+
         function edit(id) {
             if (id) {
                 $.ajax({
@@ -124,23 +166,14 @@
                     type: "GET",
                     dataType: "json",
                     success: function(result) {
-                        var currentDate = new Date(result.buy_at);
-                        var year = currentDate.getFullYear();
-                        var month = currentDate.getMonth() + 1 < 10 ? "0" + (parseInt(currentDate.getMonth()) +
-                                1) : currentDate
-                            .getMonth() + 1;
-                        var date = currentDate.getDate();
-                        var date_format = year + "-" + month + "-" + date
-
+                        console.log(result);
                         $("#id").val(result.id)
-                        $('#kode').val(result.kode);
-                        $('#name').val(result.name);
-                        $('#tgl').val(date_format);
-                        $('#harga').val(result.harga);
-                        $('#panjang').val(result.panjang);
-                        $('#satuan').val(result.satuan);
-                        $('#sisa').val(result.sisa);
-                        $('#modal-xl').modal('show');
+                        $("#parent").val(result.parent_id).change();
+                        $("#name").val(result.name)
+                        $('#controller').val(result.controller);
+                        $('#order').val(result.order_no);
+                        $("#status").val(result.status).change();
+                        $('#modal-default').modal('show');
                     },
                     error: function(xhr, Status, err) {
                         $("Terjadi error : " + Status);
@@ -152,24 +185,28 @@
         }
 
         function add_edit() {
-
             var id = $('#id').val();
-            var kode = $('#kode').val();
+            var parent = $('#parent').val();
             var name = $('#name').val();
-            var buy_at = $('#tgl').val();
-            var harga = $('#harga').val();
-            var panjang = $('#panjang').val();
-            var satuan = $('#satuan').val();
-            var sisa = $('#sisa').val();
+            var controller = $('#controller').val();
+            var order = $('#order').val();
+            var status = $('#status').val();
 
-            var object = {
-                kode,
-                name,
-                buy_at,
-                harga,
-                panjang,
-                satuan,
-                sisa
+            if (parent == 0) {
+                var object = {
+                    parent,
+                    name,
+                    order,
+                    status
+                }
+            } else {
+                var object = {
+                    parent,
+                    name,
+                    controller,
+                    order,
+                    status
+                }
             }
 
             if (required_fild(object) == false) {
@@ -189,8 +226,9 @@
                     $(".inputForm").val('');
                     $("#example1").DataTable().ajax.reload()
                     setTimeout(function() {
-                        $('#modal-xl').modal('hide');
+                        $('#modal-default').modal('hide');
                     }, 1500);
+                    data_parent();
                 },
                 error: function(xhr, Status, err) {
                     $("Terjadi error : " + Status);

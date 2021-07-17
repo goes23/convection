@@ -15,31 +15,33 @@ class ModuleController extends Controller
      */
     public function index(Request $request)
     {
+        // $parent = Module::where('parent_id', 0)->get();
         $data_view            = array();
         $data_view["title_h1"]               = "Data Module";
         $data_view["breadcrumb_item"]        = "Home";
         $data_view["breadcrumb_item_active"] = "Module";
         $data_view["modal_title"]            = "Form Module";
         $data_view["card_title"]             = "Input & Update Data Module";
+        //$data_view["parent"]                 = $parent;
 
         if ($request->ajax()) {
             return datatables()->of(Module::all())
-                ->addColumn('active', function ($data) {
-                    if ($data->active == 1) {
+                ->addColumn('status', function ($data) {
+                    if ($data->status == 1) {
                         $button = '<center><button type="button" class="btn btn-warning btn-sm" onclick="active(' . $data->id . ',0)"> Enabled </button> </center>';
                     } else {
                         $button = '<center><button type="button" class="btn btn-sm" style="background-color: #cccccc;" onclick="active(' . $data->id . ',1)"> Disabled </button> </center>';
                     }
                     return $button;
                 })
-                ->rawColumns(['active'])
+                ->rawColumns(['status'])
                 ->addColumn('action', function ($data) {
                     $button = '<center><button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
                     $button .= '&nbsp;&nbsp;';
                     $button .= '<button type="button" class="btn btn-danger btn-sm" onClick="my_delete(' . $data->id . ')">Delete</button></center>';
                     return $button;
                 })
-                ->rawColumns(['action', 'active'])
+                ->rawColumns(['action', 'status'])
                 ->addIndexColumn()
                 ->make(true);
         }
@@ -65,7 +67,23 @@ class ModuleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (!$request->ajax()) {
+            return "error request";
+            exit;
+        }
+
+        $id = $request["id"];
+
+        $post = Module::UpdateOrCreate(["id" => $id], [
+            'parent_id' => $request["data"]["parent"],
+            'name' => $request["data"]["name"],
+            'controller' => isset($request["data"]["controller"]) ? $request["data"]["controller"] : "",
+            'order_no' => $request["data"]["order"],
+            'status' => $request["data"]["status"],
+        ]);
+
+
+        return response()->json($post);
     }
 
     /**
@@ -85,9 +103,16 @@ class ModuleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        //
+        if (!$request->ajax()) {
+            return "error request";
+            exit;
+        }
+
+        $data = Module::where(["id" => $id])->first();
+
+        return response()->json($data);
     }
 
     /**
@@ -127,8 +152,20 @@ class ModuleController extends Controller
         }
 
         $update = Module::where(['id' => $request['id']])
-            ->update(['active' => $request['data']]);
+            ->update(['status' => $request['data']]);
 
         return response()->json($update);
+    }
+
+    public function dataparent(Request $request)
+    {
+        if (!$request->ajax()) {
+            return "error request";
+            exit;
+        }
+
+        $parent = Module::where('parent_id', 0)->get();
+
+        return response()->json($parent);
     }
 }

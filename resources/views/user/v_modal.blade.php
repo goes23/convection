@@ -12,36 +12,34 @@
                     <input type="hidden" class="form-control inputForm" id="id" name="id" value="">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="bahan">Bahan <a class="tn">*</a></label>
-                            <select class="form-control select2" id="bahan" data-placeholder="Select a bahan"
+                            <label for="name">Name <a class="tn">*</a></label>
+                            <input type="text" class="form-control inputForm" id="name" name="name"
+                                aria-describedby="emailHelp" placeholder="Enter name">
+                        </div>
+                         <div class="form-group">
+                            <label for="email">Email <a class="tn">*</a></label>
+                            <input type="email" class="form-control inputForm" id="email" name="email"
+                                aria-describedby="emailHelp" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password <a class="tn">*</a></label>
+                            <input type="text" class="form-control inputForm" id="password" name="password"
+                                aria-describedby="emailHelp" placeholder="Enter password">
+                        </div>
+                        <div class="form-group">
+                            <label for="repassword">Repassword <a class="tn">*</a></label>
+                            <input type="password" class="form-control inputForm" id="repassword" name="repassword"
+                                aria-describedby="emailHelp" placeholder="Enter repassword">
+                        </div>
+                        <div class="form-group">
+                            <label for="role">Role <a class="tn">*</a></label>
+                            <select class="form-control select2" id="role" data-placeholder="Select a role"
                                 data-dropdown-css-class="select2-purple" style="width: 100%;">
-                                @foreach ($bahan as $val)
-                                    <option value="{{ $val->id }}">{{ $val->kode }} - {{ $val->name }}</option>
+                                @foreach ($role as $val)
+                                    <option value="{{ $val->id }}">{{ $val->name }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="product">Product <a class="tn">*</a></label>
-                            <select class="form-control select2" id="product" data-placeholder="Select a product"
-                                data-dropdown-css-class="select2-purple" style="width: 100%;">
-                                @foreach ($product as $val)
-                                    <option value="{{ $val->id }}">{{ $val->kode }} - {{ $val->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="jumlah">Jumlah <a class="tn">*</a></label>
-                            <input type="text" class="form-control inputForm" id="jumlah" name="jumlah"
-                                aria-describedby="emailHelp" placeholder="Enter jumlah">
-                        </div>
-                        <div class="form-group">
-                            <label for="status">status <a class="tn">*</a></label>
-                            <select class="form-control status" id="status">
-                                <option value="1">Active</option>
-                                <option value="0">not Active</option>
-                            </select>
-                        </div>
-
                     </div>
                 </div>
                 <div class="modal-footer">
