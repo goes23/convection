@@ -45,6 +45,7 @@ Route::post('bahan/active', 'BahanController@active');
 Route::resource('module', 'ModuleController');
 Route::post('module/active', 'ModuleController@active');
 Route::post('module/dataparent', 'ModuleController@dataparent')->name('module.dataparent');
+Route::post('module/updatenorder', 'ModuleController@updatenorder')->name('module.updatenorder');
 
 Route::resource('product', 'ProductController');
 Route::post('product/active', 'ProductController@active');

@@ -104,15 +104,15 @@
                         }
                     }, {
                         data: 'parent_id',
-                        name: 'parent_id'
+                        name: 'parent_id',
                     },
                     {
                         data: 'name',
-                        name: 'name'
+                        name: 'name',
                     },
                     {
                         data: 'controller',
-                        name: 'controller'
+                        name: 'controller',
                     },
                     {
                         data: 'order_no',
@@ -122,17 +122,14 @@
                         data: 'status',
                         name: 'status',
                         rderable: false,
-                        searchable: false
+                        searchable: false,
                     },
                     {
                         data: 'action',
                         name: 'action',
                         orderable: false,
-                        searchable: false
+                        searchable: false,
                     }
-                ],
-                order: [
-                    [0, 'asc']
                 ]
             });
         })
@@ -296,6 +293,55 @@
                     $("Terjadi error : " + Status);
                 }
             });
+        }
+
+        function functionUp(param) {
+            var rowValue = param.value;
+            var vl = $("#order-" + rowValue).html();
+
+            if (vl <= 1) {
+                return false;
+            } else {
+                var order = parseInt(vl) - 1;
+                $("#order-" + rowValue).html(order);
+                $.ajax({
+                    url: {!! json_encode(url('module/updatenorder')) !!},
+                    type: "POST",
+                    data: {
+                        id: rowValue,
+                        order_no: order,
+                    },
+                    success: function(result) {
+                        $("#example1").DataTable().ajax.reload();
+                    },
+                    error: function(xhr, Status, err) {
+                        $("Terjadi error : " + Status);
+                    },
+                })
+            }
+        }
+
+        function functionDown(param) {
+
+            var rowValue = param.value;
+            var vl = $("#order-" + rowValue).html();
+            var order = parseInt(vl) + 1;
+            $("#order-" + rowValue).html(order);
+
+            $.ajax({
+                url: {!! json_encode(url('module/updatenorder')) !!},
+                type: "POST",
+                data: {
+                    id: rowValue,
+                    order_no: order,
+                },
+                success: function(result) {
+                    $("#example1").DataTable().ajax.reload();
+                },
+                error: function(xhr, Status, err) {
+                    $("Terjadi error : " + Status);
+                },
+            })
         }
 
     </script>
