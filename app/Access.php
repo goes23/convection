@@ -5,17 +5,17 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Module extends Model
+class Access extends Model
 {
     use SoftDeletes;
 
-    protected $table = "module";
+    protected $table = "access";
     protected $guarded = [];
     protected $dates = ['deleted_at'];
 
-    public function access()
+    public function module()
     {
-       // return $this->belongsTo('App\Access','module_id');
-        return $this->hasMany('App\Access');
+        //return $this->hasMany('App\Module');
+        return $this->belongsTo('App\Module');
     }
 }

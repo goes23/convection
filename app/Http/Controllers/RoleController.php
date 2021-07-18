@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Access;
 use Illuminate\Http\Request;
 use App\Role;
+use App\Module;
+use App\RoleAccess;
 
 class RoleController extends Controller
 {
@@ -14,13 +17,15 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
-        $data_view            = array();
+        $data_module = Module::where('parent_id', '<>', 0)->get(); //di pindah tar
+
+        $data_view                = array();
         $data_view["title_h1"]               = "Data Role";
         $data_view["breadcrumb_item"]        = "Home";
         $data_view["breadcrumb_item_active"] = "Role";
         $data_view["modal_title"]            = "Form Role";
         $data_view["card_title"]             = "Input & Update Data Role";
-
+        $data_view["module"]                 = $data_module;
 
         if ($request->ajax()) {
             return datatables()->of(Role::all())
@@ -47,33 +52,19 @@ class RoleController extends Controller
         return view('role/v_list', $data_view);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create(Request $request)
-    {
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         if (!$request->ajax()) {
             return "error request";
             exit;
         }
-        
+
         $id = $request["id"];
 
         $post = Role::UpdateOrCreate(["id" => $id], [
             'name' => $request["data"]["name"],
-            'description' => $request["data"]["description"],
+            'description' => isset($request["data"]["description"]) ? $request["data"]["description"] : '',
             'status' => $request["data"]["status"],
             'created_by' => 1
 
@@ -83,23 +74,7 @@ class RoleController extends Controller
         return response()->json($post);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Request $request, $id)
     {
         if (!$request->ajax()) {
@@ -112,24 +87,7 @@ class RoleController extends Controller
         return response()->json($data);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request, $id)
     {
         if (!$request->ajax()) {
@@ -152,5 +110,81 @@ class RoleController extends Controller
             ->update(['status' => $request['data']]);
 
         return response()->json($update);
+    }
+
+    public function datarole(Request $request)
+    {
+        if (!$request->ajax()) {
+            return "error request";
+            exit;
+        }
+
+        $data = Role::all();
+
+        return response()->json($data);
+    }
+
+
+    public function get_access(Request $request)
+    {
+        if (!$request->ajax()) {
+            return "error request";
+            exit;
+        }
+
+        $data_module_access = Module::with('access')
+            ->where('module.parent_id', '!=', 0)
+            ->get();
+
+        $data_role_access = RoleAccess::select('access_id')
+            ->where('role_id', $request['selected'])
+            ->get();
+
+        $data = [];
+        $data = [
+            "module_access" => $data_module_access,
+            "role_access" => $data_role_access
+        ];
+
+        return response()->json($data);
+    }
+
+    public function add_role_access(Request $request)
+    {
+        if (!$request->ajax()) {
+            return "error request";
+            exit;
+        }
+
+        $delete = RoleAccess::where('role_id', $request["role_id"])->delete();
+
+        if ($request["access_id"]) {
+            foreach ($request["access_id"] as $val) {
+                $insert = RoleAccess::insert([
+                    'role_id' => $request["role_id"],
+                    'access_id' => $val['value']
+                ]);
+            }
+            return response()->json($insert);
+        } else {
+            return response()->json($delete);
+        }
+    }
+
+    public function add_permission(Request $request)
+    {
+        if (!$request->ajax()) {
+            return "error request";
+            exit;
+        }
+
+        $insert = Access::UpdateOrCreate(['module_id' => $request['module_id'], 'permission' => $request['permission']], [
+            'module_id' => $request['module_id'],
+            'permission' => $request['permission'],
+            'status' => 1,
+            'created_by' => 1
+        ]);
+
+        return response()->json($insert);
     }
 }

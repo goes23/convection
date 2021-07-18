@@ -32,9 +32,9 @@
                             <div style=" padding: 0px 0px 18px 0px;">
                                 <button type="button" class="btn btn-info btn-sm" onclick="add_btn()">Tambah
                                     role</button>
-                                <button type="button" class="btn btn-warning btn-sm" onclick="add_btn()">Setting
-                                    Access</button>
-                                <button type="button" class="btn btn-success btn-sm" onclick="add_btn()">Custome
+                                <button type="button" class="btn btn-warning btn-sm" onclick="setting_access()">Setting
+                                    access</button>
+                                <button type="button" class="btn btn-success btn-sm" onclick="custom_access()">Custom
                                     access</button>
                             </div>
 
@@ -61,6 +61,12 @@
 
     {{-- MODAL FORM ADD & EDIT --}}
     @include('role.v_modal')
+    {{-- MODAL FORM ADD & EDIT --}}
+    {{-- MODAL FORM ADD & EDIT --}}
+    @include('role.v_setting')
+    {{-- MODAL FORM ADD & EDIT --}}
+    {{-- MODAL FORM ADD & EDIT --}}
+    @include('role.v_custom')
     {{-- MODAL FORM ADD & EDIT --}}
 
 
@@ -136,7 +142,6 @@
 
             var object = {
                 name,
-                description,
                 status
             }
 
@@ -144,12 +149,18 @@
                 return false;
             }
 
+            var object2 = {
+                name,
+                description,
+                status
+            }
+
             $.ajax({
                 url: "{{ route('role.store') }}",
                 type: "post",
                 data: {
                     "id": id,
-                    "data": object,
+                    "data": object2,
                 },
                 dataType: "json",
                 success: function(result) {
@@ -226,6 +237,162 @@
                     $("Terjadi error : " + Status);
                 }
             });
+        }
+
+        function setting_access() {
+            $('#access_module').html('');
+            $('#checkall').prop("checked", false);
+            $.ajax({
+                url: {!! json_encode(url('role/datarole')) !!},
+                type: "POST",
+                data: 1,
+                dataType: "json",
+                success: function(result) {
+                    $("#select_role > option").remove();
+
+                    var option = '';
+                    option += '<option value="" disabled selected>Select your option</option>'
+                    for (var i = 0; i < result.length; i++) {
+                        option += '<option value="' + result[i].id + '">' + result[i].name + '</option>'
+                    }
+                    $('#select_role').append(option);
+                    $('#modal-setting').modal('show');
+                },
+                error: function(xhr, Status, err) {
+                    $("Terjadi error : " + Status);
+                }
+            });
+        }
+
+        $('#select_role').change(function() {
+            var selected = $('#select_role').val()
+            if (selected != "") {
+                $('#checkall').prop("checked", false);
+                $('#access_module').html('')
+                $.ajax({
+                    url: {!! json_encode(url('role/get_access')) !!},
+                    type: "POST",
+                    data: {
+                        selected: selected
+                    },
+                    dataType: "json",
+                    success: function(result) {
+                        var headercollapseOne = '';
+                        for (var i = 0; i < result.module_access.length; i++) {
+                            var bodycollapseOne = '';
+                            for (var j = 0; j < result.module_access[i].access.length; j++) {
+                                var checked = '';
+                                for (const key in result.role_access) {
+                                    if (result.module_access[i].access[j].id == result.role_access[key]
+                                        .access_id) {
+                                        checked = 'checked="checked"';
+                                    }
+                                }
+                                bodycollapseOne +=`<div class="form-check form-check-inline">
+                                                        <input name="checkbox" class="form-check-input checkboxs" type="checkbox" id="check`+ result.module_access[i].access[j].id +`
+                                                        " ` + checked + ` value="` +result.module_access[i].access[j].id +`">
+                                                        <label class="form-check-label" for="check`+ result.module_access[i].access[j].id +`">` +
+                                                        result.module_access[i].access[j].permission +
+                                                        `</label>
+                                                    </div>`;
+                            }
+                            headercollapseOne += `<div class="card ">
+                                                        <div class="card-header" style="padding: 2px 0px 3px 13px;">
+                                                            <h4 class="card-title w-100">
+                                                                <a class="d-block w-100" data-toggle="collapse" href="#collapseOne">
+                                                                    ` + result.module_access[i].name + `
+                                                                </a>
+                                                            </h4>
+                                                        </div>
+                                                        <div id="collapseOne" class="collapse show" data-parent="#accordion">
+                                                            <div class="card-body" style="padding: 3px 0px 3px 40px;">
+                                                                <div class="panel-body">
+                                                                ` + bodycollapseOne + `
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                   </div>`;
+
+                        }
+
+                        $('#access_module').html(headercollapseOne)
+                    },
+                    error: function(xhr, Status, err) {
+                        $("Terjadi error : " + Status);
+                    }
+                });
+
+            } else {
+                $('#access_module').html('')
+            }
+        })
+
+        $('#checkall').click(function() {
+            if (this.checked) {
+                $('.checkboxs').prop("checked", true);
+            } else {
+                $('.checkboxs').prop("checked", false);
+            }
+        })
+
+
+        function custom_access() {
+            $('#modal-custom').modal('show');
+        }
+
+
+        function add_role_access() {
+            var selected = $('#select_role').val();
+            var checkboxs = $('.checkboxs').serializeArray()
+            if(selected != null){
+                $.ajax({
+                    url: {!! json_encode(url('role/add_role_access')) !!},
+                    type: "POST",
+                    data: {
+                        "role_id" : selected,
+                        "access_id" : checkboxs
+                    },
+                    dataType: "json",
+                    success: function(result) {
+                        call_toast(result)
+                    },
+                    error: function(xhr, Status, err) {
+                        $("Terjadi error : " + Status);
+                    }
+                });
+            }else{
+                return false;
+            }
+        }
+
+
+        function add_permission() {
+           var module_id = $('#module_id').val();
+           var permission = $('#permission').val();
+           var object = {
+                module_id,
+                permission
+            }
+
+            if (required_fild(object) == false) {
+                return false;
+            }
+
+            $.ajax({
+                    url: {!! json_encode(url('role/add_permission')) !!},
+                    type: "POST",
+                    data: {
+                        "module_id" : module_id,
+                        "permission" : permission
+                    },
+                    dataType: "json",
+                    success: function(result) {
+                        call_toast(result)
+                    },
+                    error: function(xhr, Status, err) {
+                        $("Terjadi error : " + Status);
+                    }
+                });
         }
 
     </script>

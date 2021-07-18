@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Module;
+use App\Access;
 use PDO;
 
 class ModuleController extends Controller
@@ -71,19 +73,55 @@ class ModuleController extends Controller
             return "error request";
             exit;
         }
-
         $id = $request["id"];
 
-        $post = Module::UpdateOrCreate(["id" => $id], [
-            'parent_id' => $request["data"]["parent"],
-            'name' => $request["data"]["name"],
-            'controller' => isset($request["data"]["controller"]) ? $request["data"]["controller"] : "",
-            'order_no' => $request["data"]["order"],
-            'status' => $request["data"]["status"],
-        ]);
+        if ($request['data']['parent'] == 0) {
+            $post = Module::UpdateOrCreate(["id" => $id], [
+                'parent_id' => $request["data"]["parent"],
+                'name' => $request["data"]["name"],
+                'controller' => isset($request["data"]["controller"]) ? strtolower($request["data"]["controller"]) : "",
+                'order_no' => $request["data"]["order"],
+                'status' => $request["data"]["status"],
+            ]);
+
+            return response()->json($post);
+        } else {
+            try {
+                DB::beginTransaction();
+
+                $post = Module::UpdateOrCreate(["id" => $id], [
+                    'parent_id' => $request["data"]["parent"],
+                    'name' => $request["data"]["name"],
+                    'controller' => isset($request["data"]["controller"]) ? strtolower($request["data"]["controller"]) : "",
+                    'order_no' => $request["data"]["order"],
+                    'status' => $request["data"]["status"],
+                ]);
 
 
-        return response()->json($post);
+                $permission = [
+                    0 => "view",
+                    1 => "add",
+                    2 => "edit",
+                    3 => "delete"
+                ];
+
+                for ($i = 0; $i < count($permission); $i++) {
+                    Access::UpdateOrCreate(["module_id" => $post->id, "permission" => $permission[$i]], [
+                        'permission' => $permission[$i],
+                        'status' => 1,
+                        'created_by' => 1
+                    ]);
+                }
+
+
+                DB::commit();
+
+                return response()->json($post);
+            } catch (\PDOException $e) {
+                DB::rollBack();
+                return response()->json($e);
+            }
+        }
     }
 
     /**

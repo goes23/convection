@@ -17,7 +17,7 @@
                                 aria-describedby="emailHelp" placeholder="Enter name role">
                         </div>
                          <div class="form-group">
-                            <label for="description">Description <a class="tn">*</a></label>
+                            <label for="description">Description</label>
                             <textarea class="form-control inputForm" id="description" rows="3"></textarea>
                         </div>
                         <div class="form-group">
