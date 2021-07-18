@@ -15,17 +15,17 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $role = Role::where('status',1)->get();
         $data_view            = array();
         $data_view["title_h1"]               = "Data User";
         $data_view["breadcrumb_item"]        = "Home";
         $data_view["breadcrumb_item_active"] = "User";
         $data_view["modal_title"]            = "Form User";
         $data_view["card_title"]             = "Input & Update Data User";
-        $data_view["role"]                   = $role;
+        $data_view["role"]                   = Role::where('status', 1)->get();
 
         if ($request->ajax()) {
-            return datatables()->of(User::all())
+           $list = User::with('role');
+            return datatables()->of($list)
                 ->addColumn('action', function ($data) {
                     $button = '<center><button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
                     $button .= '&nbsp;&nbsp;';
@@ -64,12 +64,21 @@ class UserController extends Controller
 
         $id = $request["id"];
 
-        $post = User::UpdateOrCreate(["id" => $id], [
-            'name' => $request["data"]["name"],
-            'email' => $request["data"]["email"],
-            'password' => bcrypt($request["data"]["password"]),
-        ]);
-
+        if ($id != null) {
+            $post = User::where('id', $id)
+                ->update([
+                    'name' => $request["data"]["name"],
+                    'email' => $request["data"]["email"],
+                    'role'   => $request["data"]['role']
+                ]);
+        } else {
+            $post = User::insert([
+                'name' => $request["data"]["name"],
+                'email' => $request["data"]["email"],
+                'password' => bcrypt($request["data"]["password"]),
+                'role'   => $request["data"]['role']
+            ]);
+        }
 
         return response()->json($post);
     }

@@ -12,4 +12,10 @@ class Role extends Model
     protected $table = "role";
     protected $guarded = [];
     protected $dates = ['deleted_at'];
+
+    public function user()
+    {
+        return $this->hasMany('App\User');
+
+    }
 }

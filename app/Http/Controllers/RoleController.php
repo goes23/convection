@@ -6,7 +6,7 @@ use App\Access;
 use Illuminate\Http\Request;
 use App\Role;
 use App\Module;
-use App\RoleAccess;
+use App\Roleaccess;
 
 class RoleController extends Controller
 {
@@ -136,7 +136,7 @@ class RoleController extends Controller
             ->where('module.parent_id', '!=', 0)
             ->get();
 
-        $data_role_access = RoleAccess::select('access_id')
+        $data_role_access = Roleaccess::select('access_id')
             ->where('role_id', $request['selected'])
             ->get();
 
@@ -156,11 +156,11 @@ class RoleController extends Controller
             exit;
         }
 
-        $delete = RoleAccess::where('role_id', $request["role_id"])->delete();
+        $delete = Roleaccess::where('role_id', $request["role_id"])->delete();
 
         if ($request["access_id"]) {
             foreach ($request["access_id"] as $val) {
-                $insert = RoleAccess::insert([
+                $insert = Roleaccess::insert([
                     'role_id' => $request["role_id"],
                     'access_id' => $val['value']
                 ]);

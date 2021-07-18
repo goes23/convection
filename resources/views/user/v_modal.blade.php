@@ -23,7 +23,7 @@
                         </div>
                         <div class="form-group">
                             <label for="password">Password <a class="tn">*</a></label>
-                            <input type="text" class="form-control inputForm" id="password" name="password"
+                            <input type="password" class="form-control inputForm" id="password" name="password"
                                 aria-describedby="emailHelp" placeholder="Enter password">
                         </div>
                         <div class="form-group">
@@ -35,9 +35,9 @@
                             <label for="role">Role <a class="tn">*</a></label>
                             <select class="form-control select2" id="role" data-placeholder="Select a role"
                                 data-dropdown-css-class="select2-purple" style="width: 100%;">
-                                @foreach ($role as $val)
+                                {{-- @foreach ($role as $val)
                                     <option value="{{ $val->id }}">{{ $val->name }}</option>
-                                @endforeach
+                                @endforeach --}}
                             </select>
                         </div>
                     </div>

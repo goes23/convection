@@ -86,8 +86,8 @@
                         name: 'email',
                     },
                     {
-                        data: 'role',
-                        name: 'role',
+                        data: 'role.name',
+                        name: 'role.name',
                     },
                     {
                         data: 'action',
@@ -112,7 +112,8 @@
                         $("#id").val(result.id)
                         $('#name').val(result.name);
                         $('#email').val(result.email);
-                        $('#password').val(result.password);
+                        $('#password').val('');
+                        $('#repassword').val('');
                         $('#modal-default').modal('show');
                     },
                     error: function(xhr, Status, err) {
@@ -126,17 +127,29 @@
 
         function add_edit() {
             var id = $('#id').val();
+            console.log(id);
             var name = $('#name').val();
             var email = $('#email').val();
             var password = $('#password').val();
             var repassword = $('#repassword').val();
+            var role = $('#role').val();
 
-            var object = {
-                name,
-                email,
-                password,
-                repassword
+            if (id == "") {
+                var object = {
+                    name,
+                    email,
+                    password,
+                    repassword,
+                    role
+                }
+            }else{
+                var object = {
+                    name,
+                    email,
+                    role
+                }
             }
+
 
             if (required_fild(object) == false) {
                 return false;
@@ -150,13 +163,13 @@
                 return false;
             }
 
-            if (password.length < 6) {
-                Swal.fire({
-                    icon: "error",
-                    text: "password minial 6 karakter",
-                });
-                return false;
-            }
+            // if (password.length < 6) {
+            //     Swal.fire({
+            //         icon: "error",
+            //         text: "password minial 6 karakter",
+            //     });
+            //     return false;
+            // }
             if (password != repassword) {
                 Swal.fire({
                     icon: "error",

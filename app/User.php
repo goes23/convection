@@ -12,4 +12,10 @@ class User extends Model
     protected $table = "users";
     protected $guarded = [];
     protected $dates = ['deleted_at'];
+    //protected $primaryKey = 'id';
+
+    public function role()
+    {
+        return $this->belongsTo('App\Role', 'role');
+    }
 }
