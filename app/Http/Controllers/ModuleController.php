@@ -27,7 +27,10 @@ class ModuleController extends Controller
         //$data_view["parent"]                 = $parent;
 
         if ($request->ajax()) {
-            return datatables()->of(Module::orderBy('parent_id', 'ASC')->orderBy('order_no', 'ASC')->get())
+            return datatables()->of(Module::orderBy('parent_id', 'ASC')
+                                    //->selectRaw('select mm.name from module mm where mm.id = module.parent_id ')
+                                    ->orderBy('order_no', 'ASC')
+                                    ->get())
                 ->addColumn('order_no', function ($data) {
                     $orderno = '<span id="order-' . $data->id . '">' . $data->order_no . '</span>
                     <span class="float-right">

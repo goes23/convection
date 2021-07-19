@@ -49,7 +49,7 @@ class AuthController extends Controller
           $request->session()->forget('remember');
         }
         session(['logged_in' => true]);
-        return redirect()->route('/');
+        return redirect()->route('/dashboard');
       } else {
         Session::flash('error', 'Password salah !!');
         return redirect()->route('login');

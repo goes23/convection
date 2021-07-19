@@ -24,7 +24,7 @@ class UserController extends Controller
         $data_view["role"]                   = Role::where('status', 1)->get();
 
         if ($request->ajax()) {
-           $list = User::with('role');
+           $list = User::with('role')->get();
             return datatables()->of($list)
                 ->addColumn('action', function ($data) {
                     $button = '<center><button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';

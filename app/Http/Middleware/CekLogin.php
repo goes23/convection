@@ -15,10 +15,10 @@ class CekLogin
      */
     public function handle($request, Closure $next)
     {
-        if(!session('logged_in')){
-            return redirect()->route('login');
+        if (!session('logged_in')) {
+           // abort(404);
+           return redirect()->route('login');
         }
         return $next($request);
-        
     }
 }
