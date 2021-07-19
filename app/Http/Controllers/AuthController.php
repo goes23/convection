@@ -36,7 +36,7 @@ class AuthController extends Controller
     }
 
     $data = User::where('email', $request->email)->first();
-
+    
     if ($data) {
       if (Hash::check($request->password, $data->password)) {
         if ($request->remember <> null) {
@@ -49,6 +49,7 @@ class AuthController extends Controller
           $request->session()->forget('remember');
         }
         session(['logged_in' => true]);
+        session(['user' => $data->id]);
         return redirect()->route('/dashboard');
       } else {
         Session::flash('error', 'Password salah !!');

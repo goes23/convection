@@ -105,7 +105,7 @@ class ModuleController extends Controller
                     Access::UpdateOrCreate(["module_id" => $post->id, "permission" => $permission[$i]], [
                         'permission' => $permission[$i],
                         'status' => 1,
-                        'created_by' => 1
+                        'created_by' => session('user')
                     ]);
                 }
 

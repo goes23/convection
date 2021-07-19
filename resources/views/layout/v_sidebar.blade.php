@@ -40,7 +40,7 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
-                <?php echo GetMenu(1); ?>
+                <?php echo GetMenu(session('user')); ?>
             </ul>
         </nav>
     </div>

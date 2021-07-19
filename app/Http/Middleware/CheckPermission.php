@@ -19,6 +19,7 @@ class CheckPermission
         $link = url()->current();
         $explode  = explode("/", $link);
         $gurl = $explode[3];
+        $user = session('user');
 
         $module = DB::select("  SELECT m.name
                             ,m.controller
@@ -34,10 +35,11 @@ class CheckPermission
                             AND a.permission ='view'
                             AND a.status = 1
                             AND a.deleted_at IS NULL
-                            AND u.id = 1
+                            AND u.id = '{$user}'
                             AND m.name = '{$gurl}'
                             ORDER BY m.order_no, orders ASC
                         ");
+    
         if ($module == []) {
             abort(404);
         }

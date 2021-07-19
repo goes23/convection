@@ -66,7 +66,7 @@ class RoleController extends Controller
             'name' => $request["data"]["name"],
             'description' => isset($request["data"]["description"]) ? $request["data"]["description"] : '',
             'status' => $request["data"]["status"],
-            'created_by' => 1
+            'created_by' => session('user')
 
         ]);
 

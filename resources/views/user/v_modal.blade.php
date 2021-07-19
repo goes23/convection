@@ -35,9 +35,9 @@
                             <label for="role">Role <a class="tn">*</a></label>
                             <select class="form-control select2" id="role" data-placeholder="Select a role"
                                 data-dropdown-css-class="select2-purple" style="width: 100%;">
-                                {{-- @foreach ($role as $val)
+                                @foreach ($role as $val)
                                     <option value="{{ $val->id }}">{{ $val->name }}</option>
-                                @endforeach --}}
+                                @endforeach
                             </select>
                         </div>
                     </div>

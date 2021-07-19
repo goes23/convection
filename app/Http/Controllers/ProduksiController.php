@@ -100,7 +100,7 @@ class ProduksiController extends Controller
             'jumlah' => $request["data"]["jumlah"],
             'sisa' => $request["data"]["jumlah"],
             'status' => $request["data"]["status"],
-            'created_by' => 1
+            'created_by' => session('user')
 
         ]);
 

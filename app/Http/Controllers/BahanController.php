@@ -78,7 +78,7 @@ class BahanController extends Controller
             'panjang' => $request["data"]["panjang"],
             'satuan' => $request["data"]["satuan"],
             'status' => $request["data"]["status"],
-            'created_by' => 1
+            'created_by' => session('user')
         ]);
 
 

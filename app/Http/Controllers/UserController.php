@@ -22,6 +22,7 @@ class UserController extends Controller
         $data_view["modal_title"]            = "Form User";
         $data_view["card_title"]             = "Input & Update Data User";
         $data_view["role"]                   = Role::where('status', 1)->get();
+        // dd( $data_view["role"]);
 
         if ($request->ajax()) {
            $list = User::with('role')->get();

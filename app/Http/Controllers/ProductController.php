@@ -78,7 +78,7 @@ class ProductController extends Controller
             'harga_modal' => $harga_modal,
             'stock' => $request["data"]["stock"] == '' ? 0 : $request["data"]["stock"],
             'status' => $request["data"]["status"],
-            'created_by'=> 1
+            'created_by'=> session('user')
 
         ]);
 
