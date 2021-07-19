@@ -30,8 +30,10 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div style=" padding: 0px 0px 18px 0px;">
+                                <?php if (allowed_access(session('user'), 'user', 'add')): ?>
                                 <button type="button" class="btn btn-info btn-sm" onclick="add_btn()">Tambah
                                     user</button>
+                                <?php endif; ?>
                             </div>
 
                             <table id="example1" class="table table-bordered table-striped">
@@ -142,7 +144,7 @@
                     repassword,
                     role
                 }
-            }else{
+            } else {
                 var object = {
                     name,
                     email,

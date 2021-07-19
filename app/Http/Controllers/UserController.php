@@ -25,12 +25,17 @@ class UserController extends Controller
         // dd( $data_view["role"]);
 
         if ($request->ajax()) {
-           $list = User::with('role')->get();
+            $list = User::with('role')->get();
             return datatables()->of($list)
                 ->addColumn('action', function ($data) {
-                    $button = '<center><button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
+                    $button = '<center>';
+                    if (allowed_access(session('user'), 'user', 'edit')) :
+                        $button = '<center><button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
+                    endif;
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<button type="button" class="btn btn-danger btn-sm" onClick="my_delete(' . $data->id . ')">Delete</button></center>';
+                    if (allowed_access(session('user'), 'user', 'delete')) :
+                        $button .= '<button type="button" class="btn btn-danger btn-sm" onClick="my_delete(' . $data->id . ')">Delete</button></center>';
+                    endif;
                     return $button;
                 })
                 ->rawColumns(['action', 'status'])

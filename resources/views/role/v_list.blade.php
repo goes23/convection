@@ -30,8 +30,10 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div style=" padding: 0px 0px 18px 0px;">
+                                <?php if (allowed_access(session('user'), 'role', 'add')): ?>
                                 <button type="button" class="btn btn-info btn-sm" onclick="add_btn()">Tambah
                                     role</button>
+                                <?php endif; ?>
                                 <button type="button" class="btn btn-warning btn-sm" onclick="setting_access()">Setting
                                     access</button>
                                 <button type="button" class="btn btn-success btn-sm" onclick="custom_access()">Custom
@@ -288,30 +290,34 @@
                                         checked = 'checked="checked"';
                                     }
                                 }
-                                bodycollapseOne +=`<div class="form-check form-check-inline">
-                                                        <input name="checkbox" class="form-check-input checkboxs" type="checkbox" id="check`+ result.module_access[i].access[j].id +`
-                                                        " ` + checked + ` value="` +result.module_access[i].access[j].id +`">
-                                                        <label class="form-check-label" for="check`+ result.module_access[i].access[j].id +`">` +
-                                                        result.module_access[i].access[j].permission +
-                                                        `</label>
-                                                    </div>`;
+                                bodycollapseOne +=
+                                    `<div class="form-check form-check-inline">
+                                                            <input name="checkbox" class="form-check-input checkboxs" type="checkbox" id="check` +
+                                    result.module_access[i].access[j].id + `
+                                                            " ` + checked + ` value="` + result.module_access[i].access[j]
+                                    .id + `">
+                                                            <label class="form-check-label" for="check` + result
+                                    .module_access[i].access[j].id + `">` +
+                                    result.module_access[i].access[j].permission +
+                                    `</label>
+                                                        </div>`;
                             }
                             headercollapseOne += `<div class="card ">
-                                                        <div class="card-header" style="padding: 2px 0px 3px 13px;">
-                                                            <h4 class="card-title w-100">
-                                                                <a class="d-block w-100" data-toggle="collapse" href="#collapseOne">
-                                                                    ` + result.module_access[i].name + `
-                                                                </a>
-                                                            </h4>
-                                                        </div>
-                                                        <div id="collapseOne" class="collapse show" data-parent="#accordion">
-                                                            <div class="card-body" style="padding: 3px 0px 3px 40px;">
-                                                                <div class="panel-body">
-                                                                ` + bodycollapseOne + `
+                                                            <div class="card-header" style="padding: 2px 0px 3px 13px;">
+                                                                <h4 class="card-title w-100">
+                                                                    <a class="d-block w-100" data-toggle="collapse" href="#collapseOne">
+                                                                        ` + result.module_access[i].name + `
+                                                                    </a>
+                                                                </h4>
+                                                            </div>
+                                                            <div id="collapseOne" class="collapse show" data-parent="#accordion">
+                                                                <div class="card-body" style="padding: 3px 0px 3px 40px;">
+                                                                    <div class="panel-body">
+                                                                    ` + bodycollapseOne + `
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                   </div>`;
+                                                       </div>`;
 
                         }
 
@@ -344,13 +350,13 @@
         function add_role_access() {
             var selected = $('#select_role').val();
             var checkboxs = $('.checkboxs').serializeArray()
-            if(selected != null){
+            if (selected != null) {
                 $.ajax({
                     url: {!! json_encode(url('role/add_role_access')) !!},
                     type: "POST",
                     data: {
-                        "role_id" : selected,
-                        "access_id" : checkboxs
+                        "role_id": selected,
+                        "access_id": checkboxs
                     },
                     dataType: "json",
                     success: function(result) {
@@ -360,16 +366,16 @@
                         $("Terjadi error : " + Status);
                     }
                 });
-            }else{
+            } else {
                 return false;
             }
         }
 
 
         function add_permission() {
-           var module_id = $('#module_id').val();
-           var permission = $('#permission').val();
-           var object = {
+            var module_id = $('#module_id').val();
+            var permission = $('#permission').val();
+            var object = {
                 module_id,
                 permission
             }
@@ -379,20 +385,20 @@
             }
 
             $.ajax({
-                    url: {!! json_encode(url('role/add_permission')) !!},
-                    type: "POST",
-                    data: {
-                        "module_id" : module_id,
-                        "permission" : permission
-                    },
-                    dataType: "json",
-                    success: function(result) {
-                        call_toast(result)
-                    },
-                    error: function(xhr, Status, err) {
-                        $("Terjadi error : " + Status);
-                    }
-                });
+                url: {!! json_encode(url('role/add_permission')) !!},
+                type: "POST",
+                data: {
+                    "module_id": module_id,
+                    "permission": permission
+                },
+                dataType: "json",
+                success: function(result) {
+                    call_toast(result)
+                },
+                error: function(xhr, Status, err) {
+                    $("Terjadi error : " + Status);
+                }
+            });
         }
 
     </script>

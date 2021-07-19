@@ -30,7 +30,9 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div style=" padding: 0px 0px 18px 0px;">
+                                <?php if (allowed_access(session('user'), 'module', 'add')): ?>
                                 <button type="button" class="btn btn-info btn-sm" onclick="add_btn()">Tambah Module</button>
+                                <?php endif;?>
                             </div>
 
                             <table id="example1" class="table table-bordered table-striped">

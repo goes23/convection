@@ -33,9 +33,14 @@ class BahanController extends Controller
                 })
                 ->rawColumns(['status'])
                 ->addColumn('action', function ($data) {
-                    $button = '<center><button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
+                    $button = '<center>';
+                    if (allowed_access(session('user'), 'bahan', 'edit')) :
+                        $button = '<center><button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
+                    endif;
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<button type="button" class="btn btn-danger btn-sm" onClick="my_delete(' . $data->id . ')">Delete</button></center>';
+                    if (allowed_access(session('user'), 'bahan', 'delete')) :
+                        $button .= '<button type="button" class="btn btn-danger btn-sm" onClick="my_delete(' . $data->id . ')">Delete</button></center>';
+                    endif;
                     return $button;
                 })
                 ->rawColumns(['action', 'status'])

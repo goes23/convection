@@ -13,6 +13,25 @@ function customImagePath($image_name)
     return public_path('folder_kamu/sub_folder_kamu/' . $image_name);
 }
 
+function allowed_access($user, $module, $permission_name)
+{
+    $allowed = DB::select(" SELECT a.permission
+                            FROM  module m
+                            JOIN access a ON a.module_id = m.id
+                            JOIN role_access ra ON ra.access_id = a.id
+                            JOIN role r ON ra.role_id = r.id
+                            JOIN users u ON u.role = r.id
+                            WHERE m.name = '{$module}'
+                            AND a.permission = '{$permission_name}'
+                            AND u.id = {$user}
+                             ");
+    if ($allowed) {
+       return true;
+    } else {
+       return false;
+    }
+}
+
 function GetMenu($id)
 {
     $module = DB::select("  SELECT m.name
@@ -30,10 +49,9 @@ function GetMenu($id)
                             AND a.status = 1
                             AND a.deleted_at IS NULL
                             AND u.id = $id
-                            -- AND m.name = 'channel'
                             ORDER BY m.order_no, orders ASC
                         ");
-                        
+
 
     $modules = [];
     foreach ($module as $val) {

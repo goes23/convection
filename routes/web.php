@@ -22,9 +22,9 @@ Route::post('login', 'AuthController@login');
 Route::post('remember', 'AuthController@remember')->name('remember');
 
 Route::group(['middleware' => ['ceklogin']], function () {
-    Route::get('admin-page', function() {
-        return 'Halaman untuk Admin';
-    })->middleware('role:admin')->name('admin.page');
+    // Route::get('admin-page', function() {
+    //     return 'Halaman untuk Admin';
+    // })->middleware('role:admin')->name('admin.page');
     Route::get('/dashboard', 'DashboardController@index')->name('/dashboard');
     Route::get('logout', 'AuthController@logout')->name('logout');
 });
