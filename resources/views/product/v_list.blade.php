@@ -33,7 +33,7 @@
                                 <?php if (allowed_access(session('user'), 'product', 'add')): ?>
                                 <button type="button" class="btn btn-info btn-sm" onclick="add_btn()">Tambah
                                     Product</button>
-                                    <?php endif; ?>
+                                <?php endif; ?>
                             </div>
 
                             <table id="example1" class="table table-bordered table-striped">
@@ -147,9 +147,8 @@
                 return false
             }
         }
-
-        function add_edit() {
-
+        $('#form_add_edit').submit(function(e) {
+            e.preventDefault();
             var id = $('#id').val();
             var kode = $('#kode').val();
             var name = $('#name').val();
@@ -196,7 +195,7 @@
                     $("Terjadi error : " + Status);
                 }
             });
-        }
+        })
 
         function my_delete(id = null) {
             if (id == null) {

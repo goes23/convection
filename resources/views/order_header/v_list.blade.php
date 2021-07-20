@@ -30,9 +30,11 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div style=" padding: 0px 0px 18px 0px;">
-                                <?php if (allowed_access(session('user'), 'user', 'add')): ?>
-                                <button type="button" class="btn btn-info btn-sm" onclick="add_btn()">Tambah
-                                    user</button>
+                                <?php if (allowed_access(session('user'), 'order_header', 'add')): ?>
+                                <Form method="post" action="{{ route('order_header.form') }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-info btn-sm">Tambah Order Header </button>
+                                </Form>
                                 <?php endif; ?>
                             </div>
 
@@ -40,10 +42,16 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Role</th>
-                                        <th>Action</th>
+                                        <th>Purchase Code</th>
+                                        <th>Customer Name</th>
+                                        <th>Customer Phone</th>
+                                        <th>Customer Address</th>
+                                        <th>Channel</th>
+                                        <th>Purchase Date</th>
+                                        <th>Total Purchase</th>
+                                        <th>Shipping Price</th>
+                                        <th>status</th>
+                                        <th>action</th>
                                     </tr>
                                 </thead>
 
@@ -58,18 +66,26 @@
     </section>
 
     {{-- MODAL FORM ADD & EDIT --}}
-    @include('user.v_modal')
+    {{-- @include('order_header.v_modal') --}}
     {{-- MODAL FORM ADD & EDIT --}}
 
 
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
         $(document).ready(function() {
+            $("#harga_modal").mask('000.000.000', {
+                reverse: true
+            });
+
+            $("#stock").inputmask('Regex', {
+                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
+            });
+
             $("#example1").DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('user.index') }}",
+                    url: "{{ route('order_header.index') }}",
                     type: "GET"
                 },
                 columns: [{
@@ -80,16 +96,42 @@
                         }
                     },
                     {
-                        data: 'name',
-                        name: 'name',
+                        data: 'purchase_code',
+                        name: 'purchase_code'
                     },
                     {
-                        data: 'email',
-                        name: 'email',
+                        data: 'customer_name',
+                        name: 'customer_name'
                     },
                     {
-                        data: 'role.name',
-                        name: 'role.name',
+                        data: 'customer_phone',
+                        name: 'customer_phone'
+                    },
+                    {
+                        data: 'customer_address',
+                        name: 'customer_address',
+                    },
+                    {
+                        data: 'channel',
+                        name: 'channel'
+                    },
+                    {
+                        data: 'purchase_date',
+                        name: 'purchase_date',
+                    },
+                    {
+                        data: 'total_purchase',
+                        name: 'total_purchase',
+                    },
+                    {
+                        data: 'shipping_price',
+                        name: 'shipping_price',
+                    },
+                    {
+                        data: 'status',
+                        name: 'status',
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'action',
@@ -107,15 +149,16 @@
         function edit(id) {
             if (id) {
                 $.ajax({
-                    url: "user/" + id + "/edit",
+                    url: "order_header/" + id + "/edit",
                     type: "GET",
                     dataType: "json",
                     success: function(result) {
                         $("#id").val(result.id)
+                        $('#kode').val(result.kode);
                         $('#name').val(result.name);
-                        $('#email').val(result.email);
-                        $('#password').val('');
-                        $('#repassword').val('');
+                        $('#harga_modal').val(result.harga_modal);
+                        $('#stock').val(result.stock);
+                        $("#status").val(result.status).change();
                         $('#modal-default').modal('show');
                     },
                     error: function(xhr, Status, err) {
@@ -126,83 +169,6 @@
                 return false
             }
         }
-
-        $('#form_add_edit').submit(function(e) {
-            e.preventDefault();
-
-            var id = $('#id').val();
-            var name = $('#name').val();
-            var email = $('#email').val();
-            var password = $('#password').val();
-            var repassword = $('#repassword').val();
-            var role = $('#role').val();
-
-            if (id == "") {
-                var object = {
-                    name,
-                    email,
-                    password,
-                    repassword,
-                    role
-                }
-            } else {
-                var object = {
-                    name,
-                    email,
-                    role
-                }
-            }
-
-
-            if (required_fild(object) == false) {
-                return false;
-            }
-            var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-            if (!regex.test(email)) {
-                Swal.fire({
-                    icon: "error",
-                    text: "Format email not valid",
-                });
-                return false;
-            }
-
-            // if (password.length < 6) {
-            //     Swal.fire({
-            //         icon: "error",
-            //         text: "password minial 6 karakter",
-            //     });
-            //     return false;
-            // }
-            if (password != repassword) {
-                Swal.fire({
-                    icon: "error",
-                    text: "password and repassword not match !!",
-                });
-                return false;
-            }
-
-            $.ajax({
-                url: "{{ route('user.store') }}",
-                type: "post",
-                data: {
-                    "id": id,
-                    "data": object,
-                },
-                dataType: "json",
-                success: function(result) {
-                    call_toast(result)
-                    $(".inputForm").val('');
-                    $("#example1").DataTable().ajax.reload()
-                    setTimeout(function() {
-                        $('#modal-default').modal('hide');
-                    }, 1500);
-                },
-                error: function(xhr, Status, err) {
-                    $("Terjadi error : " + Status);
-                }
-            });
-
-        })
 
         function my_delete(id = null) {
             if (id == null) {
@@ -219,7 +185,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "user/" + id,
+                        url: "order_header/" + id,
                         type: "delete",
                         dataType: "json",
                         success: function(result) {
@@ -235,21 +201,13 @@
             })
         }
 
-        function add_btn() {
-            var id = $('#id').val();
-            if (id != "") {
-                $(".inputForm").val('');
-            }
-            $('#modal-default').modal('show');
-        }
-
         function active(id, active) {
             if (id == null) {
                 console.log('error bosq.')
                 return false
             }
             $.ajax({
-                url: {!! json_encode(url('user/active')) !!},
+                url: {!! json_encode(url('order_header/active')) !!},
                 type: "POST",
                 data: {
                     "id": id,

@@ -1,7 +1,7 @@
 <div class="modal fade" id="modal-default">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="form_add">
+            <form name="form_add_edit" id="form_add_edit">
                 <div class="modal-header">
                     <h4 class="modal-title">{{ $modal_title }}</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -14,12 +14,12 @@
                         <div class="form-group">
                             <label for="name">Name <a class="tn">*</a></label>
                             <input type="text" class="form-control inputForm" id="name" name="name"
-                                aria-describedby="emailHelp" placeholder="Enter name">
+                                aria-describedby="emailHelp" placeholder="Enter name" required>
                         </div>
                          <div class="form-group">
                             <label for="email">Email <a class="tn">*</a></label>
                             <input type="email" class="form-control inputForm" id="email" name="email"
-                                aria-describedby="emailHelp" placeholder="Enter email">
+                                aria-describedby="emailHelp" placeholder="Enter email" required>
                         </div>
                         <div class="form-group">
                             <label for="password">Password <a class="tn">*</a></label>
@@ -34,7 +34,7 @@
                         <div class="form-group">
                             <label for="role">Role <a class="tn">*</a></label>
                             <select class="form-control select2" id="role" data-placeholder="Select a role"
-                                data-dropdown-css-class="select2-purple" style="width: 100%;">
+                                data-dropdown-css-class="select2-purple" style="width: 100%;" required>
                                 @foreach ($role as $val)
                                     <option value="{{ $val->id }}">{{ $val->name }}</option>
                                 @endforeach
@@ -44,7 +44,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="add_edit()">Save changes</button>
+                    <button type="submit" class="btn btn-primary" >Save changes</button>
                 </div>
             </form>
         </div>

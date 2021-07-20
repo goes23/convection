@@ -1,7 +1,7 @@
 <div class="modal fade" id="modal-default">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="form_add">
+            <form name="form_add_edit" id="form_add_edit">
                 <div class="modal-header">
                     <h4 class="modal-title">{{ $modal_title }}</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -14,7 +14,7 @@
                         <div class="form-group">
                             <label for="bahan">Bahan <a class="tn">*</a></label>
                             <select class="form-control select2" id="bahan" data-placeholder="Select a bahan"
-                                data-dropdown-css-class="select2-purple" style="width: 100%;">
+                                data-dropdown-css-class="select2-purple" style="width: 100%;" required>
                                 @foreach ($bahan as $val)
                                     <option value="{{ $val->id }}">{{ $val->kode }} - {{ $val->name }}</option>
                                 @endforeach
@@ -23,7 +23,7 @@
                         <div class="form-group">
                             <label for="product">Product <a class="tn">*</a></label>
                             <select class="form-control select2" id="product" data-placeholder="Select a product"
-                                data-dropdown-css-class="select2-purple" style="width: 100%;">
+                                data-dropdown-css-class="select2-purple" style="width: 100%;" required>
                                 @foreach ($product as $val)
                                     <option value="{{ $val->id }}">{{ $val->kode }} - {{ $val->name }}</option>
                                 @endforeach
@@ -32,11 +32,11 @@
                         <div class="form-group">
                             <label for="jumlah">Jumlah <a class="tn">*</a></label>
                             <input type="text" class="form-control inputForm" id="jumlah" name="jumlah"
-                                aria-describedby="emailHelp" placeholder="Enter jumlah">
+                                aria-describedby="emailHelp" placeholder="Enter jumlah" required>
                         </div>
                         <div class="form-group">
                             <label for="status">status <a class="tn">*</a></label>
-                            <select class="form-control status" id="status">
+                            <select class="form-control status" id="status" required>
                                 <option value="1">Active</option>
                                 <option value="0">not Active</option>
                             </select>
@@ -46,7 +46,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="add_edit()">Save changes</button>
+                    <button type="submit" class="btn btn-primary" >Save changes</button>
                 </div>
             </form>
         </div>

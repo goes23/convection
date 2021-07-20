@@ -136,7 +136,10 @@
             }
         }
 
-        function add_edit() {
+
+        $('#form_add_edit').submit(function(e) {
+            e.preventDefault();
+
             var id = $('#id').val();
             var name = $('#name').val();
             var description = $('#description').val();
@@ -177,7 +180,9 @@
                     $("Terjadi error : " + Status);
                 }
             });
-        }
+
+        })
+
 
         function my_delete(id = null) {
             if (id == null) {
@@ -292,32 +297,33 @@
                                 }
                                 bodycollapseOne +=
                                     `<div class="form-check form-check-inline">
-                                                            <input name="checkbox" class="form-check-input checkboxs" type="checkbox" id="check` +
+                                                                    <input name="checkbox" class="form-check-input checkboxs" type="checkbox" id="check` +
                                     result.module_access[i].access[j].id + `
-                                                            " ` + checked + ` value="` + result.module_access[i].access[j]
+                                                                    " ` + checked + ` value="` + result.module_access[i]
+                                    .access[j]
                                     .id + `">
-                                                            <label class="form-check-label" for="check` + result
+                                                                    <label class="form-check-label" for="check` + result
                                     .module_access[i].access[j].id + `">` +
                                     result.module_access[i].access[j].permission +
                                     `</label>
-                                                        </div>`;
+                                                                </div>`;
                             }
                             headercollapseOne += `<div class="card ">
-                                                            <div class="card-header" style="padding: 2px 0px 3px 13px;">
-                                                                <h4 class="card-title w-100">
-                                                                    <a class="d-block w-100" data-toggle="collapse" href="#collapseOne">
-                                                                        ` + result.module_access[i].name + `
-                                                                    </a>
-                                                                </h4>
-                                                            </div>
-                                                            <div id="collapseOne" class="collapse show" data-parent="#accordion">
-                                                                <div class="card-body" style="padding: 3px 0px 3px 40px;">
-                                                                    <div class="panel-body">
-                                                                    ` + bodycollapseOne + `
+                                                                    <div class="card-header" style="padding: 2px 0px 3px 13px;">
+                                                                        <h4 class="card-title w-100">
+                                                                            <a class="d-block w-100" data-toggle="collapse" href="#collapseOne">
+                                                                                ` + result.module_access[i].name + `
+                                                                            </a>
+                                                                        </h4>
                                                                     </div>
-                                                                </div>
-                                                            </div>
-                                                       </div>`;
+                                                                    <div id="collapseOne" class="collapse show" data-parent="#accordion">
+                                                                        <div class="card-body" style="padding: 3px 0px 3px 40px;">
+                                                                            <div class="panel-body">
+                                                                            ` + bodycollapseOne + `
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                               </div>`;
 
                         }
 
@@ -361,6 +367,9 @@
                     dataType: "json",
                     success: function(result) {
                         call_toast(result)
+                        setTimeout(function() {
+                        $('#modal-setting').modal('hide');
+                    }, 1500);
                     },
                     error: function(xhr, Status, err) {
                         $("Terjadi error : " + Status);
@@ -371,8 +380,8 @@
             }
         }
 
-
-        function add_permission() {
+        $('#add_permission').submit(function(e) {
+            e.preventDefault();
             var module_id = $('#module_id').val();
             var permission = $('#permission').val();
             var object = {
@@ -394,12 +403,15 @@
                 dataType: "json",
                 success: function(result) {
                     call_toast(result)
+                    setTimeout(function() {
+                        $('#modal-custom').modal('hide');
+                    }, 1500);
                 },
                 error: function(xhr, Status, err) {
                     $("Terjadi error : " + Status);
                 }
             });
-        }
+        })
 
     </script>
 @endsection

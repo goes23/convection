@@ -166,7 +166,8 @@
             }
         }
 
-        function add_edit() {
+        $('#form_add_edit').submit(function(e){
+            e.preventDefault();
 
             var id = $('#id').val();
             var kode = $('#kode').val();
@@ -211,7 +212,7 @@
                     $("Terjadi error : " + Status);
                 }
             });
-        }
+        })
 
         function my_delete(id = null) {
             if (id == null) {

@@ -21,19 +21,32 @@ function allowed_access($user, $module, $permission_name)
                             JOIN role_access ra ON ra.access_id = a.id
                             JOIN role r ON ra.role_id = r.id
                             JOIN users u ON u.role = r.id
-                            WHERE m.name = '{$module}'
+                            WHERE m.controller = '{$module}'
                             AND a.permission = '{$permission_name}'
                             AND u.id = {$user}
                              ");
     if ($allowed) {
-       return true;
+        return true;
     } else {
-       return false;
+        return false;
     }
 }
 
 function GetMenu($id)
 {
+
+    // $role  = DB::select("   SELECT r.id 
+    //                         FROM users u
+    //                         JOIN role r ON r.id = u.role 
+    //                         WHERE u.id = $id
+    //                     ");
+
+    
+    // if($role[0]->id == 1){
+
+    // }else{
+
+    // }
     $module = DB::select("  SELECT m.name
                             ,m.controller
                             ,(SELECT m2.name FROM module m2 WHERE m2.id = m.parent_id AND m2.status = 1) as parent
@@ -75,7 +88,7 @@ function GetMenu($id)
                 $active = 'class="nav-link"';
             }
             $submenu .= '<li class="nav-item">
-                            <a href="' . $sub->controller . '" ' . $active . '>
+                            <a href="' . URL::to('/' . $sub->controller . '') . '" ' . $active . '>
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>' . $sub->name . '</p>
                             </a>

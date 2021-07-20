@@ -15,10 +15,12 @@ class CreateOrderItemTable extends Migration
     {
         Schema::create('order_item', function (Blueprint $table) {
             $table->id();
+            $table->string('purchase_code');
             $table->integer('order_header_id');
             $table->integer('product_id');
-            $table->integer('harga_jual');
+            $table->integer('sell_price');
             $table->integer('qty');
+            $table->integer('total');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -36,7 +36,7 @@ class CheckPermission
                             AND a.status = 1
                             AND a.deleted_at IS NULL
                             AND u.id = '{$user}'
-                            AND m.name = '{$gurl}'
+                            AND m.controller = '{$gurl}'
                             ORDER BY m.order_no, orders ASC
                         ");
     
