@@ -13,41 +13,62 @@ function customImagePath($image_name)
     return public_path('folder_kamu/sub_folder_kamu/' . $image_name);
 }
 
+function get_role($id)
+{
+    $role  = DB::select("  SELECT r.id 
+                            FROM users u
+                            JOIN role r ON r.id = u.role 
+                            WHERE u.id = $id
+                        ");
+
+    return $role[0]->id;
+}
+
 function allowed_access($user, $module, $permission_name)
 {
-    $allowed = DB::select(" SELECT a.permission
-                            FROM  module m
-                            JOIN access a ON a.module_id = m.id
-                            JOIN role_access ra ON ra.access_id = a.id
-                            JOIN role r ON ra.role_id = r.id
-                            JOIN users u ON u.role = r.id
-                            WHERE m.controller = '{$module}'
-                            AND a.permission = '{$permission_name}'
-                            AND u.id = {$user}
-                             ");
-    if ($allowed) {
+    if (get_role($user) == 1) {
         return true;
     } else {
-        return false;
+        $allowed = DB::select(" SELECT a.permission
+        FROM  module m
+        JOIN access a ON a.module_id = m.id
+        JOIN role_access ra ON ra.access_id = a.id
+        JOIN role r ON ra.role_id = r.id
+        JOIN users u ON u.role = r.id
+        WHERE m.controller = '{$module}'
+        AND a.permission = '{$permission_name}'
+        AND u.id = {$user}
+         ");
+        if ($allowed) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 
 function GetMenu($id)
 {
-
-    // $role  = DB::select("   SELECT r.id 
-    //                         FROM users u
-    //                         JOIN role r ON r.id = u.role 
-    //                         WHERE u.id = $id
-    //                     ");
-
-    
-    // if($role[0]->id == 1){
-
-    // }else{
-
-    // }
-    $module = DB::select("  SELECT m.name
+    if (get_role($id) == 1) {
+        $module = DB::select("  SELECT m.name
+                                ,m.controller
+                                ,(SELECT m2.name FROM module m2 WHERE m2.id = m.parent_id AND m2.status = 1) as parent
+                                ,(SELECT m3.order_no FROM module m3 WHERE m3.id = m.parent_id) as orders
+                                FROM module m 
+                                -- JOIN access a ON a.module_id = m.id
+                                -- JOIN role_access ra ON ra.access_id = a.id
+                                -- JOIN role r ON ra.role_id = r.id
+                                -- JOIN users u ON u.role = r.id
+                                WHERE m.parent_id != 0 
+                                AND m.deleted_at IS NULL
+                                -- AND a.permission ='view'
+                                -- AND a.status = 1
+                                -- AND a.deleted_at IS NULL
+                                -- AND u.id = $id
+                                ORDER BY m.order_no, orders ASC
+                            ");
+    } else {
+        $module = DB::select("  SELECT m.name
                             ,m.controller
                             ,(SELECT m2.name FROM module m2 WHERE m2.id = m.parent_id AND m2.status = 1) as parent
                             ,(SELECT m3.order_no FROM module m3 WHERE m3.id = m.parent_id) as orders
@@ -64,6 +85,7 @@ function GetMenu($id)
                             AND u.id = $id
                             ORDER BY m.order_no, orders ASC
                         ");
+    }
 
 
     $modules = [];

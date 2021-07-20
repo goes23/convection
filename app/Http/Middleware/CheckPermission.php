@@ -16,12 +16,13 @@ class CheckPermission
      */
     public function handle($request, Closure $next)
     {
-        $link = url()->current();
-        $explode  = explode("/", $link);
-        $gurl = $explode[3];
-        $user = session('user');
+        if (get_role(session('user')) != 1) {
+            $link = url()->current();
+            $explode  = explode("/", $link);
+            $gurl = $explode[3];
+            $user = session('user');
 
-        $module = DB::select("  SELECT m.name
+            $module = DB::select("  SELECT m.name
                             ,m.controller
                             ,(SELECT m2.name FROM module m2 WHERE m2.id = m.parent_id AND m2.status = 1) as parent
                             ,(SELECT m3.order_no FROM module m3 WHERE m3.id = m.parent_id) as orders
@@ -39,9 +40,10 @@ class CheckPermission
                             AND m.controller = '{$gurl}'
                             ORDER BY m.order_no, orders ASC
                         ");
-    
-        if ($module == []) {
-            abort(404);
+
+            if ($module == []) {
+                abort(404);
+            }
         }
         return $next($request);
     }
