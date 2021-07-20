@@ -28,7 +28,7 @@ class RoleController extends Controller
         $data_view["module"]                 = $data_module;
 
         if ($request->ajax()) {
-            return datatables()->of(Role::all())
+            return datatables()->of(Role::where('id', '!=', 1)->get())
                 ->addColumn('status', function ($data) {
                     if ($data->status == 1) {
                         $button = '<center><button type="button" class="btn btn-warning btn-sm" onclick="active(' . $data->id . ',0)"> Active </button> </center>';
@@ -124,7 +124,7 @@ class RoleController extends Controller
             exit;
         }
 
-        $data = Role::all();
+        $data = Role::where('id', '!=', 1)->get();
 
         return response()->json($data);
     }
