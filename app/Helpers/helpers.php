@@ -24,6 +24,38 @@ function get_role($id)
     return $role[0]->id;
 }
 
+function generate_purchase_code()
+{
+    do {
+        $purchase_code = random();
+        $verification = DB::select((" SELECT EXISTS 
+                                        (SELECT purchase_code FROM order_header WHERE purchase_code ='{$purchase_code}')
+                                         as verification"));
+    } while ($verification[0]->verification == 1);
+    return $purchase_code;
+}
+
+function random()
+{
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $randomString = '';
+
+    for ($i = 0; $i < 5; $i++) {
+        $index = rand(0, strlen($characters) - 1);
+        $randomString .= $characters[$index];
+    }
+
+    $year = date("Y");
+    $date = date("m");
+    $micro_date = microtime();
+    $micro_dates = explode(" ", $micro_date);
+    $micro_time = (substr($micro_dates[0], 2, 3) * 10) + rand(1, 999);
+
+    $generate_code = "PC" . $year . $date . $micro_time . $randomString;
+
+    return $generate_code;
+}
+
 function allowed_access($user, $module, $permission_name)
 {
     if (get_role($user) == 1) {

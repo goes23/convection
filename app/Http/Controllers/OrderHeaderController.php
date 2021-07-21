@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\OrderHeader;
 use App\Channel;
+use App\OrderItem;
 use App\Product;
+use Illuminate\Support\Facades\DB;
 
 class OrderHeaderController extends Controller
 {
@@ -38,7 +40,7 @@ class OrderHeaderController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '<center>';
                     if (allowed_access(session('user'), 'order_header', 'edit')) :
-                        $button = '<center><button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
+                        $button = '';
                     endif;
                     $button .= '&nbsp;&nbsp;';
                     if (allowed_access(session('user'), 'order_header', 'delete')) :
@@ -56,14 +58,28 @@ class OrderHeaderController extends Controller
 
     public function form(Request $request)
     {
-        $data_view                = [];
-        $data_view['h1']                     = 'Form Order Header';
-        $data_view['breadcrumb_item']        = 'Order Header List';
-        $data_view['breadcrumb_item_active'] = 'form Order Header';
-        $data_view['card_title']             = 'Form Order';
-        $data_view['channel']                = Channel::all();
-        $data_view['product']                = Product::where('stock', '!=', 0)->get();
-
+        
+        if ($request->id != null) {
+            $data_view                = [];
+            $data_view['h1']                     = 'Form Order Header';
+            $data_view['breadcrumb_item']        = 'Order Header List';
+            $data_view['breadcrumb_item_active'] = 'Form Order Header';
+            $data_view['card_title']             = 'Form Order';
+            $data_view['channel']                = Channel::all();
+            $data_view['product']                = Product::where('stock', '!=', 0)->get();
+            
+        } else {
+            
+            $data_view                = [];
+            $data_view['h1']                     = 'Form Order Header';
+            $data_view['breadcrumb_item']        = 'Order Header List';
+            $data_view['breadcrumb_item_active'] = 'Form Order Header';
+            $data_view['card_title']             = 'Form Order';
+            $data_view['channel']                = Channel::all();
+            $data_view['product']                = Product::where('stock', '!=', 0)->get();
+            
+        }
+       
         return view('order_header/v_form', $data_view);
     }
 
@@ -73,23 +89,43 @@ class OrderHeaderController extends Controller
             return "error request";
             exit;
         }
-        dd($request);
 
-        $id = $request["id"];
-        $harga_modal = str_replace(".", "", $request["data"]["harga_modal"]);
+        $purcahe_code = generate_purchase_code();
+        try {
+            DB::beginTransaction();
 
-        $post = OrderHeader::UpdateOrCreate(["id" => $id], [
-            'kode' => $request["data"]["kode"],
-            'name' => $request["data"]["name"],
-            'harga_modal' => $harga_modal,
-            'stock' => $request["data"]["stock"] == '' ? 0 : $request["data"]["stock"],
-            'status' => $request["data"]["status"],
-            'created_by' => session('user')
+            $post = OrderHeader::UpdateOrCreate(["id" => $request->id, "purchase_code" => $purcahe_code], [
+                'purchase_code' => $purcahe_code,
+                'customer_name' => $request->customer_name,
+                'customer_phone' => $request->customer_phone,
+                'customer_address' => $request->customer_address,
+                'channel_id' => $request->channel,
+                'purchase_date' => $request->purchase_date,
+                'total_purchase' => 1,
+                'shipping_price' =>  $request->shipping_price,
+                'status' => 1
+            ]);
 
-        ]);
+            foreach ($request->orderitem as $val) {
+                $price = str_replace(".", "", $val['price']);
+                $total = (int) $val['qty'] * (int) $price;
+                OrderItem::UpdateOrCreate(['id' => null], [
+                    'purchase_code' => $purcahe_code,
+                    'order_header_id' => $post->id,
+                    'product_id' => $val['product'],
+                    'sell_price'   => $price,
+                    'qty'   => $val['qty'],
+                    'total'   => $total
+                ]);
+            }
 
+            DB::commit();
 
-        return response()->json($post);
+            return response()->json($post);
+        } catch (\PDOException $e) {
+            DB::rollBack();
+            return response()->json($e);
+        }
     }
 
     public function edit(Request $request, $id)

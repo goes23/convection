@@ -112,8 +112,8 @@
                         name: 'customer_address',
                     },
                     {
-                        data: 'channel',
-                        name: 'channel'
+                        data: 'channel_id',
+                        name: 'channel_id'
                     },
                     {
                         data: 'purchase_date',
@@ -146,21 +146,16 @@
             });
         })
 
-        function edit(id) {
+        function form_edit(id) {
             if (id) {
                 $.ajax({
-                    url: "order_header/" + id + "/edit",
-                    type: "GET",
-                    dataType: "json",
-                    success: function(result) {
-                        $("#id").val(result.id)
-                        $('#kode').val(result.kode);
-                        $('#name').val(result.name);
-                        $('#harga_modal').val(result.harga_modal);
-                        $('#stock').val(result.stock);
-                        $("#status").val(result.status).change();
-                        $('#modal-default').modal('show');
+                    url: "{{ route('order_header.form') }}",
+                    type: "post",
+                    data: {
+                        "id": id
                     },
+                    dataType: "json",
+                    success: function(result) {},
                     error: function(xhr, Status, err) {
                         $("Terjadi error : " + Status);
                     }
