@@ -20,7 +20,7 @@ class CreateOrderHeaderTable extends Migration
             $table->string('customer_phone');
             $table->string('customer_address');
             $table->integer('channel_id');
-            $table->integer('total_order')->comment('jumlah semua dari order item');
+            //$table->integer('total_order')->comment('jumlah semua dari order item');
             $table->dateTime('purchase_date');
             $table->integer('total_purchase');
             $table->integer('shipping_price');
