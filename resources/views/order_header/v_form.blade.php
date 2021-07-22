@@ -37,7 +37,8 @@
                                 <div class="form-group">
                                     <label for="customer_name">Customer Name <a class="tn">*</a></label>
                                     <input type="text" class="form-control" id="customer_name" name="customer_name"
-                                        aria-describedby="emailHelp" placeholder="Enter customer name" required>
+                                        aria-describedby="emailHelp" placeholder="Enter customer name" value="{{ dd($data_order->customer_name)}}"
+                                        required>
                                 </div>
                                 <div class="form-group">
                                     <label for="customer_phone">Customer Phone <a class="tn">*</a></label>
@@ -47,7 +48,7 @@
                                 <div class="form-group">
                                     <label for="customer_address">Customer Address <a class="tn">*</a></label>
                                     <input type="text" class="form-control" id="customer_address" name="customer_address"
-                                        aria-describedby="emailHelp" placeholder="Enter customer address" >
+                                        aria-describedby="emailHelp" placeholder="Enter customer address">
                                 </div>
                             </div>
                             <!-- /.col -->
@@ -76,51 +77,115 @@
                                 </div>
 
                             </div>
-
-                            <div class="col-md-12">
-                                <div class="container-fluid" id="item">
-                                    <div class="card card-secondary">
-                                        <div class="card-header">
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label for="product">Product <a class="tn">*</a></label>
-                                                        <select class="form-control select2" id="product" name="orderitem[0][product]"
-                                                            data-placeholder="Select a product"
-                                                            data-dropdown-css-class="select2-purple" style="width: 100%"
-                                                            required>
-                                                            @foreach ($product as $val)
-                                                                <option value="{{ $val->id }}"> {{ $val->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
+                            @if ($status != 'edit')
+                                <div class="col-md-12">
+                                    <div class="container-fluid" id="item">
+                                        <div class="card card-secondary">
+                                            <div class="card-header">
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="product">Product <a class="tn">*</a></label>
+                                                            <select class="form-control select2" id="product"
+                                                                name="orderitem[0][product]"
+                                                                data-placeholder="Select a product"
+                                                                data-dropdown-css-class="select2-purple" style="width: 100%"
+                                                                required>
+                                                                @foreach ($product as $val)
+                                                                    <option value="{{ $val->id }}"> {{ $val->name }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label for="price">Price <a class="tn">*</a></label>
-                                                        <input type="text" class="form-control price" id="price"
-                                                            name="orderitem[0][price]" aria-describedby="emailHelp"
-                                                            placeholder="Enter price" required>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="price">Price <a class="tn">*</a></label>
+                                                            <input type="text" class="form-control price" id="price"
+                                                                name="orderitem[0][price]" aria-describedby="emailHelp"
+                                                                placeholder="Enter price" required>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label for="qty">Quantity <a class="tn">*</a></label>
-                                                        <input type="text" class="form-control qty" id="qty" name="orderitem[0][qty]"
-                                                            aria-describedby="emailHelp" placeholder="Enter quantity"
-                                                            required>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="qty">Quantity <a class="tn">*</a></label>
+                                                            <input type="text" class="form-control qty" id="qty"
+                                                                name="orderitem[0][qty]" aria-describedby="emailHelp"
+                                                                placeholder="Enter quantity" required>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <div id="items"></div>
                                 </div>
-                                <div id="items"></div>
-                            </div>
+                            @else
+                                <?php $no = 0; ?>
+                                @foreach ($data_order as $item)
+                                    @foreach ($item->order_item as $val)
+                                        <div class="col-md-12">
+                                            <div class="container-fluid"
+                                                id="item<?php echo $no; ?>">
+                                                <div class="card card-secondary">
+                                                    <div class="card-header">
+                                                        <div class="card-tools">
+                                                            <button type="button" class="btn btn-tool"
+                                                                onclick="removeitem(<?php echo $no; ?>)">
+                                                                <i class="fas fa-times"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <input type="hidden" id="id_order_item" name="id_order_item" value="{{$val->id}}">
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="product">Product <a class="tn">*</a></label>
+                                                                    <select class="form-control select2" id="product"
+                                                                        name="orderitem[0][product]"
+                                                                        data-placeholder="Select a product"
+                                                                        data-dropdown-css-class="select2-purple"
+                                                                        style="width: 100%" required>
+                                                                        <?php $selected = ' selected="selected" ';?>
+                                                                        @foreach ($product as $vals)
+                                                                            <option <?php $vals->id == $val->product_id?  $selected : ""  ?> value="{{ $vals->id }}">
+                                                                                {{ $vals->name }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="price">Price <a class="tn">*</a></label>
+                                                                    <input type="text" class="form-control price" id="price"
+                                                                        name="orderitem[0][price]"
+                                                                        aria-describedby="emailHelp"
+                                                                        placeholder="Enter price" value="{{$val->sell_price}}" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <label for="qty">Quantity <a class="tn">*</a></label>
+                                                                    <input type="text" class="form-control qty" id="qty"
+                                                                        name="orderitem[0][qty]"
+                                                                        aria-describedby="emailHelp"
+                                                                        placeholder="Enter quantity" value="{{$val->qty}}" required>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="items"></div>
+                                        </div>
+                                    @endforeach
+                                @endforeach
 
+                            @endif
                         </div>
                         <button type="button" class="btn btn-info btn-sm" id="add_order_item">add order item
                         </button>
@@ -146,54 +211,61 @@
                 reverse: true
             });
 
-            $("#price").mask('000.000.000', {
+            $(".price").mask('000.000.000', {
                 reverse: true
             });
 
             $('#add_order_item').click(function() {
                 i++
                 $('#items').append(`<div class="container-fluid" id="item` + i + `">
-                                    <div class="card card-secondary">
-                                        <div class="card-header">
-                                            <div class="card-tools">
-                                                <button type="button" class="btn btn-tool" onclick="removeitem(` + i + `)">
-                                                    <i class="fas fa-times"></i>
-                                                </button>
+                                            <div class="card card-secondary">
+                                                <div class="card-header">
+                                                    <div class="card-tools">
+                                                        <button type="button" class="btn btn-tool" onclick="removeitem(` +
+                    i +
+                    `)">
+                                                            <i class="fas fa-times"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <label for="product">Product <a class="tn">*</a></label>
+                                                                <select class="form-control select2" id="product" name="orderitem[` +
+                    i +
+                    `][product]"
+                                                                    data-placeholder="Select a product" data-dropdown-css-class="select2-purple"
+                                                                    style="width: 100%;" required>
+                                                                    @foreach ($product as $val)
+                                                                        <option value="{{ $val->id }}"> {{ $val->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <label for="price">Price <a class="tn">*</a></label>
+                                                                <input type="text" class="form-control" id="price" name="orderitem[` +
+                    i +
+                    `][price]" aria-describedby="emailHelp"
+                                                                    placeholder="Enter price" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <label for="qty">Quantity <a class="tn">*</a></label>
+                                                                <input type="text" class="form-control qty" id="qty" name="orderitem[` +
+                    i + `][qty]" aria-describedby="emailHelp"
+                                                                    placeholder="Enter quantity" required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label for="product">Product <a class="tn">*</a></label>
-                                                        <select class="form-control select2" id="product" name="orderitem[`+i+`][product]"
-                                                            data-placeholder="Select a product" data-dropdown-css-class="select2-purple"
-                                                            style="width: 100%;" required>
-                                                            @foreach ($product as $val)
-                                                                <option value="{{ $val->id }}"> {{ $val->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label for="price">Price <a class="tn">*</a></label>
-                                                        <input type="text" class="form-control" id="price" name="orderitem[`+i+`][price]" aria-describedby="emailHelp"
-                                                            placeholder="Enter price" required>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label for="qty">Quantity <a class="tn">*</a></label>
-                                                        <input type="text" class="form-control qty" id="qty" name="orderitem[`+i+`][qty]" aria-describedby="emailHelp"
-                                                            placeholder="Enter quantity" required>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>`);
+                                        </div>`);
                 mask();
             })
         })
@@ -220,7 +292,7 @@
                 dataType: "json",
                 success: function(result) {
                     console.log(result);
-                   call_toast(result);
+                    call_toast(result);
                 },
                 error: function(xhr, Status, err) {
                     $("Terjadi error : " + Status);

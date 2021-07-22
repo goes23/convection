@@ -12,4 +12,9 @@ class OrderHeader extends Model
     protected $table = "order_header";
     protected $guarded = [];
     protected $dates = ['deleted_at'];
+
+    public function order_item()
+    {
+        return $this->hasMany('App\OrderItem');
+    }
 }

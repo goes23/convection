@@ -8,6 +8,7 @@ use App\Channel;
 use App\OrderItem;
 use App\Product;
 use Illuminate\Support\Facades\DB;
+use stdClass;
 
 class OrderHeaderController extends Controller
 {
@@ -39,10 +40,12 @@ class OrderHeaderController extends Controller
                 ->rawColumns(['status'])
                 ->addColumn('action', function ($data) {
                     $button = '<center>';
+                    $button .= '<button type="button" class="btn btn-secondary btn-sm" onClick="detail(' . $data->id . ')">Detail</button>';
+                    $button .= '&nbsp;';
                     if (allowed_access(session('user'), 'order_header', 'edit')) :
-                        $button = '';
+                        $button .= '<button type="button" class="btn btn-success btn-sm" onClick="edit(' . $data->id . ')">Edit</button>';
                     endif;
-                    $button .= '&nbsp;&nbsp;';
+                    $button .= '&nbsp;';
                     if (allowed_access(session('user'), 'order_header', 'delete')) :
                         $button .= '<button type="button" class="btn btn-danger btn-sm" onClick="my_delete(' . $data->id . ')">Delete</button></center>';
                     endif;
@@ -58,7 +61,7 @@ class OrderHeaderController extends Controller
 
     public function form(Request $request)
     {
-        
+
         if ($request->id != null) {
             $data_view                = [];
             $data_view['h1']                     = 'Form Order Header';
@@ -67,19 +70,30 @@ class OrderHeaderController extends Controller
             $data_view['card_title']             = 'Form Order';
             $data_view['channel']                = Channel::all();
             $data_view['product']                = Product::where('stock', '!=', 0)->get();
-            
         } else {
-            
+            $data_order = OrderHeader::with('order_item')
+                ->where('order_header.id', 2)
+                ->get();
+
+            // $order_header;                 
+            foreach ($data_order as $item) :
+                $order_header = $item;
+            endforeach;
+
+
+
+
             $data_view                = [];
-            $data_view['h1']                     = 'Form Order Header';
-            $data_view['breadcrumb_item']        = 'Order Header List';
-            $data_view['breadcrumb_item_active'] = 'Form Order Header';
-            $data_view['card_title']             = 'Form Order';
+            $data_view['h1']                     = 'Edit Form Order Header';
+            $data_view['breadcrumb_item']        = 'Edit Order Header List';
+            $data_view['breadcrumb_item_active'] = 'Edit Form Order Header';
+            $data_view['card_title']             = 'Edit Form Order';
             $data_view['channel']                = Channel::all();
             $data_view['product']                = Product::where('stock', '!=', 0)->get();
-            
+            $data_view['data_order']             = $data_order;
+            $data_view['status']                 = 'edit';
         }
-       
+
         return view('order_header/v_form', $data_view);
     }
 
@@ -162,5 +176,37 @@ class OrderHeaderController extends Controller
             ->update(['status' => $request['data']]);
 
         return response()->json($update);
+    }
+
+    public function detail(Request $request, $id)
+    {
+        if (!$request->ajax()) {
+            return "error request";
+            exit;
+        }
+
+        $data_detail = OrderHeader::with('order_item')
+            ->where('order_header.id', $id)
+            ->get();
+        $data = [];
+        $order_header = [];
+       
+        foreach ($data_detail as $item) :
+            $order_header['id'] = $item->id;
+            $order_header['purchase_code'] = $item->purchase_code;
+            $order_header['customer_name'] = $item->customer_name;
+            $order_header['customer_phone'] = $item->customer_phone;
+            $order_header['customer_address'] = $item->customer_address;
+            $order_header['channel_id'] = $item->channel_id;
+            $order_header['purchase_date'] = $item->purchase_date;
+            $order_header['total_purchase'] = $item->total_purchase;
+            $order_header['shipping_price'] = $item->shipping_price;
+            $order_header['status'] = $item->status;
+        endforeach;
+
+        $data['order_header'] = $order_header;
+        $data['data_detail'] = $data_detail;
+
+        return response()->json($data);
     }
 }

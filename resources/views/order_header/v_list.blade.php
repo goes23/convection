@@ -66,7 +66,7 @@
     </section>
 
     {{-- MODAL FORM ADD & EDIT --}}
-    {{-- @include('order_header.v_modal') --}}
+    @include('order_header.v_modal_detail')
     {{-- MODAL FORM ADD & EDIT --}}
 
 
@@ -145,6 +145,74 @@
                 ]
             });
         })
+
+        function detail(id) {
+            if (id) {
+                $('.details').html('');
+                $.ajax({
+                    url: "order_header/" + id + "/detail",
+                    type: "GET",
+                    dataType: "json",
+                    success: function(result) {
+                        var tr = ''
+                        var no = 1
+                        var total_price = 0;
+                        for (var i = 0; i < result.data_detail[0].order_item.length; i++) {
+                            total_price += result.data_detail[0].order_item[i].total;
+                            tr += `<tr>
+                                                <th scope="row">` + no + `</th>
+                                                <td>` + result.data_detail[0].order_item[i].purchase_code + `</td>
+                                                <td>` + result.data_detail[0].order_item[i].product_id + `</td>
+                                                <td>` + result.data_detail[0].order_item[i].qty + `</td>
+                                                <td>` + result.data_detail[0].order_item[i].sell_price + `</td>
+                                                <td class="prices">` + result.data_detail[0].order_item[i].total + `</td>
+                                            </tr>`
+                            no++
+                        }
+
+                        $('#purchase_code_detail').html('<b>' + result.data_detail[0].purchase_code + '</b>');
+                        $('#detail_cusomer_name').html(result.data_detail[0].customer_name)
+                        $('#detail_cusomer_address').html(result.data_detail[0].customer_address)
+                        $('#detail_cusomer_phone').html(result.data_detail[0].customer_phone)
+                        $('#detail_channel').html(result.data_detail[0].channel_id)
+                        $('#detail_purchase_data').html(result.data_detail[0].purchase_date)
+                        $('#detail_shipping_purchase').html(result.data_detail[0].shipping_price)
+                        $('#detail_order_item').html(` <table class="table table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col">no</th>
+                                                                    <th scope="col">Purchase Code</th>
+                                                                    <th scope="col">Product</th>
+                                                                    <th scope="col">Qty</th>
+                                                                    <th scope="col">Sell Price</th>
+                                                                    <th scope="col">Total</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                ` + tr + `
+                                                                <tr>
+                                                                    <td colspan="5"><center>TOTAL PRICE</cebter></td>
+                                                                    <td class="prices">` + total_price + `</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>`)
+                        mask()
+                        $('#modal-xl').modal('show');
+                    },
+                    error: function(xhr, Status, err) {
+                        $("Terjadi error : " + Status);
+                    }
+                });
+            } else {
+                return false
+            }
+        }
+
+        function mask() {
+            $('.prices').mask('000.000.000', {
+                reverse: true
+            });
+        }
 
         function form_edit(id) {
             if (id) {
