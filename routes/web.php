@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\OrderHeaderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,6 +61,7 @@ Route::group(['middleware' => ['ceklogin', 'checkpermission']], function () {
 
     Route::resource('order_header', 'OrderHeaderController');
     Route::post('order_header/form', 'OrderHeaderController@form')->name('order_header.form');
+    Route::get('order_header/{id}/form', 'OrderHeaderController@form')->name('get.form');
     Route::get('order_header/{id}/detail', 'OrderHeaderController@detail')->name('order_header.detail');
     //Route::post('order_header/form', 'OrderHeaderController@form')->name('order_header.form');
 });

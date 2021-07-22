@@ -43,7 +43,8 @@ class OrderHeaderController extends Controller
                     $button .= '<button type="button" class="btn btn-secondary btn-sm" onClick="detail(' . $data->id . ')">Detail</button>';
                     $button .= '&nbsp;';
                     if (allowed_access(session('user'), 'order_header', 'edit')) :
-                        $button .= '<button type="button" class="btn btn-success btn-sm" onClick="edit(' . $data->id . ')">Edit</button>';
+                        //$button .='<a href="" class="btn btn-xs btn-info pull-right">Edit</a>';
+                        $button .= '<a type="button" href="/order_header/' . $data->id . '/form" class="btn btn-success btn-sm" >Edit</a>';
                     endif;
                     $button .= '&nbsp;';
                     if (allowed_access(session('user'), 'order_header', 'delete')) :
@@ -59,10 +60,9 @@ class OrderHeaderController extends Controller
         return view('order_header/v_list', $data_view);
     }
 
-    public function form(Request $request)
+    public function form(Request $request, $id = "")
     {
-
-        if ($request->id != null) {
+        if ($request->id == "") {
             $data_view                = [];
             $data_view['h1']                     = 'Form Order Header';
             $data_view['breadcrumb_item']        = 'Order Header List';
@@ -70,18 +70,29 @@ class OrderHeaderController extends Controller
             $data_view['card_title']             = 'Form Order';
             $data_view['channel']                = Channel::all();
             $data_view['product']                = Product::where('stock', '!=', 0)->get();
+            $data_view['order_header']           = [];
+            $data_view['order_item']             = [];
+            $data_view['status']                 = 'add';
         } else {
             $data_order = OrderHeader::with('order_item')
-                ->where('order_header.id', 2)
+                ->where('order_header.id', $id)
                 ->get();
 
-            // $order_header;                 
+            $order_header = [];
+
             foreach ($data_order as $item) :
-                $order_header = $item;
+                $date = explode(' ', $item->purchase_date);
+                $order_header['id']               = $item->id;
+                $order_header['purchase_code']    = $item->purchase_code;
+                $order_header['customer_name']    = $item->customer_name;
+                $order_header['customer_phone']   = $item->customer_phone;
+                $order_header['customer_address'] = $item->customer_address;
+                $order_header['channel_id']       = $item->channel_id;
+                $order_header['purchase_date']    = $date[0];
+                $order_header['total_purchase']   = $item->total_purchase;
+                $order_header['shipping_price']   = $item->shipping_price;
+                $order_header['status']           = $item->status;
             endforeach;
-
-
-
 
             $data_view                = [];
             $data_view['h1']                     = 'Edit Form Order Header';
@@ -90,7 +101,8 @@ class OrderHeaderController extends Controller
             $data_view['card_title']             = 'Edit Form Order';
             $data_view['channel']                = Channel::all();
             $data_view['product']                = Product::where('stock', '!=', 0)->get();
-            $data_view['data_order']             = $data_order;
+            $data_view['order_header']           = $order_header;
+            $data_view['order_item']             = $data_order;
             $data_view['status']                 = 'edit';
         }
 
@@ -104,12 +116,16 @@ class OrderHeaderController extends Controller
             exit;
         }
 
-        $purcahe_code = generate_purchase_code();
+        if ($request->purchase_code != "" && $request->id != "") {
+            $purchase_code = $request->purchase_code;
+        } else {
+            $purchase_code = generate_purchase_code();
+        }
         try {
             DB::beginTransaction();
 
-            $post = OrderHeader::UpdateOrCreate(["id" => $request->id, "purchase_code" => $purcahe_code], [
-                'purchase_code' => $purcahe_code,
+            $post = OrderHeader::UpdateOrCreate(["id" => $request->id, "purchase_code" => $purchase_code], [
+                'purchase_code' => $purchase_code,
                 'customer_name' => $request->customer_name,
                 'customer_phone' => $request->customer_phone,
                 'customer_address' => $request->customer_address,
@@ -120,11 +136,23 @@ class OrderHeaderController extends Controller
                 'status' => 1
             ]);
 
+            if ($request->purchase_code != "" && $request->id != "") :
+                $concat = '';
+                foreach ($request->orderitem as $del) {
+                    $concat .= "'" . $del['id'] . "',";
+                }
+                $conditon = trim($concat, ",");
+
+                DB::select("DELETE FROM order_item 
+                    WHERE order_header_id = $request->id
+                    AND id NOT IN ($conditon)");
+            endif;
+
             foreach ($request->orderitem as $val) {
                 $price = str_replace(".", "", $val['price']);
                 $total = (int) $val['qty'] * (int) $price;
-                OrderItem::UpdateOrCreate(['id' => null], [
-                    'purchase_code' => $purcahe_code,
+                OrderItem::UpdateOrCreate(['id' => $val['id']], [
+                    'purchase_code' => $post->purchase_code,
                     'order_header_id' => $post->id,
                     'product_id' => $val['product'],
                     'sell_price'   => $price,
@@ -160,9 +188,19 @@ class OrderHeaderController extends Controller
             return "error request";
             exit;
         }
-        $delete = OrderHeader::find($id)->delete();
+        try {
+            DB::beginTransaction();
+            $delete = OrderHeader::find($id)->delete();
 
-        return response()->json($delete);
+            OrderItem::where('order_header_id', $id)->delete();
+
+            DB::commit();
+
+            return response()->json($delete);
+        } catch (\PDOException $e) {
+            DB::rollBack();
+            return response()->json($e);
+        }
     }
 
     public function active(Request $request)
@@ -190,7 +228,7 @@ class OrderHeaderController extends Controller
             ->get();
         $data = [];
         $order_header = [];
-       
+
         foreach ($data_detail as $item) :
             $order_header['id'] = $item->id;
             $order_header['purchase_code'] = $item->purchase_code;

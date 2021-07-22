@@ -23,7 +23,7 @@ class CreateOrderHeaderTable extends Migration
             //$table->integer('total_order')->comment('jumlah semua dari order item');
             $table->dateTime('purchase_date');
             $table->integer('total_purchase');
-            $table->integer('shipping_price');
+            $table->string('shipping_price');
             $table->integer('status');
             $table->timestamps();
             $table->softDeletes();

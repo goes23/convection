@@ -164,7 +164,7 @@
                                                 <td>` + result.data_detail[0].order_item[i].purchase_code + `</td>
                                                 <td>` + result.data_detail[0].order_item[i].product_id + `</td>
                                                 <td>` + result.data_detail[0].order_item[i].qty + `</td>
-                                                <td>` + result.data_detail[0].order_item[i].sell_price + `</td>
+                                                <td class="prices">` + result.data_detail[0].order_item[i].sell_price + `</td>
                                                 <td class="prices">` + result.data_detail[0].order_item[i].total + `</td>
                                             </tr>`
                             no++
@@ -191,7 +191,7 @@
                                                             <tbody>
                                                                 ` + tr + `
                                                                 <tr>
-                                                                    <td colspan="5"><center>TOTAL PRICE</cebter></td>
+                                                                    <td colspan="5"><center><b>TOTAL PRICE</b></cebter></td>
                                                                     <td class="prices">` + total_price + `</td>
                                                                 </tr>
                                                             </tbody>
