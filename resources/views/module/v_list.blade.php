@@ -132,7 +132,11 @@
                         orderable: false,
                         searchable: false,
                     }
-                ]
+                ],
+                columnDefs: [{
+                    "width": "20px",
+                    "targets": 0
+                }]
             });
         })
 

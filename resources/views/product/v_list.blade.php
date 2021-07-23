@@ -120,7 +120,11 @@
                 ],
                 order: [
                     [0, 'asc']
-                ]
+                ],
+                columnDefs: [{
+                    "width": "20px",
+                    "targets": 0
+                }]
             });
         })
 

@@ -31,7 +31,7 @@
                         <div class="card-body">
                             <div style=" padding: 0px 0px 18px 0px;">
                                 <?php if (allowed_access(session('user'), 'bahan', 'add')): ?>
-                                        <button type="button" class="btn btn-info btn-sm" onclick="add_btn()">Tambah Bahan</button>
+                                <button type="button" class="btn btn-info btn-sm" onclick="add_btn()">Tambah Bahan</button>
                                 <?php endif; ?>
                             </div>
 
@@ -128,7 +128,11 @@
                 ],
                 order: [
                     [0, 'asc']
-                ]
+                ],
+                columnDefs: [{
+                    "width": "20px",
+                    "targets": 0
+                }]
             });
         })
 
@@ -144,8 +148,10 @@
                         var month = currentDate.getMonth() + 1 < 10 ? "0" + (parseInt(currentDate.getMonth()) +
                                 1) : currentDate
                             .getMonth() + 1;
-                        var date = currentDate.getDate();
+                        var date = currentDate.getDate() < 10 ? "0" + currentDate.getDate() : currentDate
+                            .getDate();
                         var date_format = year + "-" + month + "-" + date
+                        console.log(date_format);
 
                         $("#id").val(result.id)
                         $('#kode').val(result.kode);
@@ -155,6 +161,7 @@
                         $('#panjang').val(result.panjang);
                         $('#satuan').val(result.satuan);
                         $("#status").val(result.status).change();
+                        mask()
                         $('#modal-xl').modal('show');
                     },
                     error: function(xhr, Status, err) {
@@ -166,7 +173,13 @@
             }
         }
 
-        $('#form_add_edit').submit(function(e){
+        function mask() {
+            $('input[id^="harga"]').mask('000.000.000', {
+                reverse: true
+            });
+        }
+
+        $('#form_add_edit').submit(function(e) {
             e.preventDefault();
 
             var id = $('#id').val();

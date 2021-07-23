@@ -142,7 +142,11 @@
                 ],
                 order: [
                     [0, 'asc']
-                ]
+                ],
+                columnDefs: [{
+                    "width": "20px",
+                    "targets": 0
+                }]
             });
         })
 
@@ -160,13 +164,13 @@
                         for (var i = 0; i < result.data_detail[0].order_item.length; i++) {
                             total_price += result.data_detail[0].order_item[i].total;
                             tr += `<tr>
-                                                <th scope="row">` + no + `</th>
-                                                <td>` + result.data_detail[0].order_item[i].purchase_code + `</td>
-                                                <td>` + result.data_detail[0].order_item[i].product_id + `</td>
-                                                <td>` + result.data_detail[0].order_item[i].qty + `</td>
-                                                <td class="prices">` + result.data_detail[0].order_item[i].sell_price + `</td>
-                                                <td class="prices">` + result.data_detail[0].order_item[i].total + `</td>
-                                            </tr>`
+                                                    <th scope="row">` + no + `</th>
+                                                    <td>` + result.data_detail[0].order_item[i].purchase_code + `</td>
+                                                    <td>` + result.data_detail[0].order_item[i].product_id + `</td>
+                                                    <td>` + result.data_detail[0].order_item[i].qty + `</td>
+                                                    <td class="prices">` + result.data_detail[0].order_item[i].sell_price + `</td>
+                                                    <td class="prices">` + result.data_detail[0].order_item[i].total + `</td>
+                                                </tr>`
                             no++
                         }
 
@@ -178,24 +182,24 @@
                         $('#detail_purchase_data').html(result.data_detail[0].purchase_date)
                         $('#detail_shipping_purchase').html(result.data_detail[0].shipping_price)
                         $('#detail_order_item').html(` <table class="table table-bordered">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th scope="col">no</th>
-                                                                    <th scope="col">Purchase Code</th>
-                                                                    <th scope="col">Product</th>
-                                                                    <th scope="col">Qty</th>
-                                                                    <th scope="col">Sell Price</th>
-                                                                    <th scope="col">Total</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                ` + tr + `
-                                                                <tr>
-                                                                    <td colspan="5"><center><b>TOTAL PRICE</b></cebter></td>
-                                                                    <td class="prices">` + total_price + `</td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>`)
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th scope="col">no</th>
+                                                                        <th scope="col">Purchase Code</th>
+                                                                        <th scope="col">Product</th>
+                                                                        <th scope="col">Qty</th>
+                                                                        <th scope="col">Sell Price</th>
+                                                                        <th scope="col">Total</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    ` + tr + `
+                                                                    <tr>
+                                                                        <td colspan="5"><center><b>TOTAL PRICE</b></cebter></td>
+                                                                        <td class="prices">` + total_price + `</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>`)
                         mask()
                         $('#modal-xl').modal('show');
                     },
