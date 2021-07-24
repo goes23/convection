@@ -30,9 +30,9 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div style=" padding: 0px 0px 18px 0px;">
-                                <?php if (allowed_access(session('user'), 'product', 'add')): ?>
+                                <?php if (allowed_access(session('user'), 'log_stock', 'add')): ?>
                                 <button type="button" class="btn btn-info btn-sm" onclick="add_btn()">Tambah
-                                    Product</button>
+                                    Log Stock</button>
                                 <?php endif; ?>
                             </div>
 
@@ -40,11 +40,9 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>kode</th>
-                                        <th>Name</th>
-                                        <th>Harga Modal</th>
-                                        <th>Stock</th>
-                                        <th>status</th>
+                                        <th>Product</th>
+                                        <th>Qty</th>
+                                        <th>Transfer Date</th>
                                         <th>action</th>
                                     </tr>
                                 </thead>
@@ -60,19 +58,16 @@
     </section>
 
     {{-- MODAL FORM ADD & EDIT --}}
-    @include('product.v_modal')
+    @include('log_stock.v_modal')
     {{-- MODAL FORM ADD & EDIT --}}
 
 
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
         $(document).ready(function() {
-            $('.inputForm').val('');
-            $("#harga_modal").mask('000.000.000', {
-                reverse: true
-            });
+            $(".inputForm").val('');
 
-            $("#stock").inputmask('Regex', {
+            $("#qty").inputmask('Regex', {
                 regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
             });
 
@@ -80,7 +75,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('product.index') }}",
+                    url: "{{ route('log_stock.index') }}",
                     type: "GET"
                 },
                 columns: [{
@@ -90,27 +85,16 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     }, {
-                        data: 'kode',
-                        name: 'kode'
+                        data: 'product',
+                        name: 'product'
                     },
                     {
-                        data: 'name',
-                        name: 'name'
+                        data: 'qty',
+                        name: 'qty'
                     },
                     {
-                        data: 'harga_modal',
-                        name: 'harga_modal',
-                        render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
-                    },
-                    {
-                        data: 'stock',
-                        name: 'stock'
-                    },
-                    {
-                        data: 'status',
-                        name: 'status',
-                        orderable: false,
-                        searchable: false
+                        data: 'transfer_date',
+                        name: 'transfer_date',
                     },
                     {
                         data: 'action',
@@ -129,19 +113,47 @@
             });
         })
 
+        $('#product').change(function() {
+            var id = $('#product').val();
+            if (id == "") {
+                $('#sisa').val(0);
+            } else {
+                $.ajax({
+                    url: "log_stock/" + id + "/get_sisa",
+                    type: "get",
+                    dataType: "json",
+                    success: function(result) {
+                        $('#sisa').val(result[0].sisa);
+                        $('#produksi_id').val(result[0].id);
+                    },
+                    error: function(xhr, Status, err) {
+                        $("Terjadi error : " + Status);
+                    }
+                });
+            }
+
+        })
+
         function edit(id) {
             if (id) {
                 $.ajax({
-                    url: "product/" + id + "/edit",
+                    url: "log_stock/" + id + "/edit",
                     type: "GET",
                     dataType: "json",
                     success: function(result) {
+                        var currentDate = new Date(result.transfer_date);
+                        var year = currentDate.getFullYear();
+                        var month = currentDate.getMonth() + 1 < 10 ? "0" + (parseInt(currentDate.getMonth()) +
+                                1) : currentDate
+                            .getMonth() + 1;
+                        var date = currentDate.getDate() < 10 ? "0" + currentDate.getDate() : currentDate
+                            .getDate();
+                        var date_format = year + "-" + month + "-" + date
+                        console.log(result);
                         $("#id").val(result.id)
-                        $('#kode').val(result.kode);
-                        $('#name').val(result.name);
-                        $('#harga_modal').val(result.harga_modal);
-                        $('#stock').val(result.stock);
-                        $("#status").val(result.status).change();
+                        $('#qty').val(result.qty);
+                        $('#transfer_date').val(date_format);
+                        $('#product').val(result.product_id).change();
                         $('#modal-default').modal('show');
                     },
                     error: function(xhr, Status, err) {
@@ -154,38 +166,40 @@
         }
         $('#form_add_edit').submit(function(e) {
             e.preventDefault();
+
             var id = $('#id').val();
-            var kode = $('#kode').val();
-            var name = $('#name').val();
-            var harga_modal = $('#harga_modal').val();
-            var stock = $('#stock').val();
-            var status = $('#status').val();
+            var sisa = $('#sisa').val();
+            var product = $('#product').val();
+            var produksi = $('#produksi_id').val();
+            var qty = $('#qty').val();
+            var transfer_date = $('#transfer_date').val();
+
+            if (parseInt(sisa) < parseInt(qty)) {
+                Swal.fire({
+                    icon: "error",
+                    text: "quantity melebihi sisa!!",
+                });
+                return false;
+            }
 
             var object = {
-                kode,
-                name,
-                harga_modal,
-                status
+                product,
+                qty,
+                transfer_date
             }
 
             if (required_fild(object) == false) {
                 return false;
             }
 
-            var dataInput = {
-                kode,
-                name,
-                harga_modal,
-                stock,
-                status
-            }
-
+        
             $.ajax({
-                url: "{{ route('product.store') }}",
+                url: "{{ route('log_stock.store') }}",
                 type: "post",
                 data: {
                     "id": id,
-                    "data": dataInput,
+                    "produksi_id" :produksi,
+                    "data": object,
                 },
                 dataType: "json",
                 success: function(result) {
@@ -217,7 +231,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "product/" + id,
+                        url: "log_stock/" + id,
                         type: "delete",
                         dataType: "json",
                         success: function(result) {
@@ -239,29 +253,6 @@
                 $(".inputForm").val('');
             }
             $('#modal-default').modal('show');
-        }
-
-        function active(id, active) {
-            if (id == null) {
-                console.log('error bosq.')
-                return false
-            }
-            $.ajax({
-                url: {!! json_encode(url('product/active')) !!},
-                type: "POST",
-                data: {
-                    "id": id,
-                    "data": active,
-                },
-                dataType: "json",
-                success: function(result) {
-                    call_toast(result)
-                    $("#example1").DataTable().ajax.reload()
-                },
-                error: function(xhr, Status, err) {
-                    $("Terjadi error : " + Status);
-                }
-            });
         }
 
     </script>

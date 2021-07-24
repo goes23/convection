@@ -10,22 +10,25 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" class="form-control inputForm" id="id" name="id" value="">
+                    {{-- <input type="hidden" class="form-control inputForm" id="forms" name="forms" value=""> --}}
                     <div class="col-md-12">
-                        <div class="form-group">
+                        <div class="form-group add">
                             <label for="bahan">Bahan <a class="tn">*</a></label>
                             <select class="form-control select2" id="bahan" data-placeholder="Select a bahan"
                                 data-dropdown-css-class="select2-purple" style="width: 100%;" required>
                                 @foreach ($bahan as $val)
-                                    <option value="{{ $val->id }}">{{ $val->kode }} - {{ $val->name }}</option>
+                                    <option value="{{ $val->id }}">{{ $val->kode }} - {{ $val->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group add">
                             <label for="product">Product <a class="tn">*</a></label>
                             <select class="form-control select2" id="product" data-placeholder="Select a product"
                                 data-dropdown-css-class="select2-purple" style="width: 100%;" required>
                                 @foreach ($product as $val)
-                                    <option value="{{ $val->id }}">{{ $val->kode }} - {{ $val->name }}</option>
+                                    <option value="{{ $val->id }}">{{ $val->kode }} - {{ $val->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -33,6 +36,12 @@
                             <label for="jumlah">Jumlah <a class="tn">*</a></label>
                             <input type="text" class="form-control inputForm" id="jumlah" name="jumlah"
                                 aria-describedby="emailHelp" placeholder="Enter jumlah" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sisa">Sisa <a class="tn">*</a></label>
+                            <input type="text" class="form-control inputForm" id="sisa" name="sisa"
+                                aria-describedby="emailHelp" placeholder="Enter sisa" >
+                            <small id="emailHelp" class="form-text text-muted">jika sisa di kosongkan value akan mengikuti jumlah.</small>
                         </div>
                         <div class="form-group">
                             <label for="status">status <a class="tn">*</a></label>
@@ -46,7 +55,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" >Save changes</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
                 </div>
             </form>
         </div>

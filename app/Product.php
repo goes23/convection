@@ -17,4 +17,10 @@ class Product extends Model
     {
         return $this->hasMany('App\Produksi');
     }
+
+    public function log_stock()
+    {
+        return $this->hasMany('App\Logstock');
+
+    }
 }

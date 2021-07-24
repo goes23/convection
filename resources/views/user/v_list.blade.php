@@ -65,6 +65,7 @@
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
         $(document).ready(function() {
+            $('.inputForm').val('');
             $("#example1").DataTable({
                 processing: true,
                 serverSide: true,

@@ -64,6 +64,7 @@
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
         $(document).ready(function() {
+            $('.inputForm').val('');
             $('#bahan').select2({
                 dropdownParent: $('#modal-default')
             });

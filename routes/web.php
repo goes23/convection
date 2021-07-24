@@ -64,6 +64,9 @@ Route::group(['middleware' => ['ceklogin', 'checkpermission']], function () {
     Route::get('order_header/{id}/form', 'OrderHeaderController@form')->name('get.form');
     Route::get('order_header/{id}/detail', 'OrderHeaderController@detail')->name('order_header.detail');
     //Route::post('order_header/form', 'OrderHeaderController@form')->name('order_header.form');
+
+    Route::resource('log_stock', 'LogStockController');
+    Route::get('log_stock/{id}/get_sisa', 'LogStockController@get_sisa')->name('log_stock.get_sisa');
 });
 
 

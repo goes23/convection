@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Produksi extends Model
 {
@@ -16,7 +17,7 @@ class Produksi extends Model
 
     public function bahan()
     {
-        return $this->belongsTo('App\Bahan','bahan_id');
+        return $this->belongsTo('App\Bahan', 'bahan_id');
     }
 
     public function product()
@@ -24,4 +25,13 @@ class Produksi extends Model
         return $this->belongsTo('App\Product', 'product_id');
     }
 
+    public function get_data_produksi($bahan, $product)
+    {
+        return  DB::select("SELECT * 
+                            FROM produksi 
+                            WHERE bahan_id='{$bahan}' 
+                            AND product_id='{$product}' 
+                            AND deleted_at IS NULL
+                            LIMIT 1");
+    }
 }

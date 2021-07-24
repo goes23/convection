@@ -13,7 +13,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="parent">Parent <a class="tn">*</a></label>
-                            <select class="form-control" id="parent" data-placeholder="Select a parent"
+                            <select class="form-control inputForm" id="parent" data-placeholder="Select a parent"
                                 style="width: 100%;" required>
                             </select>
                         </div>

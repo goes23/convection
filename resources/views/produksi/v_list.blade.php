@@ -67,6 +67,7 @@
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
         $(document).ready(function() {
+            $('.inputForm').val('');
             $('#bahan').select2({
                 dropdownParent: $('#modal-default')
             });
@@ -136,16 +137,18 @@
 
         function edit(id) {
             if (id) {
-
                 $.ajax({
                     url: "produksi/" + id + "/edit",
                     type: "GET",
                     dataType: "json",
                     success: function(result) {
-                        $("#id").val(result.id)
+                        $('.add').hide();
+                        $('#id').val(result.id)
+                        // $("#forms").val('edit');
                         $('#bahan').val(result.bahan_id).change();
                         $('#product').val(result.product_id).change();
                         $('#jumlah').val(result.jumlah);
+                        $('#sisa').val(result.sisa);
                         $("#status").val(result.status).change();
                         $('#modal-default').modal('show');
                     },
@@ -160,13 +163,22 @@
 
         $('#form_add_edit').submit(function(e) {
             e.preventDefault();
-
             var id = $('#id').val();
             var bahan = $('#bahan').val();
             var product = $('#product').val();
             var jumlah = $('#jumlah').val();
             var status = $('#status').val();
+            var sisa = $('#sisa').val();
 
+            if (sisa != "") {
+                if (parseInt(sisa) > parseInt(jumlah)) {
+                    Swal.fire({
+                        icon: "error",
+                        text: "sisa melebihi jumlah !!",
+                    });
+                    return false;
+                }
+            }
 
             var object = {
                 bahan,
@@ -184,9 +196,13 @@
                 type: "post",
                 data: {
                     "id": id,
-                    "data": object,
+                    "sisa": sisa,
+                    "data": object
                 },
                 dataType: "json",
+                beforeSend: function() {
+                    console.log("ok")
+                },
                 success: function(result) {
                     call_toast(result)
                     $(".inputForm").val('');
@@ -232,9 +248,19 @@
             })
         }
 
+        // $('#jumlah').keyup(function() {
+        //     var form = $('#forms').val()
+        //     console.log(form);
+        //     if (form == 'add') {
+        //         $('#sisa').val($(this).val());
+        //     }
+        // });
+
         function add_btn() {
             var id = $('#id').val();
             if (id != "") {
+                $('.add').show();
+                // $("#forms").val('add');
                 $(".inputForm").val('');
             }
             $('#modal-default').modal('show');

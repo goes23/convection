@@ -49,7 +49,6 @@
                                         <th>Action</th>
                                     </tr>
                                 </thead>
-
                             </table>
                         </div>
                         <!-- /.card-body -->
@@ -68,6 +67,7 @@
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
         $(document).ready(function() {
+            $('.inputForm').val('');
             $("#harga").mask('000.000.000', {
                 reverse: true
             });
@@ -151,8 +151,7 @@
                         var date = currentDate.getDate() < 10 ? "0" + currentDate.getDate() : currentDate
                             .getDate();
                         var date_format = year + "-" + month + "-" + date
-                        console.log(date_format);
-
+                        
                         $("#id").val(result.id)
                         $('#kode').val(result.kode);
                         $('#name').val(result.name);
