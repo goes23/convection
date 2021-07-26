@@ -18,19 +18,25 @@ class ModuleController extends Controller
     public function index(Request $request)
     {
         // $parent = Module::where('parent_id', 0)->get();
+        $module = new Module();
+        $all_data = $module->data_module();
         $data_view            = array();
         $data_view["title_h1"]               = "Data Module";
         $data_view["breadcrumb_item"]        = "Home";
         $data_view["breadcrumb_item_active"] = "Module";
         $data_view["modal_title"]            = "Form Module";
         $data_view["card_title"]             = "Input & Update Data Module";
-        //$data_view["parent"]                 = $parent;
 
         if ($request->ajax()) {
-            return datatables()->of(Module::orderBy('parent_id', 'ASC')
-                //->selectRaw('select mm.name from module mm where mm.id = module.parent_id ')
-                ->orderBy('order_no', 'ASC')
-                ->get())
+            return datatables()->of($all_data)
+                ->addColumn('parent_name', function ($data) {
+                    $parent = '#';
+                    if ($data->parent_name != null) {
+                        $parent = $data->parent_name;
+                    }
+                    return $parent;
+                })
+                ->rawColumns(['parent_name'])
                 ->addColumn('order_no', function ($data) {
                     $orderno = '<span id="order-' . $data->id . '">' . $data->order_no . '</span>
                     <span class="float-right">
@@ -60,7 +66,7 @@ class ModuleController extends Controller
                     endif;
                     return $button;
                 })
-                ->rawColumns(['action', 'status', 'order_no'])
+                ->rawColumns(['action', 'status', 'order_no', 'parent_name'])
                 ->addIndexColumn()
                 ->make(true);
         }

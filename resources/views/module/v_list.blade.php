@@ -106,8 +106,8 @@
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
                     }, {
-                        data: 'parent_id',
-                        name: 'parent_id',
+                        data: 'parent_name',
+                        name: 'parent_name',
                     },
                     {
                         data: 'name',
