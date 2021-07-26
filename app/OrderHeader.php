@@ -17,4 +17,9 @@ class OrderHeader extends Model
     {
         return $this->hasMany('App\OrderItem');
     }
+
+    public function channel()
+    {
+        return $this->belongsTo('App\Channel', 'channel_id');
+    }
 }

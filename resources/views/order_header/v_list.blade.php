@@ -73,6 +73,8 @@
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
         $(document).ready(function() {
+            $(".inputForm").val('');
+
             $("#harga_modal").mask('000.000.000', {
                 reverse: true
             });
@@ -112,8 +114,8 @@
                         name: 'customer_address',
                     },
                     {
-                        data: 'channel_id',
-                        name: 'channel_id'
+                        data: 'channel.name',
+                        name: 'channel.name'
                     },
                     {
                         data: 'purchase_date',
@@ -152,7 +154,7 @@
 
         function detail(id) {
             if (id) {
-                $('.details').html('');
+                $('#detail_order_item').html('');
                 $.ajax({
                     url: "order_header/" + id + "/detail",
                     type: "GET",
@@ -178,7 +180,7 @@
                         $('#detail_cusomer_name').html(result.data_detail[0].customer_name)
                         $('#detail_cusomer_address').html(result.data_detail[0].customer_address)
                         $('#detail_cusomer_phone').html(result.data_detail[0].customer_phone)
-                        $('#detail_channel').html(result.data_detail[0].channel_id)
+                        $('#detail_channel').html(result.data_detail[0].channel.name)
                         $('#detail_purchase_data').html(result.data_detail[0].purchase_date)
                         $('#detail_shipping_purchase').html(result.data_detail[0].shipping_price)
                         $('#detail_order_item').html(` <table class="table table-bordered">
