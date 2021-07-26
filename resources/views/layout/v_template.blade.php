@@ -49,12 +49,12 @@
     <script src="{{ asset('assets/') }}/dist/js/adminlte.js"></script>
     <script src="{{ asset('assets/') }}/dist/js/demo.js"></script>
 
+    <div class="mask"></div>
+    <div class="loading">
+        <img alt="Loading.." src="{{ asset('assets/') }}/img/loader.gif">
+    </div>
     
 </head>
-<div class="mask"></div>
-<div class="loading">
-    <img alt="Loading.." src="{{ asset('assets/') }}/img/loader.gif">
-</div>
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">

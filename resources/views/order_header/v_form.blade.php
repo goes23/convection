@@ -248,62 +248,56 @@
 
             $('#add_order_item').click(function() {
                 i++
-                $('#items').append(`<div class="container-fluid" id="item` + i +
-                    `">
-                                                                                                                                    <div class="card card-secondary">
-                                                                                                                                        <div class="card-header">
-                                                                                                                                            <div class="card-tools">
-                                                                                                                                                <button type="button" class="btn btn-tool" onclick="removeitem(` +
-                    i +
-                    `)">
-                                                                                                                                                    <i class="fas fa-times"></i>
-                                                                                                                                                </button>
-                                                                                                                                            </div>
-                                                                                                                                        </div>
-                                                                                                                                        <div class="card-body">
-                                                                                                                                            <div class="row">
-                                                                                                                                            <input type="hidden" id="id_order_item" name="orderitem[` +
-                    i +
-                    `][id]"
-                                                                                                                        value="">
-                                                                                                                                                <div class="col-md-4">
-                                                                                                                                                    <div class="form-group">
-                                                                                                                                                        <label for="product">Product <a class="tn">*</a></label>
-                                                                                                                                                        <select class="form-control inputForm" id="product" name="orderitem[` +
-                    i +
-                    `][product]"
-                                                                                                                                                            data-placeholder="Select a product" data-dropdown-css-class="select2-purple"
-                                                                                                                                                            style="width: 100%;" required>
-                                                                                                                                                            @foreach ($product as $val)
-                                                                                                                                                                <option value="{{ $val->id }}"> {{ $val->name }}
-                                                                                                                                                                </option>
-                                                                                                                                                            @endforeach
-                                                                                                                                                        </select>
-                                                                                                                                                    </div>
-                                                                                                                                                </div>
-                                                                                                                                                <div class="col-md-4">
-                                                                                                                                                    <div class="form-group">
-                                                                                                                                                        <label for="price">Price <a class="tn">*</a></label>
-                                                                                                                                                        <input type="text" class="form-control" id="price" name="orderitem[` +
-                    i +
-                    `][price]" aria-describedby="emailHelp"
-                                                                                                                                                            placeholder="Enter price" required>
-                                                                                                                                                    </div>
-                                                                                                                                                </div>
-                                                                                                                                                <div class="col-md-4">
-                                                                                                                                                    <div class="form-group">
-                                                                                                                                                        <label for="qty">Quantity <a class="tn">*</a></label>
-                                                                                                                                                        <input type="text" class="form-control qty" id="qty" name="orderitem[` +
-                    i +
-                    `][qty]" aria-describedby="emailHelp"
-                                                                                                                                                            placeholder="Enter quantity" required>
-                                                                                                                                                    </div>
-                                                                                                                                                </div>
-                                                                                                                                            </div>
-                                                                                                                                        </div>
-                                                                                                                                    </div>
-                                                                                                                                </div>`
-                );
+                $('#items').append(`<div class="container-fluid" id="item` + i + `">
+                                        <div class="card card-secondary">
+                                            <div class="card-header">
+                                                <div class="card-tools">
+                                                    <button type="button" class="btn btn-tool" onclick="removeitem(` +
+                                                        i +
+                                                        `)">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <input type="hidden" id="id_order_item" name="orderitem[` +
+                                                        i +
+                                                        `][id]" value="">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="product">Product <a class="tn">*</a></label>
+                                                            <select class="form-control inputForm" id="product" name="orderitem[` +
+                                                        i +
+                                                        `][product]" data-placeholder="Select a product" data-dropdown-css-class="select2-purple"
+                                                                style="width: 100%;" required>
+                                                                @foreach ($product as $val)
+                                                                    <option value="{{ $val->id }}"> {{ $val->name }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="price">Price <a class="tn">*</a></label>
+                                                            <input type="text" class="form-control" id="price" name="orderitem[` +
+                                                        i +
+                                                        `][price]" aria-describedby="emailHelp" placeholder="Enter price" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="qty">Quantity <a class="tn">*</a></label>
+                                                            <input type="text" class="form-control qty" id="qty" name="orderitem[` +
+                                                        i +
+                                                        `][qty]" aria-describedby="emailHelp" placeholder="Enter quantity" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>`);
                 mask();
             })
         })
@@ -342,4 +336,4 @@
         })
 
     </script>
-@endsection;
+@endsection
