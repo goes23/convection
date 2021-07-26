@@ -1,5 +1,5 @@
 @extends('layout.v_template')
-
+<link rel="stylesheet" href="{{ asset('assets/') }}/main.css">
 @section('content')
     <div class="content-header">
         <div class="container-fluid">

@@ -151,7 +151,6 @@
                         var date = currentDate.getDate() < 10 ? "0" + currentDate.getDate() : currentDate
                             .getDate();
                         var date_format = year + "-" + month + "-" + date
-                        
                         $("#id").val(result.id)
                         $('#kode').val(result.kode);
                         $('#name').val(result.name);
@@ -203,7 +202,7 @@
             if (required_fild(object) == false) {
                 return false;
             }
-
+            loading()
             $.ajax({
                 url: "{{ route('bahan.store') }}",
                 type: "post",
@@ -214,11 +213,13 @@
                 dataType: "json",
                 success: function(result) {
                     call_toast(result)
-                    $(".inputForm").val('');
+                    $(".inputForm").val('')
                     $("#example1").DataTable().ajax.reload()
                     setTimeout(function() {
                         $('#modal-xl').modal('hide');
                     }, 1500);
+                    // return;
+                    unloading()
                 },
                 error: function(xhr, Status, err) {
                     $("Terjadi error : " + Status);
