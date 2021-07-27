@@ -161,7 +161,7 @@ function GetMenu($id)
 
         $sidebar .= '<li ' . $pclass . '>
                         <a ' . $activc . '>
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <i class="nav-icon fas fa-book"></i>
                             <p>
                                 ' . $key . '
                                 <i class="right fas fa-angle-left"></i>
