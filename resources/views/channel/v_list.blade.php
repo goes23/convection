@@ -122,6 +122,10 @@
 
         function edit(id) {
             if (id) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> dev
                 $.ajax({
                     url: "channel/" + id + "/edit",
                     type: "GET",
