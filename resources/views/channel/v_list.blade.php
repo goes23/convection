@@ -123,6 +123,10 @@
         function edit(id) {
             if (id) {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> dev
 =======
 
 >>>>>>> dev
