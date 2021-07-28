@@ -57,9 +57,14 @@ class ProduksiController extends Controller
                 })
                 ->rawColumns(['status'])
                 ->addColumn('action', function ($data) {
-                    $button = '<center><button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
+                    $button = '<center>';
+                    if (allowed_access(session('user'), 'produksi', 'edit')) :
+                        $button = '<center><button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
+                    endif;
                     $button .= '&nbsp;&nbsp;';
-                    $button .= '<button type="button" class="btn btn-danger btn-sm" onClick="my_delete(' . $data->id . ')">Delete</button></center>';
+                    if (allowed_access(session('user'), 'produksi', 'delete')) :
+                        $button .= '<button type="button" class="btn btn-danger btn-sm" onClick="my_delete(' . $data->id . ')">Delete</button></center>';
+                    endif;
                     return $button;
                 })
                 ->rawColumns(['action', 'status'])
@@ -91,19 +96,51 @@ class ProduksiController extends Controller
             return "error request";
             exit;
         }
+        if ($request["id"]) {
+            $id = $request["id"];
+            $jumlah = $request["data"]["jumlah"];
+            if ($request["sisa"] == null) {
+                $sisa = $request["data"]["jumlah"];
+            } else {
+                $sisa = $request["sisa"];
+            }
+        } else {
+            $produksi = new Produksi();
+            $data = $produksi->get_data_produksi($request["data"]["bahan"], $request["data"]["product"]);
 
-        $id = $request["id"];
+            $id = "";
+            $jumlah = 0;
+            $sisa = 0;
+            if ($data) {
+                $id = $data[0]->id;
+                $jumlah = (int) $data[0]->jumlah + (int) $request["data"]["jumlah"];
+
+                if ($request["sisa"] == null) {
+                    $sisa = (int) $request["data"]["jumlah"] + (int) $data[0]->sisa;
+                } else {
+                    $sisa = $request["sisa"] + (int) $data[0]->sisa;
+                }
+            } else {
+                $id = $request["id"];
+                $jumlah = $request["data"]["jumlah"];
+
+                if ($request["sisa"] == null) {
+                    $sisa = $request["data"]["jumlah"];
+                } else {
+                    $sisa = $request["sisa"];
+                }
+            }
+        }
 
         $post = Produksi::UpdateOrCreate(["id" => $id], [
             'bahan_id' => $request["data"]["bahan"],
             'product_id' => $request["data"]["product"],
-            'jumlah' => $request["data"]["jumlah"],
-            'sisa' => $request["data"]["jumlah"],
+            'jumlah' => $jumlah,
+            'sisa' => $sisa,
             'status' => $request["data"]["status"],
-            'created_by' => 1
+            'created_by' => session('user')
 
         ]);
-
 
         return response()->json($post);
     }

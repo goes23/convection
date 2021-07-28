@@ -19,7 +19,7 @@ class CreateModuleTable extends Migration
             $table->string('name', 50);
             $table->string('controller', 50);
             $table->integer('order_no');
-            $table->integer('active');
+            $table->integer('status');
             $table->timestamps();
             $table->softDeletes();
         });

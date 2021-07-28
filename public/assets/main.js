@@ -6,7 +6,11 @@ $.ajaxSetup({
 
 function required_fild(object) {
     for (const property in object) {
-        if (`${object[property]}` == "" || `${object[property]}` == 'null' || `${object[property]}` == 'undefined') {
+        if (
+            `${object[property]}` == "" ||
+            `${object[property]}` == "null" ||
+            `${object[property]}` == "undefined"
+        ) {
             console.log(`${object[property]}`);
             Swal.fire({
                 icon: "error",
@@ -48,4 +52,25 @@ function call_toast(result) {
             title: "successfully",
         });
     }
+}
+
+function loading() {
+    var maskHeight = $(document).height();
+    var maskWidth = $(document).width();
+
+    $(".mask").css({
+        width: maskWidth,
+        height: maskHeight,
+    });
+    $(".mask").fadeTo("slow", 0.1);
+    $(".loading").fadeIn("slow");
+
+    return false;
+}
+
+function unloading() {
+	$(".mask").hide();
+	$(".loading").hide();
+
+    return false;
 }

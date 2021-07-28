@@ -30,12 +30,15 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div style=" padding: 0px 0px 18px 0px;">
+                                <?php if (allowed_access(session('user'), 'bahan', 'add')): ?>
                                 <button type="button" class="btn btn-info btn-sm" onclick="add_btn()">Tambah Bahan</button>
+                                <?php endif; ?>
                             </div>
 
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
+                                        <th>No</th>
                                         <th>kode</th>
                                         <th>Name</th>
                                         <th>Tanggal Pembelian</th>
@@ -46,7 +49,6 @@
                                         <th>Action</th>
                                     </tr>
                                 </thead>
-
                             </table>
                         </div>
                         <!-- /.card-body -->
@@ -65,7 +67,10 @@
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
         $(document).ready(function() {
-            $("#harga").mask('000.000.000', {reverse: true});
+            $('.inputForm').val('');
+            $("#harga").mask('000.000.000', {
+                reverse: true
+            });
             $("#panjang").inputmask('Regex', {
                 regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
             });
@@ -78,6 +83,12 @@
                     type: "GET"
                 },
                 columns: [{
+                        "data": null,
+                        "sortable": false,
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    }, {
                         data: 'kode',
                         name: 'kode'
                     },
@@ -92,7 +103,7 @@
                     {
                         data: 'harga',
                         name: 'harga',
-                        render: $.fn.dataTable.render.number( '.', ',', 2, 'Rp. ' )
+                        render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
                     },
                     {
                         data: 'panjang',
@@ -117,7 +128,11 @@
                 ],
                 order: [
                     [0, 'asc']
-                ]
+                ],
+                columnDefs: [{
+                    "width": "20px",
+                    "targets": 0
+                }]
             });
         })
 
@@ -133,9 +148,9 @@
                         var month = currentDate.getMonth() + 1 < 10 ? "0" + (parseInt(currentDate.getMonth()) +
                                 1) : currentDate
                             .getMonth() + 1;
-                        var date = currentDate.getDate();
+                        var date = currentDate.getDate() < 10 ? "0" + currentDate.getDate() : currentDate
+                            .getDate();
                         var date_format = year + "-" + month + "-" + date
-
                         $("#id").val(result.id)
                         $('#kode').val(result.kode);
                         $('#name').val(result.name);
@@ -143,7 +158,8 @@
                         $('#harga').val(result.harga);
                         $('#panjang').val(result.panjang);
                         $('#satuan').val(result.satuan);
-                        $("#status").val(result.status ).change();
+                        $("#status").val(result.status).change();
+                        mask()
                         $('#modal-xl').modal('show');
                     },
                     error: function(xhr, Status, err) {
@@ -155,7 +171,14 @@
             }
         }
 
-        function add_edit() {
+        function mask() {
+            $('input[id^="harga"]').mask('000.000.000', {
+                reverse: true
+            });
+        }
+
+        $('#form_add_edit').submit(function(e) {
+            e.preventDefault();
 
             var id = $('#id').val();
             var kode = $('#kode').val();
@@ -179,7 +202,7 @@
             if (required_fild(object) == false) {
                 return false;
             }
-
+            loading()
             $.ajax({
                 url: "{{ route('bahan.store') }}",
                 type: "post",
@@ -190,17 +213,19 @@
                 dataType: "json",
                 success: function(result) {
                     call_toast(result)
-                    $(".inputForm").val('');
+                    $(".inputForm").val('')
                     $("#example1").DataTable().ajax.reload()
                     setTimeout(function() {
                         $('#modal-xl').modal('hide');
                     }, 1500);
+                    // return;
+                    unloading()
                 },
                 error: function(xhr, Status, err) {
                     $("Terjadi error : " + Status);
                 }
             });
-        }
+        })
 
         function my_delete(id = null) {
             if (id == null) {

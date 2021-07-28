@@ -30,13 +30,16 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div style=" padding: 0px 0px 18px 0px;">
+                                <?php if (allowed_access(session('user'), 'channel', 'add')): ?>
                                 <button type="button" class="btn btn-info btn-sm" onclick="add_btn()">Tambah
-                                    channel</button>
+                                    Channel</button>
+                                <?php endif; ?>
                             </div>
 
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
+                                        <th>No</th>
                                         <th>Name</th>
                                         <th>Status</th>
                                         <th>Action</th>
@@ -61,6 +64,7 @@
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
         $(document).ready(function() {
+            $('.inputForm').val('');
             $('#bahan').select2({
                 dropdownParent: $('#modal-default')
             });
@@ -82,7 +86,13 @@
                     url: "{{ route('channel.index') }}",
                     type: "GET"
                 },
-                columns: [
+                columns: [{
+                        "data": null,
+                        "sortable": false,
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
                     {
                         data: 'name',
                         name: 'name',
@@ -102,13 +112,16 @@
                 ],
                 order: [
                     [0, 'asc']
-                ]
+                ],
+                columnDefs: [{
+                    "width": "20px",
+                    "targets": 0
+                }]
             });
         })
 
         function edit(id) {
             if (id) {
-               
                 $.ajax({
                     url: "channel/" + id + "/edit",
                     type: "GET",
@@ -116,7 +129,7 @@
                     success: function(result) {
                         $("#id").val(result.id)
                         $('#name').val(result.name);
-                        $("#status").val(result.status ).change();
+                        $("#status").val(result.status).change();
                         $('#modal-default').modal('show');
                     },
                     error: function(xhr, Status, err) {
@@ -128,7 +141,9 @@
             }
         }
 
-        function add_edit() {
+        $('#form_add_edit').submit(function(e) {
+            e.preventDefault();
+
             var id = $('#id').val();
             var name = $('#name').val();
             var status = $('#status').val();
@@ -162,7 +177,8 @@
                     $("Terjadi error : " + Status);
                 }
             });
-        }
+
+        })
 
         function my_delete(id = null) {
             if (id == null) {

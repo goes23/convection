@@ -1,7 +1,7 @@
 <div class="modal fade" id="modal-default">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="form_add">
+            <form name="form_add_edit" id="form_add_edit">
                 <div class="modal-header">
                     <h4 class="modal-title">{{ $modal_title }}</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -14,11 +14,11 @@
                         <div class="form-group">
                             <label for="name">Name Channel <a class="tn">*</a></label>
                             <input type="text" class="form-control inputForm" id="name" name="name"
-                                aria-describedby="emailHelp" placeholder="Enter name">
+                                aria-describedby="emailHelp" placeholder="Enter name" required>
                         </div>
                         <div class="form-group">
                             <label for="status">status <a class="tn">*</a></label>
-                            <select class="form-control" id="status">
+                            <select class="form-control" id="status" required>
                                 <option value="1">Active</option>
                                 <option value="0">not Active</option>
                             </select>
@@ -28,7 +28,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="add_edit()">Save changes</button>
+                    <button type="submit" class="btn btn-primary" >Save changes</button>
                 </div>
             </form>
         </div>

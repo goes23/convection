@@ -30,13 +30,16 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div style=" padding: 0px 0px 18px 0px;">
+                                <?php if (allowed_access(session('user'), 'produksi', 'add')): ?>
                                 <button type="button" class="btn btn-info btn-sm" onclick="add_btn()">Tambah
                                     produksi</button>
+                                <?php endif; ?>
                             </div>
 
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
+                                        <th>No</th>
                                         <th>Bahan</th>
                                         <th>Product</th>
                                         <th>Jumlah</th>
@@ -64,6 +67,7 @@
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
         $(document).ready(function() {
+            $('.inputForm').val('');
             $('#bahan').select2({
                 dropdownParent: $('#modal-default')
             });
@@ -85,7 +89,13 @@
                     url: "{{ route('produksi.index') }}",
                     type: "GET"
                 },
-                columns: [
+                columns: [{
+                        "data": null,
+                        "sortable": false,
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
                     {
                         data: 'bahan',
                         name: 'bahan',
@@ -117,23 +127,29 @@
                 ],
                 order: [
                     [0, 'asc']
-                ]
+                ],
+                columnDefs: [{
+                    "width": "20px",
+                    "targets": 0
+                }]
             });
         })
 
         function edit(id) {
             if (id) {
-               
                 $.ajax({
                     url: "produksi/" + id + "/edit",
                     type: "GET",
                     dataType: "json",
                     success: function(result) {
-                        $("#id").val(result.id)
+                        $('.add').hide();
+                        $('#id').val(result.id)
+                        // $("#forms").val('edit');
                         $('#bahan').val(result.bahan_id).change();
                         $('#product').val(result.product_id).change();
                         $('#jumlah').val(result.jumlah);
-                        $("#status").val(result.status ).change();
+                        $('#sisa').val(result.sisa);
+                        $("#status").val(result.status).change();
                         $('#modal-default').modal('show');
                     },
                     error: function(xhr, Status, err) {
@@ -145,14 +161,24 @@
             }
         }
 
-        function add_edit() {
-
+        $('#form_add_edit').submit(function(e) {
+            e.preventDefault();
             var id = $('#id').val();
             var bahan = $('#bahan').val();
             var product = $('#product').val();
             var jumlah = $('#jumlah').val();
             var status = $('#status').val();
+            var sisa = $('#sisa').val();
 
+            if (sisa != "") {
+                if (parseInt(sisa) > parseInt(jumlah)) {
+                    Swal.fire({
+                        icon: "error",
+                        text: "sisa melebihi jumlah !!",
+                    });
+                    return false;
+                }
+            }
 
             var object = {
                 bahan,
@@ -170,9 +196,13 @@
                 type: "post",
                 data: {
                     "id": id,
-                    "data": object,
+                    "sisa": sisa,
+                    "data": object
                 },
                 dataType: "json",
+                beforeSend: function() {
+                    console.log("ok")
+                },
                 success: function(result) {
                     call_toast(result)
                     $(".inputForm").val('');
@@ -185,7 +215,7 @@
                     $("Terjadi error : " + Status);
                 }
             });
-        }
+        })
 
         function my_delete(id = null) {
             if (id == null) {
@@ -218,9 +248,19 @@
             })
         }
 
+        // $('#jumlah').keyup(function() {
+        //     var form = $('#forms').val()
+        //     console.log(form);
+        //     if (form == 'add') {
+        //         $('#sisa').val($(this).val());
+        //     }
+        // });
+
         function add_btn() {
             var id = $('#id').val();
             if (id != "") {
+                $('.add').show();
+                // $("#forms").val('add');
                 $(".inputForm").val('');
             }
             $('#modal-default').modal('show');
