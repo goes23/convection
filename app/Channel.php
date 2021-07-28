@@ -12,18 +12,9 @@ class Channel extends Model
     protected $table = "channel";
     protected $guarded = [];
     protected $dates = ['deleted_at'];
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> dev
 
     public function order_header()
     {
         return $this->hasMany('App\OrderHeader');
     }
-<<<<<<< HEAD
->>>>>>> dev
-=======
->>>>>>> dev
 }
