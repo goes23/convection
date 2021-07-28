@@ -56,6 +56,16 @@ function random()
     return $generate_code;
 }
 
+function get_user_name($user_id)
+{
+    $name_user = DB::select("SELECT name FROM users WHERE id='{$user_id}'");
+    if ($name_user) {
+        return $name_user[0]->name;
+    } else {
+        return "user";
+    }
+}
+
 function allowed_access($user, $module, $permission_name)
 {
     if (get_role($user) == 1) {
@@ -79,7 +89,7 @@ function allowed_access($user, $module, $permission_name)
     }
 }
 
-function GetMenu($id)
+function get_menu_build($id)
 {
     if (get_role($id) == 1) {
         $module = DB::select("  SELECT m.name
@@ -136,7 +146,7 @@ function GetMenu($id)
             $explode  = explode("/", $link);
             $gurl = $explode[3];
             if (strtolower($gurl) == strtolower($sub->controller)) {
-                $active = 'class="nav-link active"';
+                $active = 'class="nav-link active"' . 'style="background-color:#f9f9f9c9;"';
                 array_push($class, $active);
             } else {
                 $active = 'class="nav-link"';
@@ -149,10 +159,10 @@ function GetMenu($id)
                         </li>';
         }
 
-        if (in_array('class="nav-link active"', $class)) {
+        if (in_array('class="nav-link active"' . 'style="background-color:#f9f9f9c9;"', $class)) {
             $pclass = 'class="nav-item menu-is-opening menu-open"';
             $display = 'style="display: block;"';
-            $activc = 'class="nav-link active"';
+            $activc = 'class="nav-link active" style="background-color:#138496;"';
         } else {
             $pclass = 'class="nav-item"';
             $display = 'style="display: none;"';

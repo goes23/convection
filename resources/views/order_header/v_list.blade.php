@@ -186,7 +186,7 @@
                         $('#detail_order_item').html(` <table class="table table-bordered">
                                                                 <thead>
                                                                     <tr>
-                                                                        <th scope="col">no</th>
+                                                                        <th scope="col">NO</th>
                                                                         <th scope="col">Purchase Code</th>
                                                                         <th scope="col">Product</th>
                                                                         <th scope="col">Qty</th>
