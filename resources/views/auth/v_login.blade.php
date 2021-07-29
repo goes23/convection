@@ -72,9 +72,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" style="margin-bottom: 15px;">
                         <div class="col-8">
-                            <div class="icheck-primary">
+                            <div class="icheck-success">
                                 <input type="checkbox" id="remember" name="remember">
                                 <label for="remember">
                                     Remember Me
@@ -82,7 +82,7 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block">Log In</button>
+                    <button type="submit" class="btn btn-info btn-block">Log In</button>
                 </form>
             </div>
             <!-- /.login-card-body -->
