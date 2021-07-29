@@ -16,6 +16,6 @@
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
     </div>
-    <!-- /.content-header -->
+  <img src="{{ asset('assets/') }}/dist/img/welcome.png" alt="welcome" class="welcome">
 
 @endsection
