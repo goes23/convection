@@ -35,7 +35,7 @@
                                 <?php endif; ?>
                             </div>
 
-                            <table id="example1" class="table table-bordered table-striped">
+                            <table id="example1" class="table table-bordered table-striped" style="width: 100%">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -82,7 +82,8 @@
                     url: "{{ route('bahan.index') }}",
                     type: "GET"
                 },
-                columns: [{
+                columns: [
+                    {
                         "data": null,
                         "sortable": false,
                         render: function(data, type, row, meta) {
@@ -124,7 +125,7 @@
                         name: 'action',
                         orderable: false,
                         searchable: false
-                    }
+                    },
                 ],
                 order: [
                     [0, 'asc']
