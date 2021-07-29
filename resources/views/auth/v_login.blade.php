@@ -20,12 +20,15 @@
 <body class="hold-transition login-page">
     <div class="login-box">
         <div class="login-logo">
-            <a href="{{ asset('assets/') }}/index2.html"><b>Form </b>Login</a>
+            <a href="{{ asset('assets/') }}/index2.html"><b>Convection</b></a>
         </div>
         <!-- /.login-logo -->
         <div class="card">
-            <div class="card-body login-card-body">
+            <div class="card-body login-card-body" style="border-radius: 10px;">
                 <p class="login-box-msg">Sign in to start your session</p>
+                <div style="margin-left: 25%; margin-bottom: 24px;">
+                    <img src="{{ asset('assets/') }}/dist/img/default1.png" alt="logo" style="border-radius: 100%; width: 70%;">
+                </div>
 
                 <form action="{{ route('login') }}" method="post">
 
@@ -53,9 +56,6 @@
                             {{ Session::get('error') }}
                         </div>
                     @endif
-
-
-
                     <div class="input-group mb-3">
                         <input type="email" class="form-control" placeholder="Email" id="email" name="email" required>
                         <div class="input-group-append">
