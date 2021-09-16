@@ -139,10 +139,10 @@
                         $("#id").val(result.id)
                         $('#kode').val(result.kode);
                         $('#name').val(result.name);
-                        $('#foto').val(result.foto);
                         $('#harga_jual').val(result.harga_jual);
                         $("#harga_modal_product").val(result.harga_modal_product);
                         $('.edit').show();
+                        $('#output').attr('src', "{{ asset('assets/img/') }}/" + result.foto);
                         $('#modal-default').modal('show');
                     },
                     error: function(xhr, Status, err) {
@@ -158,9 +158,6 @@
             var id = $('#id').val();
             var kode = $('#kode').val();
             var name = $('#name').val();
-            // var foto = $('#foto').val();
-            // var harga_jual = $('#harga_jual').val();
-            // var harga_modal_product = $('#harga_modal_product').val();
 
             var object = {
                 kode,
@@ -171,15 +168,7 @@
                 return false;
             }
 
-            // if (id == '') {
-            //     var dataInput = {
-            //         kode,
-            //         name
-            //     }
-            // } else {
-            //var dataInput = $('#form_add_edit').serialize()
             var dataInput = new FormData(this)
-            // }
 
             $.ajax({
                 url: "{{ route('product.store') }}",
@@ -268,6 +257,7 @@
 
         var loadFile = function(event) {
             var output = document.getElementById('output');
+            console.log(event.target.files[0]);
             output.src = URL.createObjectURL(event.target.files[0]);
         };
 

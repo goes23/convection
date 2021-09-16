@@ -81,52 +81,62 @@ class ProductController extends Controller
         }
 
         if ($request["id"] == '') {
-            $post = Product::insert([
-                'kode' => $request["kode"],
-                'name' => $request["name"],
-                'created_by' => session('user')
-            ]);
-        } else {
+            $insert       = [];
+            $insert['kode']       = $request["kode"];
+            $insert['name']       = $request["name"];
+            $insert['created_by'] = session('user');
 
+            $post = Product::insert($insert);
+        } else {
+            $update = [];
             if ($_FILES['file']['name'] == '') {
-                $filename = DB::table('product')->where('id', $request['id'])->first()->foto;
+                $update['kode']                = $request["kode"];
+                $update['name']                = $request["name"];
+                $update['harga_jual']          = $request["harga_jual"];
+                $update['harga_modal_product'] = $request["harga_modal_product"];
+                $update['created_by']          = session('user');
             } else {
 
+            /* DELETE FOTO/FILE */
                 $photoname = DB::table('product')->where('id', $request['id'])->first()->foto;
+
                 $image_path = public_path('/assets/img/') . $photoname;
                 $image_path_thumbnail = public_path('/thumbnail/') . $photoname;
-                if (File::exists($image_path)) {
+
+                if (File::exists($image_path)) { // cek jika ada foto maka hapus
                     File::delete($image_path);
                     File::delete($image_path_thumbnail);
                 }
 
-                $image = $request->file('file');
-                $filename = time() . '.' . $image->extension();
+            /* DELETE FOTO/FILE */
 
+            /* RESIZE IMAGE & SAVE FOTO KE PATH */
+                $image           = $request->file('file');
+                $filename        = time() . '.' . $image->extension();
                 $destinationPath = public_path('/thumbnail');
-
-                $img = Image::make($image->path());
+                $img             = Image::make($image->path());
 
                 $img->resize(100, 100, function ($constraint) {
-
                     $constraint->aspectRatio();
                 })->save($destinationPath . '/' . $filename);
 
                 $destinationPath = public_path('/assets/img');
-
                 $image->move($destinationPath, $filename);
+
+            /* RESIZE IMAGE & SAVE FOTO KE PATH */
+
+                $update['kode']                = $request["kode"];
+                $update['name']                = $request["name"];
+                $update['foto']                = $filename;
+                $update['harga_jual']          = $request["harga_jual"];
+                $update['harga_modal_product'] = $request["harga_modal_product"];
+                $update['created_by']          = session('user');
             }
 
             $post = Product::where(['id' => $request['id']])
-                ->update([
-                    "kode" =>  $request["kode"],
-                    "name" =>  $request["name"],
-                    "foto" =>  $filename,
-                    "harga_jual" =>  $request["harga_jual"],
-                    "harga_modal_product" =>  $request["harga_modal_product"],
-                    'created_by' => session('user')
-                ]);
+                ->update($update);
         }
+
         return response()->json($post);
     }
 
