@@ -142,7 +142,11 @@
                         $('#harga_jual').val(result.harga_jual);
                         $("#harga_modal_product").val(result.harga_modal_product);
                         $('.edit').show();
-                        $('#output').attr('src', "{{ asset('assets/img/') }}/" + result.foto);
+                        if (result.foto != null) {
+                            $('#output').attr('src', "{{ asset('assets/img/') }}/" + result.foto);
+                        }else{
+                            $('#output').attr('src', "");
+                        }
                         $('#modal-default').modal('show');
                     },
                     error: function(xhr, Status, err) {
@@ -257,7 +261,6 @@
 
         var loadFile = function(event) {
             var output = document.getElementById('output');
-            console.log(event.target.files[0]);
             output.src = URL.createObjectURL(event.target.files[0]);
         };
 
