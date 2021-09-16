@@ -55,6 +55,8 @@ Route::group(['middleware' => ['ceklogin', 'checkpermission']], function () {
 
     Route::resource('produksi', 'ProduksiController');
     Route::post('produksi/active', 'ProduksiController@active');
+    Route::post('produksi/form', 'ProduksiController@form')->name('produksi.form');
+
 
     Route::resource('channel', 'ChannelController');
     Route::post('channel/active', 'ChannelController@active');

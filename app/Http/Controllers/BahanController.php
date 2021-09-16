@@ -23,15 +23,6 @@ class BahanController extends Controller
 
         if ($request->ajax()) {
             return datatables()->of(Bahan::all())
-                ->addColumn('status', function ($data) {
-                    if ($data->status == 1) {
-                        $button = '<center><button type="button" class="btn btn-warning btn-sm" onclick="active(' . $data->id . ',0)"> Active </button> </center>';
-                    } else {
-                        $button = '<center><button type="button" class="btn btn-sm" style="background-color: #cccccc;" onclick="active(' . $data->id . ',1)"> Not Active </button> </center>';
-                    }
-                    return $button;
-                })
-                ->rawColumns(['status'])
                 ->addColumn('action', function ($data) {
                     $button = '<center>';
                     if (allowed_access(session('user'), 'bahan', 'edit')) :
@@ -43,7 +34,7 @@ class BahanController extends Controller
                     endif;
                     return $button;
                 })
-                ->rawColumns(['action', 'status'])
+                ->rawColumns(['action'])
                 ->addIndexColumn()
                 ->make(true);
         }
@@ -82,7 +73,9 @@ class BahanController extends Controller
             'harga' => $harga,
             'panjang' => $request["data"]["panjang"],
             'satuan' => $request["data"]["satuan"],
-            'status' => $request["data"]["status"],
+            'sisa_bahan' => $request["data"]["panjang"],
+            'harga_satuan' => $request["data"]["harga_satuan"],
+            'discount' => $request["data"]["discount"],
             'created_by' => session('user')
         ]);
 

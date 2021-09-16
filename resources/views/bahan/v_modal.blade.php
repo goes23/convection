@@ -59,15 +59,30 @@
                                             aria-describedby="emailHelp" placeholder="Enter satuan" required>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+
+                                <div class="col-md-4" id ="sisa_hide">
                                     <div class="form-group">
-                                        <label for="status">status <a class="tn">*</a></label>
-                                        <select class="form-control" id="status" required>
-                                            <option value="1">Active</option>
-                                            <option value="0">not Active</option>
-                                          </select>
+                                        <label for="sisa_bahan">Sisa bahan <a class="tn">*</a></label>
+                                        <input type="text" class="form-control inputForm" id="sisa_bahan" name="sisa_bahan"
+                                            aria-describedby="emailHelp" placeholder="Enter sisa bahan" disabled>
                                     </div>
                                 </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="harga_satuan">Harga Satuan <a class="tn">*</a></label>
+                                        <input type="text" class="form-control inputForm" id="harga_satuan" name="harga_satuan"
+                                            aria-describedby="emailHelp" placeholder="Enter satuan" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="discount">Discount <a class="tn">*</a></label>
+                                        <input type="text" class="form-control inputForm" id="discount" name="discount"
+                                            aria-describedby="emailHelp" placeholder="Enter satuan" required>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
 
@@ -83,3 +98,5 @@
         </div>
     </div>
 </div>
+
+

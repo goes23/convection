@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Product;
+use Image;
+
 
 class ProductController extends Controller
 {
@@ -24,19 +26,19 @@ class ProductController extends Controller
 
         if ($request->ajax()) {
             return datatables()->of(Product::all())
-                ->addColumn('status', function ($data) {
-                    if ($data->status == 1) {
-                        $button = '<center><button type="button" class="btn btn-warning btn-sm" onclick="active(' . $data->id . ',0)"> Active </button> </center>';
-                    } else {
-                        $button = '<center><button type="button" class="btn btn-sm" style="background-color: #cccccc;" onclick="active(' . $data->id . ',1)"> Not Active </button> </center>';
+                ->addColumn('img', function ($data) {
+                    $img = '';
+                    if ($data['foto'] != null) {
+                        $img = '<center><img src="'.asset('thumbnail/').'/'.$data['foto'].'" alt="" width="200" height="100"></center>';
                     }
-                    return $button;
+                    return $img;
                 })
-                ->rawColumns(['status'])
                 ->addColumn('action', function ($data) {
                     $button = '<center>';
                     if (allowed_access(session('user'), 'product', 'edit')) :
-                        $button = '<center><button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
+                        $button = '<center><button type="button" class="btn btn-warning btn-sm" onclick="stock(' . $data->id . ')">Stock</button>';
+                        $button .= '&nbsp;&nbsp;';
+                        $button .= '<button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
                     endif;
                     $button .= '&nbsp;&nbsp;';
                     if (allowed_access(session('user'), 'product', 'delete')) :
@@ -44,10 +46,11 @@ class ProductController extends Controller
                     endif;
                     return $button;
                 })
-                ->rawColumns(['action', 'status'])
+                ->rawColumns(['action', 'img'])
                 ->addIndexColumn()
                 ->make(true);
         }
+        // <img src="pic_trulli.jpg" alt="" width="500" height="333">
 
         return view('product/v_list', $data_view);
     }
@@ -74,20 +77,43 @@ class ProductController extends Controller
             exit;
         }
 
-        $id = $request["id"];
-        $harga_modal = str_replace(".", "", $request["data"]["harga_modal"]);
+        if ($request["id"] == '') {
+            $post = Product::insert([
+                'kode' => $request["kode"],
+                'name' => $request["name"],
+                'created_by' => session('user')
+            ]);
+        } else {
+            if ($_FILES['file']['name'] == '') {
+                $filename = $_FILES['file']['name'];
+            } else {
+                $image = $request->file('file');
+                $filename = time() . '.' . $image->extension();
 
-        $post = Product::UpdateOrCreate(["id" => $id], [
-            'kode' => $request["data"]["kode"],
-            'name' => $request["data"]["name"],
-            'harga_modal' => $harga_modal,
-            'stock' => $request["data"]["stock"] == '' ? 0 : $request["data"]["stock"],
-            'status' => $request["data"]["status"],
-            'created_by' => session('user')
+                $destinationPath = public_path('/thumbnail');
 
-        ]);
+                $img = Image::make($image->path());
 
+                $img->resize(100, 100, function ($constraint) {
 
+                    $constraint->aspectRatio();
+                })->save($destinationPath . '/' . $filename);
+
+                $destinationPath = public_path('/assets/img');
+
+                $image->move($destinationPath, $filename);
+            }
+
+            $post = Product::where(['id' => $request['id']])
+                ->update([
+                    "kode" =>  $request["kode"],
+                    "name" =>  $request["name"],
+                    "foto" =>  $filename,
+                    "harga_jual" =>  $request["harga_jual"],
+                    "harga_modal_product" =>  $request["harga_modal_product"],
+                    'created_by' => session('user')
+                ]);
+        }
         return response()->json($post);
     }
 

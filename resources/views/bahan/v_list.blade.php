@@ -45,7 +45,7 @@
                                         <th>Harga</th>
                                         <th>Panjang</th>
                                         <th>Satuan</th>
-                                        <th>Status</th>
+                                        <th>Sisa Bahan</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -74,6 +74,9 @@
             $("#panjang").inputmask('Regex', {
                 regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
             });
+            $("#discount").inputmask('Regex', {
+                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
+            });
 
             $("#example1").DataTable({
                 processing: true,
@@ -82,8 +85,7 @@
                     url: "{{ route('bahan.index') }}",
                     type: "GET"
                 },
-                columns: [
-                    {
+                columns: [{
                         "data": null,
                         "sortable": false,
                         render: function(data, type, row, meta) {
@@ -115,10 +117,8 @@
                         name: 'satuan'
                     },
                     {
-                        data: 'status',
-                        name: 'status',
-                        orderable: false,
-                        searchable: false
+                        data: 'sisa_bahan',
+                        name: 'sisa_bahan',
                     },
                     {
                         data: 'action',
@@ -159,8 +159,12 @@
                         $('#harga').val(result.harga);
                         $('#panjang').val(result.panjang);
                         $('#satuan').val(result.satuan);
-                        $("#status").val(result.status).change();
+                        $("#sisa_bahan").val(result.sisa_bahan)
+                        $("#harga_satuan").val(result.status).change();
+                        $("#discount").val(result.discount)
+
                         mask()
+                        $('#sisa_hide').show();
                         $('#modal-xl').modal('show');
                     },
                     error: function(xhr, Status, err) {
@@ -188,7 +192,9 @@
             var harga = $('#harga').val();
             var panjang = $('#panjang').val();
             var satuan = $('#satuan').val();
-            var status = $('#status').val();
+            // var sisa_bahan = $('#sisa_bahan').val();
+            var harga_satuan = $('#harga_satuan').val();
+            var discount = $('#discount').val();
 
             var object = {
                 kode,
@@ -197,7 +203,9 @@
                 harga,
                 panjang,
                 satuan,
-                status,
+                // sisa_bahan,
+                harga_satuan,
+                discount
             }
 
             if (required_fild(object) == false) {
@@ -264,6 +272,7 @@
             if (id != "") {
                 $(".inputForm").val('');
             }
+            $('#sisa_hide').hide();
             $('#modal-xl').modal('show');
         }
 

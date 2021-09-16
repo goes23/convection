@@ -17,13 +17,15 @@ class ProduksiController extends Controller
     public function index(Request $request)
     {
         // dd("po");
-        $data_bahan = Bahan::where('status', 1)
+        $data_bahan = Bahan::where('sisa_bahan', '<>', 0)
             ->select('id', 'kode', 'name')
             ->get();
 
-        $data_product = Product::where('status', 1)
-            ->select('id', 'kode', 'name')
-            ->get();
+        $data_product = Product::all();
+
+        // $data_product = Product::where('status', 1)
+        //     ->select('id', 'kode', 'name')
+        //     ->get();
 
         $data_view            = array();
         $data_view["title_h1"]               = "Data Produksi";
@@ -55,19 +57,7 @@ class ProduksiController extends Controller
                     }
                     return $button;
                 })
-                ->rawColumns(['status'])
-                ->addColumn('action', function ($data) {
-                    $button = '<center>';
-                    if (allowed_access(session('user'), 'produksi', 'edit')) :
-                        $button = '<center><button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
-                    endif;
-                    $button .= '&nbsp;&nbsp;';
-                    if (allowed_access(session('user'), 'produksi', 'delete')) :
-                        $button .= '<button type="button" class="btn btn-danger btn-sm" onClick="my_delete(' . $data->id . ')">Delete</button></center>';
-                    endif;
-                    return $button;
-                })
-                ->rawColumns(['action', 'status'])
+                ->rawColumns(['action'])
                 ->addIndexColumn()
                 ->make(true);
         }
@@ -75,11 +65,45 @@ class ProduksiController extends Controller
         return view('produksi/v_list', $data_view);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function form(Request $request, $id = "")
+    {
+
+        if ($request->id == "") {
+            $data_bahan = Bahan::where('sisa_bahan', '<>', 0)
+                ->select('id', 'kode', 'name')
+                ->get();
+
+            $data_product = Product::all();
+
+            $data_view                = [];
+            $data_view['h1']                     = 'Form Produksi';
+            $data_view['breadcrumb_item']        = 'Produksi List';
+            $data_view['breadcrumb_item_active'] = 'Form Produksi';
+            $data_view['card_title']             = 'Form Produksi';
+            $data_view["bahan"]                  = $data_bahan;
+            $data_view["product"]                = $data_product;
+            $data_view['status']                 = 'add';
+            return view('produksi/v_form', $data_view);
+        } else {
+            // $data_order = OrderHeader::with('order_item', 'channel')
+            //     ->where('order_header.id', $id)
+            //     ->get();
+
+            $data_view                = [];
+            $data_view['h1']                     = 'Form Produksi';
+            $data_view['breadcrumb_item']        = 'Produksi List';
+            $data_view['breadcrumb_item_active'] = 'Form Produksi';
+            $data_view['card_title']             = 'Form Produksi';
+            $data_view['channel']                = [];
+            //dd($data_view['channel']);
+            $data_view['product']                = [];
+            $data_view['data_order']             = [];
+            $data_view['status']                 = 'edit';
+            return view('produksi/v_form', $data_view);
+        }
+    }
+
+
     public function create(Request $request)
     {
     }

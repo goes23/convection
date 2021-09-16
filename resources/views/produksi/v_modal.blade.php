@@ -16,6 +16,7 @@
                             <label for="bahan">Bahan <a class="tn">*</a></label>
                             <select class="form-control select2" id="bahan" data-placeholder="Select a bahan"
                                 data-dropdown-css-class="select2-purple" style="width: 100%;" required>
+                                <option value="" disabled selected>Choose .. </option>
                                 @foreach ($bahan as $val)
                                     <option value="{{ $val->id }}">{{ $val->kode }} - {{ $val->name }}
                                     </option>
@@ -26,6 +27,7 @@
                             <label for="product">Product <a class="tn">*</a></label>
                             <select class="form-control select2" id="product" data-placeholder="Select a product"
                                 data-dropdown-css-class="select2-purple" style="width: 100%;" required>
+                                <option value="" disabled selected>Choose .. </option>
                                 @foreach ($product as $val)
                                     <option value="{{ $val->id }}">{{ $val->kode }} - {{ $val->name }}
                                     </option>
@@ -40,8 +42,9 @@
                         <div class="form-group">
                             <label for="sisa">Sisa <a class="tn">*</a></label>
                             <input type="text" class="form-control inputForm" id="sisa" name="sisa"
-                                aria-describedby="emailHelp" placeholder="Enter sisa" >
-                            <small id="emailHelp" class="form-text text-muted">jika sisa di kosongkan value akan mengikuti jumlah.</small>
+                                aria-describedby="emailHelp" placeholder="Enter sisa">
+                            <small id="emailHelp" class="form-text text-muted">jika sisa di kosongkan value akan
+                                mengikuti jumlah.</small>
                         </div>
                         <div class="form-group">
                             <label for="status">status <a class="tn">*</a></label>

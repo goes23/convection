@@ -42,9 +42,9 @@
                                         <th>No</th>
                                         <th>kode</th>
                                         <th>Name</th>
-                                        <th>Harga Modal</th>
-                                        <th>Stock</th>
-                                        <th>status</th>
+                                        <th>Foto</th>
+                                        <th>Harga Jual</th>
+                                        <th>Harga Modal Product</th>
                                         <th>action</th>
                                     </tr>
                                 </thead>
@@ -98,19 +98,19 @@
                         name: 'name'
                     },
                     {
-                        data: 'harga_modal',
-                        name: 'harga_modal',
-                        render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
-                    },
-                    {
-                        data: 'stock',
-                        name: 'stock'
-                    },
-                    {
-                        data: 'status',
-                        name: 'status',
+                        data: 'img',
+                        name: 'img',
                         orderable: false,
                         searchable: false
+                    },
+                    {
+                        data: 'harga_jual',
+                        name: 'harga_jual'
+                    },
+                    {
+                        data: 'harga_modal_product',
+                        name: 'harga_modal_product',
+                        render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
                     },
                     {
                         data: 'action',
@@ -139,9 +139,10 @@
                         $("#id").val(result.id)
                         $('#kode').val(result.kode);
                         $('#name').val(result.name);
-                        $('#harga_modal').val(result.harga_modal);
-                        $('#stock').val(result.stock);
-                        $("#status").val(result.status).change();
+                        $('#foto').val(result.foto);
+                        $('#harga_jual').val(result.harga_jual);
+                        $("#harga_modal_product").val(result.harga_modal_product);
+                        $('.edit').show();
                         $('#modal-default').modal('show');
                     },
                     error: function(xhr, Status, err) {
@@ -157,36 +158,36 @@
             var id = $('#id').val();
             var kode = $('#kode').val();
             var name = $('#name').val();
-            var harga_modal = $('#harga_modal').val();
-            var stock = $('#stock').val();
-            var status = $('#status').val();
+            // var foto = $('#foto').val();
+            // var harga_jual = $('#harga_jual').val();
+            // var harga_modal_product = $('#harga_modal_product').val();
 
             var object = {
                 kode,
-                name,
-                harga_modal,
-                status
+                name
             }
 
             if (required_fild(object) == false) {
                 return false;
             }
 
-            var dataInput = {
-                kode,
-                name,
-                harga_modal,
-                stock,
-                status
-            }
+            // if (id == '') {
+            //     var dataInput = {
+            //         kode,
+            //         name
+            //     }
+            // } else {
+            //var dataInput = $('#form_add_edit').serialize()
+            var dataInput = new FormData(this)
+            // }
 
             $.ajax({
                 url: "{{ route('product.store') }}",
-                type: "post",
-                data: {
-                    "id": id,
-                    "data": dataInput,
-                },
+                type: "POST",
+                data: dataInput,
+                cache: false,
+                contentType: false,
+                processData: false,
                 dataType: "json",
                 success: function(result) {
                     call_toast(result)
@@ -238,6 +239,7 @@
             if (id != "") {
                 $(".inputForm").val('');
             }
+            $('.edit').hide();
             $('#modal-default').modal('show');
         }
 
@@ -263,6 +265,11 @@
                 }
             });
         }
+
+        var loadFile = function(event) {
+            var output = document.getElementById('output');
+            output.src = URL.createObjectURL(event.target.files[0]);
+        };
 
     </script>
 @endsection

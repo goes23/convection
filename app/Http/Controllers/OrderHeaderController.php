@@ -70,7 +70,8 @@ class OrderHeaderController extends Controller
             $data_view['breadcrumb_item_active'] = 'Form Order Header';
             $data_view['card_title']             = 'Form Order';
             $data_view['channel']                = Channel::all();
-            $data_view['product']                = Product::where('stock', '!=', 0)->get();
+            // $data_view['product']                = Product::where('stock', '!=', 0)->get();
+            $data_view['product']                = [];
             $data_view['data_order']             = [];
             $data_view['status']                 = 'add';
             return view('order_header/v_form', $data_view);
@@ -86,7 +87,8 @@ class OrderHeaderController extends Controller
             $data_view['card_title']             = 'Edit Form Order';
             $data_view['channel']                = Channel::all();
             //dd($data_view['channel']);
-            $data_view['product']                = Product::where('stock', '!=', 0)->get();
+            $data_view['product']                = [];
+            // $data_view['product']                = Product::where('stock', '!=', 0)->get();
             $data_view['data_order']             = $data_order;
             $data_view['status']                 = 'edit';
             return view('order_header/v_form', $data_view);
@@ -127,7 +129,7 @@ class OrderHeaderController extends Controller
                 }
                 $conditon = trim($concat, ",");
 
-                DB::select("DELETE FROM order_item 
+                DB::select("DELETE FROM order_item
                     WHERE order_header_id = $request->id
                     AND id NOT IN ($conditon)");
             endif;

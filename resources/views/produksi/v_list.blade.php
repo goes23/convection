@@ -31,20 +31,32 @@
                         <div class="card-body">
                             <div style=" padding: 0px 0px 18px 0px;">
                                 <?php if (allowed_access(session('user'), 'produksi', 'add')): ?>
+                                <Form method="post" action="{{ route('produksi.form') }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-info btn-sm">Tambah produksi</button>
+                                </Form>
+                                <?php endif; ?>
+
+                                <?php /* if (allowed_access(session('user'), 'produksi', 'add')): ?>
                                 <button type="button" class="btn btn-info btn-sm" onclick="add_btn()">Tambah
                                     produksi</button>
-                                <?php endif; ?>
+                                <?php endif; */?>
                             </div>
 
                             <table id="example1" class="table table-bordered table-striped" style="width: 100%">
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Bahan</th>
+                                        <th>Kode Produksi</th>
                                         <th>Product</th>
-                                        <th>Jumlah</th>
-                                        <th>Sisa</th>
-                                        <th>Status</th>
+                                        <th>Bahan</th>
+                                        <th>Bidang</th>
+                                        <th>Pemakaian</th>
+                                        <th>Harga Potong</th>
+                                        <th>Harga Jait</th>
+                                        <th>Harga Finishing</th>
+                                        <th>Harga Aksesoris</th>
+                                        <th>Harga Modal Bahan</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -97,26 +109,44 @@
                         }
                     },
                     {
-                        data: 'bahan',
-                        name: 'bahan',
+                        data: 'kode_produksi',
+                        name: 'kode_produksi',
                     },
                     {
-                        data: 'product',
-                        name: 'product',
+                        data: 'product.name',
+                        name: 'product.name',
                     },
                     {
-                        data: 'jumlah',
-                        name: 'jumlah'
+                        data: 'bahan.name',
+                        name: 'bahan.name'
                     },
                     {
-                        data: 'sisa',
-                        name: 'sisa'
+                        data: 'bidang',
+                        name: 'bidang'
                     },
                     {
-                        data: 'status',
-                        name: 'status',
-                        orderable: false,
-                        searchable: false
+                        data: 'pemakaian',
+                        name: 'pemakaian'
+                    },
+                    {
+                        data: 'harga_potong_satuan',
+                        name: 'harga_potong_satuan'
+                    },
+                    {
+                        data: 'harga_jait_satuan',
+                        name: 'harga_jait_satuan'
+                    },
+                    {
+                        data: 'harga_finishing_satuan',
+                        name: 'harga_finishing_satuan'
+                    },
+                    {
+                        data: 'harga_aksesoris',
+                        name: 'harga_aksesoris',
+                    },
+                    {
+                        data: 'harga_modal_bahan_satuan',
+                        name: 'harga_modal_bahan_satuan',
                     },
                     {
                         data: 'action',
