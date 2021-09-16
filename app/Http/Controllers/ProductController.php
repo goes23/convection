@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Product;
 use Image;
+use File;
+use Illuminate\Support\Facades\DB;
+
 
 
 class ProductController extends Controller
@@ -29,7 +32,7 @@ class ProductController extends Controller
                 ->addColumn('img', function ($data) {
                     $img = '';
                     if ($data['foto'] != null) {
-                        $img = '<center><img src="'.asset('thumbnail/').'/'.$data['foto'].'" alt="" width="200" height="100"></center>';
+                        $img = '<center><img src="' . asset('thumbnail/') . '/' . $data['foto'] . '" alt="" width="200" height="100"></center>';
                     }
                     return $img;
                 })
@@ -84,9 +87,19 @@ class ProductController extends Controller
                 'created_by' => session('user')
             ]);
         } else {
+
             if ($_FILES['file']['name'] == '') {
-                $filename = $_FILES['file']['name'];
+                $filename = DB::table('product')->where('id', $request['id'])->first()->foto;
             } else {
+
+                $photoname = DB::table('product')->where('id', $request['id'])->first()->foto;
+                $image_path = public_path('/assets/img/') . $photoname;
+                $image_path_thumbnail = public_path('/thumbnail/') . $photoname;
+                if (File::exists($image_path)) {
+                    File::delete($image_path);
+                    File::delete($image_path_thumbnail);
+                }
+
                 $image = $request->file('file');
                 $filename = time() . '.' . $image->extension();
 
