@@ -7,6 +7,7 @@ use App\Product;
 use Image;
 use File;
 use Illuminate\Support\Facades\DB;
+use App\Produksi;
 
 
 
@@ -97,7 +98,7 @@ class ProductController extends Controller
                 $update['created_by']          = session('user');
             } else {
 
-            /* DELETE FOTO/FILE */
+                /* DELETE FOTO/FILE */
                 $photoname = DB::table('product')->where('id', $request['id'])->first()->foto;
 
                 $image_path = public_path('/assets/img/') . $photoname;
@@ -108,9 +109,9 @@ class ProductController extends Controller
                     File::delete($image_path_thumbnail);
                 }
 
-            /* DELETE FOTO/FILE */
+                /* DELETE FOTO/FILE */
 
-            /* RESIZE IMAGE & SAVE FOTO KE PATH */
+                /* RESIZE IMAGE & SAVE FOTO KE PATH */
                 $image           = $request->file('file');
                 $filename        = time() . '.' . $image->extension();
                 $destinationPath = public_path('/thumbnail');
@@ -123,7 +124,7 @@ class ProductController extends Controller
                 $destinationPath = public_path('/assets/img');
                 $image->move($destinationPath, $filename);
 
-            /* RESIZE IMAGE & SAVE FOTO KE PATH */
+                /* RESIZE IMAGE & SAVE FOTO KE PATH */
 
                 $update['kode']                = $request["kode"];
                 $update['name']                = $request["name"];
@@ -193,9 +194,18 @@ class ProductController extends Controller
             return "error request";
             exit;
         }
-        $delete = Product::find($id)->delete();
 
-        return response()->json($delete);
+        $check_produksi = Produksi::where("product_id", $id)->exists();
+        if (!$check_produksi) {
+            $delete = Product::find($id)->delete();
+            return response()->json($delete);
+        } else {
+            $res = [
+                "status" => false,
+                "msg" => "Product sedang di proses di produksi ..!!!"
+            ];
+            return response()->json($res);
+        }
     }
 
     public function active(Request $request)

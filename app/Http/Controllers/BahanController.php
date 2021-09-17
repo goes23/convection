@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Bahan;
+use App\Produksi;
 
 class BahanController extends Controller
 {
@@ -136,9 +137,18 @@ class BahanController extends Controller
             return "error request";
             exit;
         }
-        $delete = Bahan::find($id)->delete();
 
-        return response()->json($delete);
+        $check_produksi = Produksi::where("bahan_id", $id)->exists();
+        if (!$check_produksi) {
+            $delete = Bahan::find($id)->delete();
+            return response()->json($delete);
+        } else {
+            $res = [
+                "status" => false,
+                "msg" => "Bahan sedang di proses di produksi ..!!!"
+            ];
+            return response()->json($res);
+        }
     }
 
     public function active(Request $request)
