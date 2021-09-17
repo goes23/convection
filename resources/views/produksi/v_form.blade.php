@@ -270,7 +270,7 @@
             if (status != 1) {
                 $('#product').val('').change();
                 $('#bahan').val('').change();
-                //$('#size').val('').change();
+                $('#size').val('').change();
             }
 
             $("#qty").inputmask('Regex', {

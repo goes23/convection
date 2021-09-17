@@ -122,42 +122,14 @@ class ProduksiController extends Controller
             exit;
         }
 
-        // dd($request->all());
-        // array:13 [
-        //     "_token" => "imUiWQhkXpyGbBztmJmmCcvQvsjqUo9Yx4DcF3eL"
-        //     "id" => null
-        //     "kode_produksi" => null
-        //     "product_id" => "1"
-        //     "bahan_id" => "1"
-        //     "bidang" => "123"
-        //     "pemakaian" => "123"
-        //     "harga_potong_satuan" => "11"
-        //     "harga_jait_satuan" => "122"
-        //     "harga_finishing_satuan" => "11"
-        //     "harga_aksesoris" => "11"
-        //     "harga_modal_bahan_satuan" => "123"
-        //     "variants" => array:2 [
-        //       0 => array:3 [
-        //         "id" => null
-        //         "size" => "M"
-        //         "jumlah_produksi" => "10"
-        //       ]
-        //       1 => array:3 [
-        //         "id" => null
-        //         "size" => "XL"
-        //         "jumlah_produksi" => "11"
-        //       ]
-        //     ]
-        //   ]
-
         if ($request['id'] == null && $request['kode_produksi'] == null) {
             $kode = generate_kode();
         } else {
             $kode = $request['kode_produksi'];
+            $id = $request['id'];
             DB::select("DELETE FROM variants
-            WHERE kode_produksi = $kode");
+            WHERE produksi_id = $id");
         }
-
 
         $data = [];
         $data['kode_produksi']            = $kode;
