@@ -15,9 +15,9 @@ function customImagePath($image_name)
 
 function get_role($id)
 {
-    $role  = DB::select("  SELECT r.id 
+    $role  = DB::select("  SELECT r.id
                             FROM users u
-                            JOIN role r ON r.id = u.role 
+                            JOIN role r ON r.id = u.role
                             WHERE u.id = $id
                         ");
 
@@ -27,15 +27,26 @@ function get_role($id)
 function generate_purchase_code()
 {
     do {
-        $purchase_code = random();
-        $verification = DB::select((" SELECT EXISTS 
+        $purchase_code = random('order');
+        $verification = DB::select((" SELECT EXISTS
                                         (SELECT purchase_code FROM order_header WHERE purchase_code ='{$purchase_code}')
                                          as verification"));
     } while ($verification[0]->verification == 1);
     return $purchase_code;
 }
 
-function random()
+function generate_kode()
+{
+    do {
+        $kode_produksi = random('produksi');
+        $verification = DB::select((" SELECT EXISTS
+                                    (SELECT kode_produksi FROM produksi WHERE kode_produksi ='{$kode_produksi}')
+                                     as verification"));
+    } while ($verification[0]->verification == 1);
+    return $kode_produksi;
+}
+
+function random($param)
 {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $randomString = '';
@@ -51,7 +62,16 @@ function random()
     $micro_dates = explode(" ", $micro_date);
     $micro_time = (substr($micro_dates[0], 2, 3) * 10) + rand(1, 999);
 
-    $generate_code = "PC" . $year . $date . $micro_time . $randomString;
+    switch ($param) {
+        case "produksi":
+            $generate_code = "PR" . $year . $date . $micro_time . $randomString;
+            break;
+        case "order":
+            $generate_code = "PC" . $year . $date . $micro_time . $randomString;
+            break;
+        default:
+            $generate_code = "PC" . $year . $date . $micro_time . $randomString;
+    }
 
     return $generate_code;
 }
@@ -96,12 +116,12 @@ function get_menu_build($id)
                                 ,m.controller
                                 ,(SELECT m2.name FROM module m2 WHERE m2.id = m.parent_id AND m2.status = 1) as parent
                                 ,(SELECT m3.order_no FROM module m3 WHERE m3.id = m.parent_id) as orders
-                                FROM module m 
+                                FROM module m
                                 -- JOIN access a ON a.module_id = m.id
                                 -- JOIN role_access ra ON ra.access_id = a.id
                                 -- JOIN role r ON ra.role_id = r.id
                                 -- JOIN users u ON u.role = r.id
-                                WHERE m.parent_id != 0 
+                                WHERE m.parent_id != 0
                                 AND m.deleted_at IS NULL
                                 -- AND a.permission ='view'
                                 -- AND a.status = 1
@@ -114,12 +134,12 @@ function get_menu_build($id)
                             ,m.controller
                             ,(SELECT m2.name FROM module m2 WHERE m2.id = m.parent_id AND m2.status = 1) as parent
                             ,(SELECT m3.order_no FROM module m3 WHERE m3.id = m.parent_id) as orders
-                            FROM module m 
+                            FROM module m
                             JOIN access a ON a.module_id = m.id
                             JOIN role_access ra ON ra.access_id = a.id
                             JOIN role r ON ra.role_id = r.id
                             JOIN users u ON u.role = r.id
-                            WHERE m.parent_id != 0 
+                            WHERE m.parent_id != 0
                             AND m.deleted_at IS NULL
                             AND a.permission ='view'
                             AND a.status = 1

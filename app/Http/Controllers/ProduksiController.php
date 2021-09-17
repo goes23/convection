@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Produksi;
 use App\Bahan;
 use App\Product;
+use App\Variants;
+use Illuminate\Support\Facades\DB;
 
 class ProduksiController extends Controller
 {
@@ -120,53 +122,81 @@ class ProduksiController extends Controller
             return "error request";
             exit;
         }
-        if ($request["id"]) {
-            $id = $request["id"];
-            $jumlah = $request["data"]["jumlah"];
-            if ($request["sisa"] == null) {
-                $sisa = $request["data"]["jumlah"];
-            } else {
-                $sisa = $request["sisa"];
-            }
+
+        // dd($request->all());
+        // array:13 [
+        //     "_token" => "imUiWQhkXpyGbBztmJmmCcvQvsjqUo9Yx4DcF3eL"
+        //     "id" => null
+        //     "kode_produksi" => null
+        //     "product_id" => "1"
+        //     "bahan_id" => "1"
+        //     "bidang" => "123"
+        //     "pemakaian" => "123"
+        //     "harga_potong_satuan" => "11"
+        //     "harga_jait_satuan" => "122"
+        //     "harga_finishing_satuan" => "11"
+        //     "harga_aksesoris" => "11"
+        //     "harga_modal_bahan_satuan" => "123"
+        //     "variants" => array:2 [
+        //       0 => array:3 [
+        //         "id" => null
+        //         "size" => "M"
+        //         "jumlah_produksi" => "10"
+        //       ]
+        //       1 => array:3 [
+        //         "id" => null
+        //         "size" => "XL"
+        //         "jumlah_produksi" => "11"
+        //       ]
+        //     ]
+        //   ]
+
+        if ($request['id'] == null && $request['kode_produksi'] == null) {
+            $kode = generate_kode();
         } else {
-            $produksi = new Produksi();
-            $data = $produksi->get_data_produksi($request["data"]["bahan"], $request["data"]["product"]);
-
-            $id = "";
-            $jumlah = 0;
-            $sisa = 0;
-            if ($data) {
-                $id = $data[0]->id;
-                $jumlah = (int) $data[0]->jumlah + (int) $request["data"]["jumlah"];
-
-                if ($request["sisa"] == null) {
-                    $sisa = (int) $request["data"]["jumlah"] + (int) $data[0]->sisa;
-                } else {
-                    $sisa = $request["sisa"] + (int) $data[0]->sisa;
-                }
-            } else {
-                $id = $request["id"];
-                $jumlah = $request["data"]["jumlah"];
-
-                if ($request["sisa"] == null) {
-                    $sisa = $request["data"]["jumlah"];
-                } else {
-                    $sisa = $request["sisa"];
-                }
-            }
+            $kode = $request['kode_produksi'];
+            DB::select("DELETE FROM variants
+            WHERE kode_produksi = $kode
+            -- AND id NOT IN ($conditon)");
         }
 
-        $post = Produksi::UpdateOrCreate(["id" => $id], [
-            'bahan_id' => $request["data"]["bahan"],
-            'product_id' => $request["data"]["product"],
-            'jumlah' => $jumlah,
-            'sisa' => $sisa,
-            'status' => $request["data"]["status"],
-            'created_by' => session('user')
 
-        ]);
+        $data = [];
+        $data['kode_produksi']            = $kode;
+        $data['product_id']               = $request['product_id'];
+        $data['bahan_id']                 = $request['bahan_id'];
+        $data['bidang']                   = $request['bidang'];
+        $data['pemakaian']                = $request['pemakaian'];
+        $data['harga_potong_satuan']      = $request['harga_potong_satuan'];
+        $data['harga_jait_satuan']        = $request['harga_jait_satuan'];
+        $data['harga_finishing_satuan']   = $request['harga_finishing_satuan'];
+        $data['harga_aksesoris']          = $request['harga_aksesoris'];
+        $data['harga_modal_bahan_satuan'] = $request['harga_modal_bahan_satuan'];
+        $data['created_by']               = session('user');
 
-        return response()->json($post);
+        try {
+            DB::beginTransaction();
+
+            $post = Produksi::UpdateOrCreate(["id" => $request['id']], $data);
+
+            foreach ($request['variants'] as $val) {
+
+                $variant['kode_produksi']        = $kode;
+                $variant['product_id']           = $request['product_id'];
+                $variant['size']                 = $val['size'];
+                $variant['jumlah_produksi']      = $val['jumlah_produksi'];
+                $variant['sisa_jumlah_produksi'] = 0;
+                $variant['jumlah_stock_product'] = 0;
+
+                Variants::insert($variant);
+            }
+
+            DB::commit();
+            return response()->json($post);
+        } catch (\PDOException $e) {
+            DB::rollBack();
+            return response()->json($e);
+        }
     }
 
     /**

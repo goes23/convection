@@ -113,12 +113,12 @@
                         name: 'kode_produksi',
                     },
                     {
-                        data: 'product.name',
-                        name: 'product.name',
+                        data: 'product',
+                        name: 'product',
                     },
                     {
-                        data: 'bahan.name',
-                        name: 'bahan.name'
+                        data: 'bahan',
+                        name: 'bahan'
                     },
                     {
                         data: 'bidang',

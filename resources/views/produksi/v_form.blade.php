@@ -37,10 +37,13 @@
                                 <input type="hidden" class="form-control" id="id" name="id"
                                     value="{{ isset($data_order[0]->id) ? $data_order[0]->id : '' }}">
 
+                                <input type="hidden" class="form-control" id="kode_produksi" name="kode_produksi"
+                                    value="{{ isset($data_order[0]->kode_produksi) ? $data_order[0]->kode_produksi : '' }}">
+
                                 <div class="form-group">
                                     <label for="product">Product <a class="tn">*</a></label>
                                     <select class="form-control select2" id="product" data-placeholder="Select a product"
-                                        data-dropdown-css-class="select2-purple" style="width: 100%;" required>
+                                        data-dropdown-css-class="select2-purple" style="width: 100%;" name="product_id" required>
                                         <option value="" disabled selected>Choose .. </option>
                                         @foreach ($product as $val)
                                             <option value="{{ $val->id }}">{{ $val->kode }} - {{ $val->name }}
@@ -51,7 +54,7 @@
                                 <div class="form-group">
                                     <label for="bahan">Bahan <a class="tn">*</a></label>
                                     <select class="form-control select2" id="bahan" data-placeholder="Select a bahan"
-                                        data-dropdown-css-class="select2-purple" style="width: 100%;" required>
+                                        data-dropdown-css-class="select2-purple" style="width: 100%;" name="bahan_id" required>
                                         <option value="" disabled selected>Choose .. </option>
                                         @foreach ($bahan as $val)
                                             <option value="{{ $val->id }}">{{ $val->kode }} - {{ $val->name }}
@@ -85,7 +88,7 @@
                                 <div class="form-group">
                                     <label for="harga_jait_satuan">Harga Jait Satuan <a class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="harga_jait_satuan"
-                                        name="harga_jait_satuan" name="harga_jait_satuan"
+                                        name="harga_jait_satuan"
                                         placeholder="Enter harga jait satuan"
                                         value="{{ isset($data_order[0]->harga_jait_satuan) ? explode(' ', $data_order[0]->harga_jait_satuan)[0] : '' }}"
                                         required>
@@ -111,7 +114,7 @@
                                     <label for="harga_modal_bahan_satuan">Harga Modal Bahan Satuan <a
                                             class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="harga_modal_bahan_satuan"
-                                        name="harga_modal_bahan_satuan" name="harga_modal_bahan_satuan"
+                                        name="harga_modal_bahan_satuan"
                                         placeholder="Enter harga modal bahan satuan"
                                         value="{{ isset($data_order[0]->harga_modal_bahan_satuan) ? explode(' ', $data_order[0]->harga_modal_bahan_satuan)[0] : '' }}"
                                         required>
@@ -130,12 +133,12 @@
                                             <div class="card-body">
                                                 <div class="row">
                                                     <input type="hidden" id="id_order_item"
-                                                        name="orderitem[{{ $no }}][id]" value="">
+                                                        name="variants[{{ $no }}][id]" value="">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="size">Size <a class="tn">*</a></label>
                                                             <select class="form-control inputForm" id="size"
-                                                                name="orderitem[{{ $no }}][size]"
+                                                                name="variants[{{ $no }}][size]"
                                                                 data-placeholder="Select a size"
                                                                 data-dropdown-css-class="select2-purple" style="width: 100%"
                                                                 required>
@@ -155,7 +158,7 @@
                                                                     class="tn">*</a></label>
                                                             <input type="text" class="form-control jumlah_produksi"
                                                                 id="jumlah_produksi"
-                                                                name="orderitem[{{ $no }}][jumlah_produksi]"
+                                                                name="variants[{{ $no }}][jumlah_produksi]"
                                                                 aria-describedby="emailHelp"
                                                                 placeholder="Enter jumlah produksi" required>
                                                         </div>
@@ -186,14 +189,14 @@
                                                     <div class="card-body">
                                                         <div class="row">
                                                             <input type="hidden" id="id_order_item"
-                                                                name="orderitem[{{ $no }}][id]"
+                                                                name="variants[{{ $no }}][id]"
                                                                 value="{{ $val->id }}">
                                                             <div class="col-md-4">
                                                                 {{-- {{ $val->product_id }} --}}
                                                                 <div class="form-group">
                                                                     <label for="product">Product <a class="tn">*</a></label>
                                                                     <select class="form-control" id="product"
-                                                                        name="orderitem[{{ $no }}][product]"
+                                                                        name="variants[{{ $no }}][product]"
                                                                         data-placeholder="Select a product"
                                                                         style="width: 100%" required>
                                                                         @foreach ($product as $vals)
@@ -209,7 +212,7 @@
                                                                 <div class="form-group">
                                                                     <label for="price">Price <a class="tn">*</a></label>
                                                                     <input type="text" class="form-control price" id="price"
-                                                                        name="orderitem[{{ $no }}][price]"
+                                                                        name="variants[{{ $no }}][price]"
                                                                         aria-describedby="emailHelp"
                                                                         placeholder="Enter price"
                                                                         value="{{ $val->sell_price }}" required>
@@ -219,7 +222,7 @@
                                                                 <div class="form-group">
                                                                     <label for="qty">Quantity <a class="tn">*</a></label>
                                                                     <input type="text" class="form-control qty" id="qty"
-                                                                        name="orderitem[{{ $no }}][qty]"
+                                                                        name="variants[{{ $no }}][qty]"
                                                                         aria-describedby="emailHelp"
                                                                         placeholder="Enter quantity"
                                                                         value="{{ $val->qty }}" required>
@@ -271,40 +274,41 @@
             $('#add_order_item').click(function() {
                 i++
                 $('#items').append(`<div class="row" id="row` + i + `">
-                            <input type="hidden" id="id_order_item" name="orderitem[` +
+                                <input type="hidden" id="id_order_item" name="variants[` +
                     i +
                     `][id]" value="">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="size">Size <a class="tn">*</a></label>
-                                    <select class="form-control inputForm" id="size" name="orderitem[` +
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="size">Size <a class="tn">*</a></label>
+                                        <select class="form-control inputForm" id="size" name="variants[` +
                     i +
                     `][size]" data-placeholder="Select a size" data-dropdown-css-class="select2-purple"
-                                        style="width: 100%;" required>
-                                        <option value="" disabled selected>Choose ..</option>
-                                        <option value="S">S</option>
-                                        <option value="M">M</option>
-                                        <option value="L">L</option>
-                                        <option value="XL">XL</option>
-                                        <option value="XXL">XXL</option>
-                                    </select>
+                                            style="width: 100%;" required>
+                                            <option value="" disabled selected>Choose ..</option>
+                                            <option value="S">S</option>
+                                            <option value="M">M</option>
+                                            <option value="L">L</option>
+                                            <option value="XL">XL</option>
+                                            <option value="XXL">XXL</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="jumlah_produksi">Jumlah Produksi <a class="tn">*</a></label>
-                                    <input type="text" class="form-control" id="jumlah_produksi" name="orderitem[` +
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="jumlah_produksi">Jumlah Produksi <a class="tn">*</a></label>
+                                        <input type="text" class="form-control" id="jumlah_produksi" name="variants[` +
                     i +
                     `][jumlah_produksi]" aria-describedby="emailHelp" placeholder="Enter jumlah_produksi" required>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <br>
-                                    <button type="button" class="btn btn-danger btn-sm" style="margin-top: 10px;" onclick="removerow(`+ i +`)"> romove</button>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <br>
+                                        <button type="button" class="btn btn-danger btn-sm" style="margin-top: 10px;" onclick="removerow(` +
+                    i + `)"> romove</button>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>`);
+                            </div>`);
                 mask();
             })
         })
@@ -324,16 +328,21 @@
 
         $('#produksi').submit(function(e) {
             e.preventDefault();
+            var dataForm = new FormData(this);
+
             $.ajax({
-                url: "{{ route('order_header.store') }}",
+                url: "{{ route('produksi.store') }}",
                 type: "post",
-                data: $('#order').serialize(),
+                data: dataForm,
+                cache: false,
+                contentType: false,
+                processData: false,
                 dataType: "json",
                 success: function(result) {
                     console.log(result);
                     call_toast(result);
                     setTimeout(function() {
-                        window.location.href = "{{ route('order_header.index') }}";
+                        window.location.href = "{{ route('produksi.index') }}";
                     }, 1000);
                 },
                 error: function(xhr, Status, err) {
