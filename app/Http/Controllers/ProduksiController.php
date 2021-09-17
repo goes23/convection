@@ -51,12 +51,15 @@ class ProduksiController extends Controller
                     return $product;
                 })
                 ->rawColumns(['product'])
-                ->addColumn('status', function ($data) {
-                    if ($data->status == 1) {
-                        $button = '<center><button type="button" class="btn btn-warning btn-sm" onclick="active(' . $data->id . ',0)"> Active </button> </center>';
-                    } else {
-                        $button = '<center><button type="button" class="btn btn-sm" style="background-color: #cccccc;" onclick="active(' . $data->id . ',1)"> Not Active </button> </center>';
-                    }
+                ->addColumn('action', function ($data) {
+                    $button = '<center>';
+                    if (allowed_access(session('user'), 'produksi', 'edit')) :
+                        $button = '<center><button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
+                    endif;
+                    $button .= '&nbsp;&nbsp;';
+                    if (allowed_access(session('user'), 'produksi', 'delete')) :
+                        $button .= '<button type="button" class="btn btn-danger btn-sm" onClick="my_delete(' . "'" . $data->kode_produksi . "'" . ')">Delete</button></center>';
+                    endif;
                     return $button;
                 })
                 ->rawColumns(['action'])
@@ -246,13 +249,27 @@ class ProduksiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, $kode)
     {
         if (!$request->ajax()) {
             return "error request";
             exit;
         }
-        $delete = Produksi::find($id)->delete();
+
+        try {
+            DB::beginTransaction();
+
+            $delete = Produksi::where('kode_produksi', $kode)->delete();
+            variants::where('kode_produksi', $kode)->delete();
+
+            DB::commit();
+
+            return response()->json($delete);
+        } catch (\PDOException $e) {
+            DB::rollBack();
+            return response()->json($e);
+        }
+
 
         return response()->json($delete);
     }

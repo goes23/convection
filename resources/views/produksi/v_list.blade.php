@@ -247,7 +247,7 @@
             });
         })
 
-        function my_delete(id = null) {
+        function my_delete(id) {
             if (id == null) {
                 return false
             }
