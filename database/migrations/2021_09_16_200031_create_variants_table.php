@@ -16,6 +16,7 @@ class CreateVariantsTable extends Migration
         Schema::create('variants', function (Blueprint $table) {
             $table->id();
             $table->string('kode_produksi');
+            $table->integer('produksi_id');
             $table->integer('product_id');
             $table->string('size');
             $table->integer('jumlah_produksi');

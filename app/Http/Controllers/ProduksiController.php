@@ -54,11 +54,12 @@ class ProduksiController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '<center>';
                     if (allowed_access(session('user'), 'produksi', 'edit')) :
-                        $button = '<center><button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
+                        $button .= '<a type="button" href="/produksi/' . $data->id . '/form" class="btn btn-success btn-sm" >Edit</a>';
+                    // $button = '<center><button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
                     endif;
                     $button .= '&nbsp;&nbsp;';
                     if (allowed_access(session('user'), 'produksi', 'delete')) :
-                        $button .= '<button type="button" class="btn btn-danger btn-sm" onClick="my_delete(' . "'" . $data->kode_produksi . "'" . ')">Delete</button></center>';
+                        $button .= '<button type="button" class="btn btn-danger btn-sm" onClick="my_delete(' . $data->id . ')">Delete</button></center>';
                     endif;
                     return $button;
                 })
@@ -70,42 +71,37 @@ class ProduksiController extends Controller
         return view('produksi/v_list', $data_view);
     }
 
-    public function form(Request $request, $id = "")
+    public function form(Request $request, $id = '')
     {
+        $data_bahan = Bahan::where('sisa_bahan', '<>', 0)
+            ->select('id', 'kode', 'name')
+            ->get();
 
-        if ($request->id == "") {
-            $data_bahan = Bahan::where('sisa_bahan', '<>', 0)
-                ->select('id', 'kode', 'name')
-                ->get();
+        $data_product = Product::all();
 
-            $data_product = Product::all();
+        $data_view                = [];
+        $data_view['h1']                     = 'Form Produksi';
+        $data_view['breadcrumb_item']        = 'Produksi List';
+        $data_view['breadcrumb_item_active'] = 'Form Produksi';
+        $data_view['card_title']             = 'Form Produksi';
+        $data_view["bahan"]                  = $data_bahan;
+        $data_view["product"]                = $data_product;
+        // $data_view["size"]                   = $size;
 
-            $data_view                = [];
-            $data_view['h1']                     = 'Form Produksi';
-            $data_view['breadcrumb_item']        = 'Produksi List';
-            $data_view['breadcrumb_item_active'] = 'Form Produksi';
-            $data_view['card_title']             = 'Form Produksi';
-            $data_view["bahan"]                  = $data_bahan;
-            $data_view["product"]                = $data_product;
-            $data_view['status']                 = 'add';
-            return view('produksi/v_form', $data_view);
+
+        if ($id == "") {
+            $data_view['status']                 = 0; // status add
+            $data_view['data_produksi']          = [];
         } else {
-            // $data_order = OrderHeader::with('order_item', 'channel')
-            //     ->where('order_header.id', $id)
-            //     ->get();
+            $data_produksi = Produksi::with('variants')
+                ->where('produksi.id', $id)
+                ->get();
+                //dd($data_produksi[0]->product_id);
 
-            $data_view                = [];
-            $data_view['h1']                     = 'Form Produksi';
-            $data_view['breadcrumb_item']        = 'Produksi List';
-            $data_view['breadcrumb_item_active'] = 'Form Produksi';
-            $data_view['card_title']             = 'Form Produksi';
-            $data_view['channel']                = [];
-            //dd($data_view['channel']);
-            $data_view['product']                = [];
-            $data_view['data_order']             = [];
-            $data_view['status']                 = 'edit';
-            return view('produksi/v_form', $data_view);
+            $data_view['data_produksi']          = $data_produksi;
+            $data_view['status']                 = 1;  // status edit
         }
+        return view('produksi/v_form', $data_view);
     }
 
 
@@ -159,8 +155,7 @@ class ProduksiController extends Controller
         } else {
             $kode = $request['kode_produksi'];
             DB::select("DELETE FROM variants
-            WHERE kode_produksi = $kode
-            -- AND id NOT IN ($conditon)");
+            WHERE kode_produksi = $kode");
         }
 
 
@@ -185,6 +180,7 @@ class ProduksiController extends Controller
             foreach ($request['variants'] as $val) {
 
                 $variant['kode_produksi']        = $kode;
+                $variant['produksi_id']          = $post->id;
                 $variant['product_id']           = $request['product_id'];
                 $variant['size']                 = $val['size'];
                 $variant['jumlah_produksi']      = $val['jumlah_produksi'];
@@ -249,7 +245,7 @@ class ProduksiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $kode)
+    public function destroy(Request $request, $id)
     {
         if (!$request->ajax()) {
             return "error request";
@@ -259,8 +255,8 @@ class ProduksiController extends Controller
         try {
             DB::beginTransaction();
 
-            $delete = Produksi::where('kode_produksi', $kode)->delete();
-            variants::where('kode_produksi', $kode)->delete();
+            $delete = Produksi::where('id', $id)->delete();
+            variants::where('produksi_id', $id)->delete();
 
             DB::commit();
 
