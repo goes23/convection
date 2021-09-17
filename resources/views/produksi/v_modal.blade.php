@@ -37,12 +37,12 @@
                         <div class="form-group">
                             <label for="jumlah">Jumlah <a class="tn">*</a></label>
                             <input type="text" class="form-control inputForm" id="jumlah" name="jumlah"
-                                aria-describedby="emailHelp" placeholder="Enter jumlah" required>
+                                 placeholder="Enter jumlah" required>
                         </div>
                         <div class="form-group">
                             <label for="sisa">Sisa <a class="tn">*</a></label>
                             <input type="text" class="form-control inputForm" id="sisa" name="sisa"
-                                aria-describedby="emailHelp" placeholder="Enter sisa">
+                                 placeholder="Enter sisa">
                             <small id="emailHelp" class="form-text text-muted">jika sisa di kosongkan value akan
                                 mengikuti jumlah.</small>
                         </div>

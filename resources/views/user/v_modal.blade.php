@@ -14,22 +14,22 @@
                         <div class="form-group">
                             <label for="name">Name <a class="tn">*</a></label>
                             <input type="text" class="form-control inputForm" id="name" name="name"
-                                aria-describedby="emailHelp" placeholder="Enter name" required>
+                                 placeholder="Enter name" required>
                         </div>
                          <div class="form-group">
                             <label for="email">Email <a class="tn">*</a></label>
                             <input type="email" class="form-control inputForm" id="email" name="email"
-                                aria-describedby="emailHelp" placeholder="Enter email" required>
+                                 placeholder="Enter email" required>
                         </div>
                         <div class="form-group">
                             <label for="password">Password <a class="tn">*</a></label>
                             <input type="password" class="form-control inputForm" id="password" name="password"
-                                aria-describedby="emailHelp" placeholder="Enter password">
+                                 placeholder="Enter password">
                         </div>
                         <div class="form-group">
                             <label for="repassword">Repassword <a class="tn">*</a></label>
                             <input type="password" class="form-control inputForm" id="repassword" name="repassword"
-                                aria-describedby="emailHelp" placeholder="Enter repassword">
+                                 placeholder="Enter repassword">
                         </div>
                         <div class="form-group">
                             <label for="role">Role <a class="tn">*</a></label>

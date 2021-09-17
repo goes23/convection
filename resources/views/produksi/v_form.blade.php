@@ -84,7 +84,7 @@
                                 <div class="form-group">
                                     <label for="bidang">Bidang <a class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="bidang" name="bidang"
-                                        aria-describedby="emailHelp" placeholder="Enter bidang"
+                                         placeholder="Enter bidang"
                                         value="{{ isset($data_produksi[0]->bidang) ? $data_produksi[0]->bidang : '' }}">
                                 </div>
                             </div>
@@ -93,13 +93,13 @@
                                 <div class="form-group">
                                     <label for="pemakaian">Pemakaian <a class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="pemakaian" name="pemakaian"
-                                        aria-describedby="emailHelp" placeholder="Enter pemakaian"
+                                         placeholder="Enter pemakaian"
                                         value="{{ isset($data_produksi[0]->pemakaian) ? $data_produksi[0]->pemakaian : '' }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="harga_potong_satuan">Harga Potong Satuan <a class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="harga_potong_satuan"
-                                        name="harga_potong_satuan" aria-describedby="emailHelp"
+                                        name="harga_potong_satuan"
                                         placeholder="Enter harga potong satuan"
                                         value="{{ isset($data_produksi[0]->harga_potong_satuan) ? (int) $data_produksi[0]->harga_potong_satuan : '' }}"
                                         required>
@@ -117,14 +117,14 @@
                                 <div class="form-group">
                                     <label for="harga_finishing_satuan">Harga Finishing Satuan <a class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="harga_finishing_satuan"
-                                        name="harga_finishing_satuan" aria-describedby="emailHelp"
+                                        name="harga_finishing_satuan"
                                         placeholder="Enter harga finishing satuan"
                                         value="{{ isset($data_produksi[0]->harga_finishing_satuan) ? $data_produksi[0]->harga_finishing_satuan : '' }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="harga_aksesoris">Harga Aksesoris <a class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="harga_aksesoris"
-                                        name="harga_aksesoris" aria-describedby="emailHelp" placeholder="Enter aksesoris"
+                                        name="harga_aksesoris"  placeholder="Enter aksesoris"
                                         value="{{ isset($data_produksi[0]->harga_aksesoris) ? (int) $data_produksi[0]->harga_aksesoris : '' }}"
                                         required>
                                 </div>
@@ -175,7 +175,7 @@
                                                             <input type="text" class="form-control jumlah_produksi"
                                                                 id="jumlah_produksi"
                                                                 name="variants[{{ $no }}][jumlah_produksi]"
-                                                                aria-describedby="emailHelp"
+
                                                                 placeholder="Enter jumlah produksi" required>
                                                         </div>
                                                     </div>
@@ -225,7 +225,7 @@
                                                                     <input type="text" class="form-control jumlah_produksi"
                                                                         id="jumlah_produksi"
                                                                         name="variants[{{ $no }}][jumlah_produksi]"
-                                                                        aria-describedby="emailHelp"
+
                                                                         placeholder="Enter jumlah produksi"
                                                                         value="{{ $val->jumlah_produksi }}" required>
                                                                 </div>
@@ -312,7 +312,7 @@
                                                                                     <label for="jumlah_produksi">Jumlah Produksi <a class="tn">*</a></label>
                                                                                     <input type="text" class="form-control" id="jumlah_produksi" name="variants[` +
                     i +
-                    `][jumlah_produksi]" aria-describedby="emailHelp" placeholder="Enter jumlah_produksi" required>
+                    `][jumlah_produksi]"  placeholder="Enter jumlah_produksi" required>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="col-md-2">

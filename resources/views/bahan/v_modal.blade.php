@@ -21,12 +21,12 @@
                                     <div class="form-group">
                                         <label for="kode">Kode <a class="tn">*</a></label>
                                         <input type="text" class="form-control inputForm" id="kode" name="kode"
-                                            aria-describedby="emailHelp" placeholder="Enter kode" required>
+                                             placeholder="Enter kode" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="tgl">Tanggal Pembelian <a class="tn">*</a></label>
                                         <input type="date" class="form-control inputForm" id="tgl" name="tgl_pembelian"
-                                            aria-describedby="emailHelp" placeholder="Enter tangggal pembelian"
+                                             placeholder="Enter tangggal pembelian"
                                             required>
                                     </div>
                                 </div>
@@ -34,12 +34,12 @@
                                     <div class="form-group">
                                         <label for="name">Nama <a class="tn">*</a></label>
                                         <input type="text" class="form-control inputForm" id="name" name="name"
-                                            aria-describedby="emailHelp" placeholder="Enter name" required>
+                                             placeholder="Enter name" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="harga">Harga <a class="tn">*</a></label>
                                         <input type="text" class="form-control inputForm" id="harga" name="harga"
-                                            aria-describedby="emailHelp" placeholder="Enter harga" required>
+                                             placeholder="Enter harga" required>
                                     </div>
                                 </div>
                             </div>
@@ -49,14 +49,14 @@
                                     <div class="form-group">
                                         <label for="panjang">panjang <a class="tn">*</a></label>
                                         <input type="text" class="form-control inputForm" id="panjang" name="panjang"
-                                            aria-describedby="emailHelp" placeholder="Enter panjang" required>
+                                             placeholder="Enter panjang" required>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="satuan">Satuan <a class="tn">*</a></label>
                                         <input type="text" class="form-control inputForm" id="satuan" name="satuan"
-                                            aria-describedby="emailHelp" placeholder="Enter satuan" required>
+                                             placeholder="Enter satuan" required>
                                     </div>
                                 </div>
 
@@ -64,7 +64,7 @@
                                     <div class="form-group">
                                         <label for="sisa_bahan">Sisa bahan <a class="tn">*</a></label>
                                         <input type="text" class="form-control inputForm" id="sisa_bahan" name="sisa_bahan"
-                                            aria-describedby="emailHelp" placeholder="Enter sisa bahan" disabled>
+                                             placeholder="Enter sisa bahan" disabled>
                                     </div>
                                 </div>
 
@@ -72,14 +72,14 @@
                                     <div class="form-group">
                                         <label for="harga_satuan">Harga Satuan <a class="tn">*</a></label>
                                         <input type="text" class="form-control inputForm" id="harga_satuan" name="harga_satuan"
-                                            aria-describedby="emailHelp" placeholder="Enter satuan" required>
+                                             placeholder="Enter satuan" required>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="discount">Discount <a class="tn">*</a></label>
                                         <input type="text" class="form-control inputForm" id="discount" name="discount"
-                                            aria-describedby="emailHelp" placeholder="Enter satuan" required>
+                                             placeholder="Enter satuan" required>
                                     </div>
                                 </div>
 

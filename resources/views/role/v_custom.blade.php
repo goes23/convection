@@ -21,7 +21,7 @@
                     <div class="form-group">
                         <label for="permission">Name Permission<a class="tn">*</a></label>
                         <input type="text" class="form-control inputForm" id="permission" name="permission"
-                            aria-describedby="emailHelp" placeholder="Enter permission" required>
+                             placeholder="Enter permission" required>
                     </div>
                 </div>
                 <div class="modal-footer">

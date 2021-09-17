@@ -14,12 +14,12 @@
                         <div class="form-group">
                             <label for="kode">Kode <a class="tn">*</a></label>
                             <input type="text" class="form-control inputForm" id="kode" name="kode"
-                                aria-describedby="emailHelp" placeholder="Enter kode" required>
+                                 placeholder="Enter kode" required>
                         </div>
                         <div class="form-group">
                             <label for="name">Name <a class="tn">*</a></label>
                             <input type="text" class="form-control inputForm" id="name" name="name"
-                                aria-describedby="emailHelp" placeholder="Enter name" required>
+                                 placeholder="Enter name" required>
                         </div>
 
                         <div class="form-group edit">
@@ -27,18 +27,18 @@
                             <img class="inputForm" id="output"/ style="padding: 0px;margin-bottom: 21px;margin-left: 9px;" width="250" height="250">
                             <input type="file"  class="form-control inputForm" accept="image/*" onchange="loadFile(event)" name="file">
                             {{-- <input type="text" class="form-control inputForm" id="foto" name="foto"
-                                aria-describedby="emailHelp" placeholder="Enter foto" > --}}
+                                 placeholder="Enter foto" > --}}
                         </div>
                         <div class="form-group edit">
                             <label for="harga_jual">Harga Jual </label>
                             <input type="text" class="form-control inputForm" id="harga_jual" name="harga_jual"
-                                aria-describedby="emailHelp" placeholder="Enter harga jual" >
+                                 placeholder="Enter harga jual" >
                         </div>
 
                         <div class="form-group edit">
                             <label for="harga_modal_product">Harga Modal Product </label>
                             <input type="text" class="form-control inputForm" id="harga_modal_product" name="harga_modal_product"
-                                aria-describedby="emailHelp" placeholder="Enter harga modal product" >
+                                 placeholder="Enter harga modal product" >
                         </div>
 
 

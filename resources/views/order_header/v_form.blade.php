@@ -41,21 +41,21 @@
                                 <div class="form-group">
                                     <label for="customer_name">Customer Name <a class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="customer_name"
-                                        name="customer_name" aria-describedby="emailHelp" placeholder="Enter customer name"
+                                        name="customer_name"  placeholder="Enter customer name"
                                         value="{{ isset($data_order[0]->customer_name) ? $data_order[0]->customer_name : '' }}"
                                         required>
                                 </div>
                                 <div class="form-group">
                                     <label for="customer_phone">Customer Phone <a class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="customer_phone"
-                                        name="customer_phone" aria-describedby="emailHelp"
+                                        name="customer_phone"
                                         placeholder="Enter customer phone"
                                         value="{{ isset($data_order[0]->customer_phone) ? $data_order[0]->customer_phone : '' }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="customer_address">Customer Address <a class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="customer_address"
-                                        name="customer_address" aria-describedby="emailHelp"
+                                        name="customer_address"
                                         placeholder="Enter customer address"
                                         value="{{ isset($data_order[0]->customer_address) ? $data_order[0]->customer_address : '' }}">
                                 </div>
@@ -82,7 +82,7 @@
                                 <div class="form-group">
                                     <label for="shipping_price">Shipping Price <a class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="shipping_price"
-                                        name="shipping_price" aria-describedby="emailHelp"
+                                        name="shipping_price"
                                         placeholder="Enter shipping price"
                                         value="{{ isset($data_order[0]->shipping_price) ? (int) $data_order[0]->shipping_price : '' }}"
                                         required>
@@ -127,7 +127,7 @@
                                                             <label for="price">Price <a class="tn">*</a></label>
                                                             <input type="text" class="form-control price" id="price"
                                                                 name="orderitem[{{ $no }}][price]"
-                                                                aria-describedby="emailHelp" placeholder="Enter price"
+                                                                 placeholder="Enter price"
                                                                 required>
                                                         </div>
                                                     </div>
@@ -136,7 +136,7 @@
                                                             <label for="qty">Quantity <a class="tn">*</a></label>
                                                             <input type="text" class="form-control qty" id="qty"
                                                                 name="orderitem[{{ $no }}][qty]"
-                                                                aria-describedby="emailHelp" placeholder="Enter quantity"
+                                                                 placeholder="Enter quantity"
                                                                 required>
                                                         </div>
                                                     </div>
@@ -189,7 +189,7 @@
                                                                     <label for="price">Price <a class="tn">*</a></label>
                                                                     <input type="text" class="form-control price" id="price"
                                                                         name="orderitem[{{ $no }}][price]"
-                                                                        aria-describedby="emailHelp"
+
                                                                         placeholder="Enter price"
                                                                         value="{{ $val->sell_price }}" required>
                                                                 </div>
@@ -199,7 +199,7 @@
                                                                     <label for="qty">Quantity <a class="tn">*</a></label>
                                                                     <input type="text" class="form-control qty" id="qty"
                                                                         name="orderitem[{{ $no }}][qty]"
-                                                                        aria-describedby="emailHelp"
+
                                                                         placeholder="Enter quantity"
                                                                         value="{{ $val->qty }}" required>
                                                                 </div>
@@ -283,7 +283,7 @@
                                                             <label for="price">Price <a class="tn">*</a></label>
                                                             <input type="text" class="form-control" id="price" name="orderitem[` +
                                                         i +
-                                                        `][price]" aria-describedby="emailHelp" placeholder="Enter price" required>
+                                                        `][price]"  placeholder="Enter price" required>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4">
@@ -291,7 +291,7 @@
                                                             <label for="qty">Quantity <a class="tn">*</a></label>
                                                             <input type="text" class="form-control qty" id="qty" name="orderitem[` +
                                                         i +
-                                                        `][qty]" aria-describedby="emailHelp" placeholder="Enter quantity" required>
+                                                        `][qty]"  placeholder="Enter quantity" required>
                                                         </div>
                                                     </div>
                                                 </div>

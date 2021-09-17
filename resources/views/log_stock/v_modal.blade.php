@@ -24,12 +24,12 @@
                         <div class="form-group">
                             <label for="sisa">Sisa Produksi <a class="tn">*</a></label>
                             <input type="text" class="form-control inputForm" id="sisa" name="sisa"
-                                aria-describedby="emailHelp" placeholder="0" readonly>
+                                 placeholder="0" readonly>
                         </div>
                         <div class="form-group">
                             <label for="qty">Qty <a class="tn">*</a></label>
                             <input type="text" class="form-control inputForm" id="qty" name="qty"
-                                aria-describedby="emailHelp" placeholder="Enter quantity" required>
+                                 placeholder="Enter quantity" required>
                         </div>
                         <div class="form-group">
                             <label for="transfer_date">Transfer Date <a class="tn">*</a></label>
