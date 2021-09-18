@@ -63,6 +63,10 @@
     @include('product.v_modal')
     {{-- MODAL FORM ADD & EDIT --}}
 
+    {{-- MODAL FORM ADD & EDIT --}}
+    @include('product.v_modal_stock')
+    {{-- MODAL FORM ADD & EDIT --}}
+
 
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
@@ -210,7 +214,6 @@
                         type: "delete",
                         dataType: "json",
                         success: function(result) {
-                            console.log(result);
                             status_delete(result)
                             $("#example1").DataTable().ajax.reload()
                         },
@@ -233,7 +236,6 @@
 
         function active(id, active) {
             if (id == null) {
-                console.log('error bosq.')
                 return false
             }
             $.ajax({
@@ -253,6 +255,69 @@
                 }
             });
         }
+
+
+        function stock(id) {
+            $('#id_stock').val(id)
+            $('#kode_produksi').val('');
+            $('#size').val('');
+            $('#jumlah_produksi').val('')
+            $('#sisa_jumlah_produksi').val('')
+            $.ajax({
+                url: "product/" + id + "/produksi",
+                type: "GET",
+                dataType: "json",
+                success: function(result) {
+                    if (result.length == 0) {
+                        return false;
+                    }
+                    var opt = '';
+                    opt += '<option value="" disabled selected>Choose ..</option>';
+                    for (var i = 0; i < result.length; i++) {
+                        opt += '<option value="' + result[i].id + '">' + result[i].kode_produksi +
+                            '</option>'
+                    }
+                    $('#kode_produksi').html(opt)
+                    $('#modal-stock').modal('show');
+                },
+                error: function(xhr, Status, err) {
+                    $("Terjadi error : " + Status);
+                }
+            });
+        }
+
+        $('#kode_produksi').change(function() {
+            var id = $('#kode_produksi').val();
+            $.ajax({
+                url: "product/" + id + "/variants",
+                type: "GET",
+                dataType: "json",
+                success: function(result) {
+                    var opt = '';
+                    opt += '<option value="" disabled selected>Choose ..</option>';
+                    for (var i = 0; i < result.length; i++) {
+                        opt += '<option value="' + result[i].id + '">' + result[i].size +
+                            '</option>'
+                    }
+                    $('#size').html(opt)
+                    $('#modal-stock').modal('show');
+
+                    $('#size').change(function() {
+                        for (const key in result) {
+                            if (parseInt($(this).val()) == result[key].id) {
+                                $('#jumlah_produksi').val(result[key]
+                                    .jumlah_produksi)
+                                $('#sisa_jumlah_produksi').val(result[key].sisa_jumlah_produksi)
+                                break;
+                            }
+                        }
+                    })
+                },
+                error: function(xhr, Status, err) {
+                    $("Terjadi error : " + Status);
+                }
+            });
+        })
 
         var loadFile = function(event) {
             var output = document.getElementById('output');

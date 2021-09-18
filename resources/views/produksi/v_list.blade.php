@@ -72,7 +72,7 @@
     </section>
 
     {{-- MODAL FORM ADD & EDIT --}}
-    @include('produksi.v_modal')
+    {{-- @include('produksi.v_modal') --}}
     {{-- MODAL FORM ADD & EDIT --}}
 
 

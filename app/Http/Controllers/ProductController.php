@@ -8,8 +8,7 @@ use Image;
 use File;
 use Illuminate\Support\Facades\DB;
 use App\Produksi;
-
-
+use App\Variants;
 
 class ProductController extends Controller
 {
@@ -219,5 +218,28 @@ class ProductController extends Controller
             ->update(['status' => $request['data']]);
 
         return response()->json($update);
+    }
+
+    public function get_data_produksi(Request $request, $id)
+    {
+        if (!$request->ajax()) {
+            return "error request";
+            exit;
+        }
+        $data = Produksi::where('product_id', $id)->get();
+
+
+        return response()->json($data);
+    }
+
+    public function get_data_variants(Request $request, $id)
+    {
+        if (!$request->ajax()) {
+            return "error request";
+            exit;
+        }
+        $data = Variants::where('produksi_id', $id)->get();
+
+        return response()->json($data);
     }
 }

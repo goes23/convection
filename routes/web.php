@@ -52,6 +52,9 @@ Route::group(['middleware' => ['ceklogin', 'checkpermission']], function () {
 
     Route::resource('product', 'ProductController');
     Route::post('product/active', 'ProductController@active');
+    Route::get('product/{id}/produksi', 'ProductController@get_data_produksi')->name('get.get_data_produksi');
+    Route::get('product/{id}/variants', 'ProductController@get_data_variants')->name('get.get_data_variants');
+
 
     Route::resource('produksi', 'ProduksiController');
     Route::post('produksi/active', 'ProduksiController@active');
