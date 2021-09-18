@@ -68,15 +68,8 @@
     <script>
         $(document).ready(function() {
             $('.inputForm').val('');
-            $("#harga").mask('000.000.000', {
-                reverse: true
-            });
-            $("#panjang").inputmask('Regex', {
-                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
-            });
-            $("#discount").inputmask('Regex', {
-                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
-            });
+
+            mask_number()
 
             $("#example1").DataTable({
                 processing: true,
@@ -160,10 +153,8 @@
                         $('#panjang').val(result.panjang);
                         $('#satuan').val(result.satuan);
                         $("#sisa_bahan").val(result.sisa_bahan)
-                        $("#harga_satuan").val(result.status).change();
+                        $("#harga_satuan").val(result.harga_satuan);
                         $("#discount").val(result.discount)
-
-                        mask()
                         $('#sisa_hide').show();
                         $('#modal-xl').modal('show');
                     },
@@ -174,12 +165,6 @@
             } else {
                 return false
             }
-        }
-
-        function mask() {
-            $('input[id^="harga"]').mask('000.000.000', {
-                reverse: true
-            });
         }
 
         $('#form_add_edit').submit(function(e) {
@@ -272,6 +257,7 @@
             if (id != "") {
                 $(".inputForm").val('');
             }
+
             $('#sisa_hide').hide();
             $('#modal-xl').modal('show');
         }
@@ -296,6 +282,21 @@
                 error: function(xhr, Status, err) {
                     $("Terjadi error : " + Status);
                 }
+            });
+        }
+
+
+        function mask_number() {
+            $('input[id^="harga"]').mask('000.000.000', {
+                reverse: true
+            });
+
+            $("#panjang").inputmask('Regex', {
+                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
+            });
+
+            $("#discount").inputmask('Regex', {
+                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
             });
         }
 

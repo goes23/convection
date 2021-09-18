@@ -64,6 +64,7 @@ class BahanController extends Controller
             return "error request";
             exit;
         }
+
         $id = $request["id"];
         $harga = str_replace(".", "", $request["data"]["harga"]);
 
@@ -71,11 +72,11 @@ class BahanController extends Controller
             'kode' => $request["data"]["kode"],
             'name' => $request["data"]["name"],
             'buy_at' => $request["data"]["buy_at"],
-            'harga' => $harga,
+            'harga' => str_replace(".", "", $harga),
             'panjang' => $request["data"]["panjang"],
             'satuan' => $request["data"]["satuan"],
             'sisa_bahan' => $request["data"]["panjang"],
-            'harga_satuan' => $request["data"]["harga_satuan"],
+            'harga_satuan' => str_replace(".", "", $request["data"]["harga_satuan"]),
             'discount' => $request["data"]["discount"],
             'created_by' => session('user')
         ]);
