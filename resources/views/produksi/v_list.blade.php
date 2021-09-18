@@ -130,23 +130,28 @@
                     },
                     {
                         data: 'harga_potong_satuan',
-                        name: 'harga_potong_satuan'
+                        name: 'harga_potong_satuan',
+                        render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
                     },
                     {
                         data: 'harga_jait_satuan',
-                        name: 'harga_jait_satuan'
+                        name: 'harga_jait_satuan',
+                        render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
                     },
                     {
                         data: 'harga_finishing_satuan',
-                        name: 'harga_finishing_satuan'
+                        name: 'harga_finishing_satuan',
+                        render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
                     },
                     {
                         data: 'harga_aksesoris',
                         name: 'harga_aksesoris',
+                        render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
                     },
                     {
                         data: 'harga_modal_bahan_satuan',
                         name: 'harga_modal_bahan_satuan',
+                        render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
                     },
                     {
                         data: 'action',

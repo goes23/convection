@@ -68,13 +68,7 @@
     <script>
         $(document).ready(function() {
             $('.inputForm').val('');
-            $("#harga_modal").mask('000.000.000', {
-                reverse: true
-            });
-
-            $("#stock").inputmask('Regex', {
-                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
-            });
+            mask_number();
 
             $("#example1").DataTable({
                 processing: true,
@@ -105,7 +99,8 @@
                     },
                     {
                         data: 'harga_jual',
-                        name: 'harga_jual'
+                        name: 'harga_jual',
+                        render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
                     },
                     {
                         data: 'harga_modal_product',
@@ -144,7 +139,7 @@
                         $('.edit').show();
                         if (result.foto != null) {
                             $('#output').attr('src', "{{ asset('assets/img/') }}/" + result.foto);
-                        }else{
+                        } else {
                             $('#output').attr('src', "");
                         }
                         $('#modal-default').modal('show');
@@ -263,6 +258,12 @@
             var output = document.getElementById('output');
             output.src = URL.createObjectURL(event.target.files[0]);
         };
+
+        function mask_number() {
+            $('input[id^="harga"]').mask('000.000.000', {
+                reverse: true
+            });
+        }
 
     </script>
 @endsection

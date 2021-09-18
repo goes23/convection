@@ -96,7 +96,7 @@ class ProduksiController extends Controller
             $data_produksi = Produksi::with('variants')
                 ->where('produksi.id', $id)
                 ->get();
-                //dd($data_produksi[0]->product_id);
+            //dd($data_produksi[0]->product_id);
 
             $data_view['data_produksi']          = $data_produksi;
             $data_view['status']                 = 1;  // status edit
@@ -130,6 +130,7 @@ class ProduksiController extends Controller
             DB::select("DELETE FROM variants
             WHERE produksi_id = $id");
         }
+       // dd($request->all());
 
         $data = [];
         $data['kode_produksi']            = $kode;
@@ -137,11 +138,11 @@ class ProduksiController extends Controller
         $data['bahan_id']                 = $request['bahan_id'];
         $data['bidang']                   = $request['bidang'];
         $data['pemakaian']                = $request['pemakaian'];
-        $data['harga_potong_satuan']      = $request['harga_potong_satuan'];
-        $data['harga_jait_satuan']        = $request['harga_jait_satuan'];
-        $data['harga_finishing_satuan']   = $request['harga_finishing_satuan'];
-        $data['harga_aksesoris']          = $request['harga_aksesoris'];
-        $data['harga_modal_bahan_satuan'] = $request['harga_modal_bahan_satuan'];
+        $data['harga_potong_satuan']      =  str_replace(".", "", $request['harga_potong_satuan']);
+        $data['harga_jait_satuan']        =  str_replace(".", "", $request['harga_jait_satuan']);
+        $data['harga_finishing_satuan']   =  str_replace(".", "", $request['harga_finishing_satuan']);
+        $data['harga_aksesoris']          =  str_replace(".", "", $request['harga_aksesoris']);
+        $data['harga_modal_bahan_satuan'] =  str_replace(".", "", $request['harga_modal_bahan_satuan']);
         $data['created_by']               = session('user');
 
         try {

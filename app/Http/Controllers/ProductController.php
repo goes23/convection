@@ -93,8 +93,8 @@ class ProductController extends Controller
             if ($_FILES['file']['name'] == '') {
                 $update['kode']                = $request["kode"];
                 $update['name']                = $request["name"];
-                $update['harga_jual']          = $request["harga_jual"];
-                $update['harga_modal_product'] = $request["harga_modal_product"];
+                $update['harga_jual']          = str_replace(".", "", $request["harga_jual"]);
+                $update['harga_modal_product'] = str_replace(".", "", $request["harga_modal_product"]);
                 $update['created_by']          = session('user');
             } else {
 
@@ -129,8 +129,8 @@ class ProductController extends Controller
                 $update['kode']                = $request["kode"];
                 $update['name']                = $request["name"];
                 $update['foto']                = $filename;
-                $update['harga_jual']          = $request["harga_jual"];
-                $update['harga_modal_product'] = $request["harga_modal_product"];
+                $update['harga_jual']          = str_replace(".", "", $request["harga_jual"]);
+                $update['harga_modal_product'] = str_replace(".", "", $request["harga_modal_product"]);
                 $update['created_by']          = session('user');
             }
 

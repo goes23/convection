@@ -69,7 +69,7 @@
         $(document).ready(function() {
             $('.inputForm').val('');
 
-            mask_number()
+            mask_number() // mendaftarkan mask
 
             $("#example1").DataTable({
                 processing: true,

@@ -84,7 +84,7 @@
                                 <div class="form-group">
                                     <label for="bidang">Bidang <a class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="bidang" name="bidang"
-                                         placeholder="Enter bidang"
+                                        placeholder="Enter bidang"
                                         value="{{ isset($data_produksi[0]->bidang) ? $data_produksi[0]->bidang : '' }}">
                                 </div>
                             </div>
@@ -93,14 +93,13 @@
                                 <div class="form-group">
                                     <label for="pemakaian">Pemakaian <a class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="pemakaian" name="pemakaian"
-                                         placeholder="Enter pemakaian"
+                                        placeholder="Enter pemakaian"
                                         value="{{ isset($data_produksi[0]->pemakaian) ? $data_produksi[0]->pemakaian : '' }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="harga_potong_satuan">Harga Potong Satuan <a class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="harga_potong_satuan"
-                                        name="harga_potong_satuan"
-                                        placeholder="Enter harga potong satuan"
+                                        name="harga_potong_satuan" placeholder="Enter harga potong satuan"
                                         value="{{ isset($data_produksi[0]->harga_potong_satuan) ? (int) $data_produksi[0]->harga_potong_satuan : '' }}"
                                         required>
                                 </div>
@@ -117,14 +116,13 @@
                                 <div class="form-group">
                                     <label for="harga_finishing_satuan">Harga Finishing Satuan <a class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="harga_finishing_satuan"
-                                        name="harga_finishing_satuan"
-                                        placeholder="Enter harga finishing satuan"
+                                        name="harga_finishing_satuan" placeholder="Enter harga finishing satuan"
                                         value="{{ isset($data_produksi[0]->harga_finishing_satuan) ? $data_produksi[0]->harga_finishing_satuan : '' }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="harga_aksesoris">Harga Aksesoris <a class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="harga_aksesoris"
-                                        name="harga_aksesoris"  placeholder="Enter aksesoris"
+                                        name="harga_aksesoris" placeholder="Enter aksesoris"
                                         value="{{ isset($data_produksi[0]->harga_aksesoris) ? (int) $data_produksi[0]->harga_aksesoris : '' }}"
                                         required>
                                 </div>
@@ -175,7 +173,6 @@
                                                             <input type="text" class="form-control jumlah_produksi"
                                                                 id="jumlah_produksi"
                                                                 name="variants[{{ $no }}][jumlah_produksi]"
-
                                                                 placeholder="Enter jumlah produksi" required>
                                                         </div>
                                                     </div>
@@ -225,7 +222,6 @@
                                                                     <input type="text" class="form-control jumlah_produksi"
                                                                         id="jumlah_produksi"
                                                                         name="variants[{{ $no }}][jumlah_produksi]"
-
                                                                         placeholder="Enter jumlah produksi"
                                                                         value="{{ $val->jumlah_produksi }}" required>
                                                                 </div>
@@ -266,6 +262,7 @@
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
         $(document).ready(function() {
+            mask_number();
             var status = {{ $status }}
             if (status != 1) {
                 $('#product').val('').change();
@@ -288,41 +285,41 @@
                 i++
                 $('#items').append(`<div class="row" id="row` + i +
                     `">
-                                                                            <input type="hidden" id="id_order_item" name="variants[` +
+                                                                                <input type="hidden" id="id_order_item" name="variants[` +
                     i +
                     `][id]" value="">
-                                                                            <div class="col-md-6">
-                                                                                <div class="form-group">
-                                                                                    <label for="size">Size <a class="tn">*</a></label>
-                                                                                    <select class="form-control inputForm" id="size" name="variants[` +
+                                                                                <div class="col-md-6">
+                                                                                    <div class="form-group">
+                                                                                        <label for="size">Size <a class="tn">*</a></label>
+                                                                                        <select class="form-control inputForm" id="size" name="variants[` +
                     i +
                     `][size]" data-placeholder="Select a size" data-dropdown-css-class="select2-purple"
-                                                                                        style="width: 100%;" required>
-                                                                                        <option value="" disabled selected>Choose ..</option>
-                                                                                        <option value="S">S</option>
-                                                                                        <option value="M">M</option>
-                                                                                        <option value="L">L</option>
-                                                                                        <option value="XL">XL</option>
-                                                                                        <option value="XXL">XXL</option>
-                                                                                    </select>
+                                                                                            style="width: 100%;" required>
+                                                                                            <option value="" disabled selected>Choose ..</option>
+                                                                                            <option value="S">S</option>
+                                                                                            <option value="M">M</option>
+                                                                                            <option value="L">L</option>
+                                                                                            <option value="XL">XL</option>
+                                                                                            <option value="XXL">XXL</option>
+                                                                                        </select>
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
-                                                                            <div class="col-md-4">
-                                                                                <div class="form-group">
-                                                                                    <label for="jumlah_produksi">Jumlah Produksi <a class="tn">*</a></label>
-                                                                                    <input type="text" class="form-control" id="jumlah_produksi" name="variants[` +
+                                                                                <div class="col-md-4">
+                                                                                    <div class="form-group">
+                                                                                        <label for="jumlah_produksi">Jumlah Produksi <a class="tn">*</a></label>
+                                                                                        <input type="text" class="form-control" id="jumlah_produksi" name="variants[` +
                     i +
                     `][jumlah_produksi]"  placeholder="Enter jumlah_produksi" required>
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
-                                                                            <div class="col-md-2">
-                                                                                <div class="form-group">
-                                                                                    <br>
-                                                                                    <button type="button" class="btn btn-danger btn-sm" style="margin-top: 10px;" onclick="removerow(` +
+                                                                                <div class="col-md-2">
+                                                                                    <div class="form-group">
+                                                                                        <br>
+                                                                                        <button type="button" class="btn btn-danger btn-sm" style="margin-top: 10px;" onclick="removerow(` +
                     i + `)"> romove</button>
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
-                                                                        </div>`);
+                                                                            </div>`);
                 mask();
             })
         })
@@ -364,6 +361,20 @@
                 }
             });
         })
+
+        function mask_number() {
+            $('input[id^="harga"]').mask('000.000.000', {
+                reverse: true
+            });
+
+            $("#bidang").inputmask('Regex', {
+                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
+            });
+
+            $("#pemakaian").inputmask('Regex', {
+                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
+            });
+        }
 
     </script>
 @endsection
