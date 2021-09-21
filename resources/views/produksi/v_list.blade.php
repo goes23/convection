@@ -51,6 +51,7 @@
                                         <th>Product</th>
                                         <th>Bahan</th>
                                         <th>Bidang</th>
+                                        <th>Toral Stock</th>
                                         <th>Pemakaian</th>
                                         <th>Harga Potong</th>
                                         <th>Harga Jait</th>
@@ -123,6 +124,10 @@
                     {
                         data: 'bidang',
                         name: 'bidang'
+                    },
+                    {
+                        data: 'total_stock',
+                        name: 'total_stock'
                     },
                     {
                         data: 'pemakaian',
@@ -281,47 +286,6 @@
                     });
                 }
             })
-        }
-
-        // $('#jumlah').keyup(function() {
-        //     var form = $('#forms').val()
-        //     console.log(form);
-        //     if (form == 'add') {
-        //         $('#sisa').val($(this).val());
-        //     }
-        // });
-
-        function add_btn() {
-            var id = $('#id').val();
-            if (id != "") {
-                $('.add').show();
-                // $("#forms").val('add');
-                $(".inputForm").val('');
-            }
-            $('#modal-default').modal('show');
-        }
-
-        function active(id, active) {
-            if (id == null) {
-                console.log('error bosq.')
-                return false
-            }
-            $.ajax({
-                url: {!! json_encode(url('produksi/active')) !!},
-                type: "POST",
-                data: {
-                    "id": id,
-                    "data": active,
-                },
-                dataType: "json",
-                success: function(result) {
-                    call_toast(result)
-                    $("#example1").DataTable().ajax.reload()
-                },
-                error: function(xhr, Status, err) {
-                    $("Terjadi error : " + Status);
-                }
-            });
         }
 
     </script>

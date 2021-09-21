@@ -74,7 +74,7 @@ class ProduksiController extends Controller
     public function form(Request $request, $id = '')
     {
         $data_bahan = Bahan::where('sisa_bahan', '<>', 0)
-            ->select('id', 'kode', 'name')
+            ->select('id', 'kode', 'name', 'panjang', 'sisa_bahan')
             ->get();
 
         $data_product = Product::all();
@@ -122,21 +122,71 @@ class ProduksiController extends Controller
             exit;
         }
 
+        $sisa_bahan = 0;
+        // if ($request['status'] == 0) { // add
+
+        if ($request['panjang_bahan'] > $request['sisa_bahan']) {
+            $res = [
+                'status_form' => $request['status'],
+                'status' => false,
+                'msg'   => 'Data request panjang bahan melebihi sisa bahan..!!'
+            ];
+            return response()->json($res);
+        }
+        $sisa_bahan = $request['sisa_bahan'] - $request['panjang_bahan'];
+        // } else {
+
+        //     if ($request['panjang_bahan'] > $request['panjang']) {
+        //         $res = [
+        //             'status_form' => $request['status'],
+        //             'status' => false,
+        //             'msg'   => 'Data request panjang bahan melebihi panjang bahan..!!'
+        //         ];
+        //         return response()->json($res);
+        //     } else {
+        //         $bahan_id = $request['bahan_id'];
+        //         $id = $request['id'];
+
+        //         $bahan = DB::select("SELECT panjang_bahan FROM produksi
+        //                                 WHERE bahan_id = $bahan_id
+        //                                 AND id != $id ");
+
+        //         $jml = 0;
+        //         foreach ($bahan as $val) {
+        //             $jml += $val->panjang_bahan;
+        //         }
+        //         $sisa_bahan = ($request['panjang'] - $jml) - $request['panjang_bahan'];
+
+        //         if($sisa_bahan < 0){
+        //             $res = [
+        //                 'status_form' => $request['status'],
+        //                 'status' => false,
+        //                 'msg'   => 'request melebihi panjang..!!'
+        //             ];
+        //             return response()->json($res);
+        //         }
+
+        //     }
+        // }
+
         if ($request['id'] == null && $request['kode_produksi'] == null) {
             $kode = generate_kode();
         } else {
             $kode = $request['kode_produksi'];
-            $id = $request['id'];
-            DB::select("DELETE FROM variants
-            WHERE produksi_id = $id");
         }
-       // dd($request->all());
 
-        $data = [];
+        $total_stock = 0;
+        foreach($request['variants'] as $vals){
+            $total_stock += $vals['jumlah_produksi'];
+        }
+
+        $data = array();
         $data['kode_produksi']            = $kode;
         $data['product_id']               = $request['product_id'];
         $data['bahan_id']                 = $request['bahan_id'];
+        $data['panjang_bahan']            = $request['panjang_bahan'];
         $data['bidang']                   = $request['bidang'];
+        $data['total_stock']              = $total_stock;
         $data['pemakaian']                = $request['pemakaian'];
         $data['harga_potong_satuan']      =  str_replace(".", "", $request['harga_potong_satuan']);
         $data['harga_jait_satuan']        =  str_replace(".", "", $request['harga_jait_satuan']);
@@ -147,6 +197,12 @@ class ProduksiController extends Controller
 
         try {
             DB::beginTransaction();
+
+            if ($request['id'] != null && $request['kode_produksi'] != null) {
+                $id = $request['id'];
+                DB::select("DELETE FROM variants
+                WHERE produksi_id = $id");
+            }
 
             $post = Produksi::UpdateOrCreate(["id" => $request['id']], $data);
 
@@ -163,8 +219,18 @@ class ProduksiController extends Controller
                 Variants::insert($variant);
             }
 
+            $sisa_bahan = $request['sisa_bahan'] - $request['panjang_bahan'];
+            Bahan::where(['id' => $request['bahan_id']])
+                ->update(['sisa_bahan' => $sisa_bahan]);
+
+
             DB::commit();
-            return response()->json($post);
+            $res = [
+                // 'status_form' => $request['status'],
+                'status' => true,
+                // 'msg'   => 'Data request panjang bahan melebihi panjang bahan..!!'
+            ];
+            return response()->json($res);
         } catch (\PDOException $e) {
             DB::rollBack();
             return response()->json($e);

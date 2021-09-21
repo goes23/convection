@@ -16,7 +16,11 @@ class CreateLogStockTable extends Migration
         Schema::create('log_stock', function (Blueprint $table) {
             $table->id();
             $table->integer('product_id');
-            $table->integer('qty');
+            $table->integer('produksi_id');
+            $table->integer('variant_id');
+            $table->string('transaksi')->nullable()->comment("tambah/ kurang");
+            $table->text('keterangan')->nullable();
+            $table->integer('qty')->nullable();
             $table->dateTime('transfer_date');
             $table->integer('created_by');
             $table->timestamps();

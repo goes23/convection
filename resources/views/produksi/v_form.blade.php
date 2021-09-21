@@ -34,16 +34,20 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-4">
+                                <input type="hidden" class="form-control" id="status" value="" name="status">
+
                                 <input type="hidden" class="form-control" id="id" name="id"
                                     value="{{ isset($data_produksi[0]->id) ? $data_produksi[0]->id : '' }}">
 
                                 <input type="hidden" class="form-control" id="kode_produksi" name="kode_produksi"
                                     value="{{ isset($data_produksi[0]->kode_produksi) ? $data_produksi[0]->kode_produksi : '' }}">
+
                                 <div class="form-group">
                                     <label for="product">Product <a class="tn">*</a></label>
                                     <select class="form-control select2" id="product" data-placeholder="Select a product"
                                         data-dropdown-css-class="select2-purple" style="width: 100%;" name="product_id"
-                                        required>
+                                        required <?php echo isset($data_produksi[0]->product_id) ?
+                                        'disabled="disabled"' : ''; ?>>
                                         <option value="" disabled selected>Choose .. </option>
                                         @foreach ($product as $val)
                                             @php
@@ -64,7 +68,8 @@
                                     <label for="bahan">Bahan <a class="tn">*</a></label>
                                     <select class="form-control select2" id="bahan" data-placeholder="Select a bahan"
                                         data-dropdown-css-class="select2-purple" style="width: 100%;" name="bahan_id"
-                                        required>
+                                        required <?php echo isset($data_produksi[0]->bahan_id) ?
+                                        'disabled="disabled"' : ''; ?>>
                                         <option value="" disabled selected>Choose .. </option>
                                         @foreach ($bahan as $vals)
                                             @php
@@ -75,22 +80,47 @@
                                                     }
                                                 }
                                             @endphp
-                                            <option value="{{ $vals->id }}" @php echo $option; @endphp>{{ $vals->kode }} -
+                                            <option value="{{ $vals->id }}" @php echo $option; @endphp>{{ $vals->kode }}
+                                                -
                                                 {{ $vals->name }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
+                                @if ($status == 1)
+                                    <input type="hidden" class="form-control" id="product_id" name="product_id"
+                                        value="{{ $data_produksi[0]->product_id }}">
+
+                                    <input type="hidden" class="form-control" id="bahan_id" name="bahan_id"
+                                        value="{{ $data_produksi[0]->bahan_id }}">
+
+                                @endif
                                 <div class="form-group">
-                                    <label for="bidang">Bidang <a class="tn">*</a></label>
-                                    <input type="text" class="form-control inputForm" id="bidang" name="bidang"
-                                        placeholder="Enter bidang"
-                                        value="{{ isset($data_produksi[0]->bidang) ? $data_produksi[0]->bidang : '' }}">
+                                    <label for="panjang">Panjang bahan <a class="tn">*</a></label>
+                                    <input type="text" class="form-control inputForm" id="panjang" name="panjang"
+                                        placeholder="panjang" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sisa_bahan">Sisa bahan <a class="tn">*</a></label>
+                                    <input type="text" class="form-control inputForm" id="sisa_bahan" name="sisa_bahan"
+                                        placeholder="panjang" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="panjang_bahan">Panjang bahan di gunakan <a class="tn">*</a></label>
+                                    <input type="text" class="form-control inputForm" id="panjang_bahan"
+                                        name="panjang_bahan" placeholder="Enter panjang bahan di gunakan"
+                                        value="{{ isset($data_produksi[0]->panjang_bahan) ? $data_produksi[0]->panjang_bahan : '' }}">
                                 </div>
                             </div>
                             <!-- /.col -->
                             <div class="col-md-4">
                                 <div class="form-group">
+                                    <div class="form-group">
+                                        <label for="bidang">Bidang <a class="tn">*</a></label>
+                                        <input type="text" class="form-control inputForm" id="bidang" name="bidang"
+                                            placeholder="Enter bidang"
+                                            value="{{ isset($data_produksi[0]->bidang) ? $data_produksi[0]->bidang : '' }}">
+                                    </div>
                                     <label for="pemakaian">Pemakaian <a class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="pemakaian" name="pemakaian"
                                         placeholder="Enter pemakaian"
@@ -110,15 +140,16 @@
                                         value="{{ isset($data_produksi[0]->harga_jait_satuan) ? explode(' ', $data_produksi[0]->harga_jait_satuan)[0] : '' }}"
                                         required>
                                 </div>
-                            </div>
-
-                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="harga_finishing_satuan">Harga Finishing Satuan <a class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="harga_finishing_satuan"
                                         name="harga_finishing_satuan" placeholder="Enter harga finishing satuan"
                                         value="{{ isset($data_produksi[0]->harga_finishing_satuan) ? $data_produksi[0]->harga_finishing_satuan : '' }}">
                                 </div>
+                            </div>
+
+                            <div class="col-md-4">
+
                                 <div class="form-group">
                                     <label for="harga_aksesoris">Harga Aksesoris <a class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="harga_aksesoris"
@@ -264,10 +295,21 @@
         $(document).ready(function() {
             mask_number();
             var status = {{ $status }}
+            $('#status').val(status)
             if (status != 1) {
-                $('#product').val('').change();
-                $('#bahan').val('').change();
+                $('#product').val('');
+                $('#bahan').val('');
                 $('#size').val('').change();
+            } else {
+                // console.log($('#panjang_bahan').val())
+                var val = $('#bahan').val();
+                var bahan = <?php echo json_encode($bahan); ?>;            for (var i = 0; i < bahan.length; i++) {
+                    if (parseInt(val) == parseInt(bahan[i].id)) {
+                        $('#panjang').val(bahan[i].panjang)
+                        $('#sisa_bahan').val(parseInt(bahan[i].sisa_bahan) + parseInt($('#panjang_bahan').val()))
+                        break;
+                    }
+                }
             }
 
             $("#qty").inputmask('Regex', {
@@ -285,41 +327,43 @@
                 i++
                 $('#items').append(`<div class="row" id="row` + i +
                     `">
-                                                                                <input type="hidden" id="id_order_item" name="variants[` +
+                                            <input type="hidden" id="id_order_item" name="variants[` +
                     i +
                     `][id]" value="">
-                                                                                <div class="col-md-6">
-                                                                                    <div class="form-group">
-                                                                                        <label for="size">Size <a class="tn">*</a></label>
-                                                                                        <select class="form-control inputForm" id="size" name="variants[` +
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="size">Size <a class="tn">*</a></label>
+                                                    <select class="form-control inputForm" id="size" name="variants[` +
                     i +
-                    `][size]" data-placeholder="Select a size" data-dropdown-css-class="select2-purple"
-                                                                                            style="width: 100%;" required>
-                                                                                            <option value="" disabled selected>Choose ..</option>
-                                                                                            <option value="S">S</option>
-                                                                                            <option value="M">M</option>
-                                                                                            <option value="L">L</option>
-                                                                                            <option value="XL">XL</option>
-                                                                                            <option value="XXL">XXL</option>
-                                                                                        </select>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col-md-4">
-                                                                                    <div class="form-group">
-                                                                                        <label for="jumlah_produksi">Jumlah Produksi <a class="tn">*</a></label>
-                                                                                        <input type="text" class="form-control" id="jumlah_produksi" name="variants[` +
+                    `][size]" data-placeholder="Select a size" data-dropdown-css-class="select2-purple" style="width: 100%;"
+                                                        required>
+                                                        <option value="" disabled selected>Choose ..</option>
+                                                        <option value="S">S</option>
+                                                        <option value="M">M</option>
+                                                        <option value="L">L</option>
+                                                        <option value="XL">XL</option>
+                                                        <option value="XXL">XXL</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="jumlah_produksi">Jumlah Produksi <a class="tn">*</a></label>
+                                                    <input type="text" class="form-control" id="jumlah_produksi" name="variants[` +
                     i +
-                    `][jumlah_produksi]"  placeholder="Enter jumlah_produksi" required>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col-md-2">
-                                                                                    <div class="form-group">
-                                                                                        <br>
-                                                                                        <button type="button" class="btn btn-danger btn-sm" style="margin-top: 10px;" onclick="removerow(` +
-                    i + `)"> romove</button>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>`);
+                    `][jumlah_produksi]" placeholder="Enter jumlah_produksi" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <br>
+                                                    <button type="button" class="btn btn-danger btn-sm" style="margin-top: 10px;" onclick="removerow(` +
+                    i +
+                    `)"> romove</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        `);
                 mask();
             })
         })
@@ -329,9 +373,6 @@
         }
 
         function mask() {
-            // $('input[id^="jumlah_produksi"]').mask('000000000', {
-            //     reverse: true
-            // });
             $('input[id^="jumlah_produksi"]').inputmask('Regex', {
                 regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
             });
@@ -340,7 +381,6 @@
         $('#produksi').submit(function(e) {
             e.preventDefault();
             var dataForm = new FormData(this);
-
             $.ajax({
                 url: "{{ route('produksi.store') }}",
                 type: "post",
@@ -350,11 +390,15 @@
                 processData: false,
                 dataType: "json",
                 success: function(result) {
-                    console.log(result);
-                    call_toast(result);
-                    setTimeout(function() {
-                        window.location.href = "{{ route('produksi.index') }}";
-                    }, 1000);
+                    if (result.status == false) {
+
+                    } else {
+                        call_toast(result);
+                        setTimeout(function() {
+                            window.location.href = "{{ route('produksi.index') }}";
+                        }, 1000);
+
+                    }
                 },
                 error: function(xhr, Status, err) {
                     $("Terjadi error : " + Status);
@@ -374,6 +418,42 @@
             $("#pemakaian").inputmask('Regex', {
                 regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
             });
+        }
+
+        $('#bahan').change(function() {
+            var val = $(this).val();
+            var bahan = <?php echo json_encode($bahan); ?>;        for (var i = 0; i < bahan.length; i++) {
+                if (parseInt(val) == parseInt(bahan[i].id)) {
+                    $('#panjang').val(bahan[i].panjang)
+                    $('#sisa_bahan').val(bahan[i].sisa_bahan)
+                    break;
+                }
+            }
+        })
+
+        function toasts(result) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                didOpen: (toast) => {
+                    toast.addEventListener("mouseenter", Swal.stopTimer);
+                    toast.addEventListener("mouseleave", Swal.resumeTimer);
+                },
+            });
+
+            if (result) {
+                return Toast.fire({
+                    icon: "success",
+                    title: "successfully",
+                });
+            } else {
+                return Toast.fire({
+                    icon: "error",
+                    title: "successfully",
+                });
+            }
         }
 
     </script>

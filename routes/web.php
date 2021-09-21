@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderHeaderController;
+use App\Product;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +55,8 @@ Route::group(['middleware' => ['ceklogin', 'checkpermission']], function () {
     Route::post('product/active', 'ProductController@active');
     Route::get('product/{id}/produksi', 'ProductController@get_data_produksi')->name('get.get_data_produksi');
     Route::get('product/{id}/variants', 'ProductController@get_data_variants')->name('get.get_data_variants');
+    Route::post('product/log_stock', 'ProductController@log_stock')->name('product.log_stock');
+
 
 
     Route::resource('produksi', 'ProduksiController');

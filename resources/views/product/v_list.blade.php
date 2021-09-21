@@ -258,7 +258,7 @@
 
 
         function stock(id) {
-            $('#id_stock').val(id)
+            $('#id').val(id)
             $('#kode_produksi').val('');
             $('#size').val('');
             $('#jumlah_produksi').val('')
@@ -269,6 +269,7 @@
                 dataType: "json",
                 success: function(result) {
                     if (result.length == 0) {
+                        alert("data belum di prosses di produksi..");
                         return false;
                     }
                     var opt = '';
@@ -293,6 +294,7 @@
                 type: "GET",
                 dataType: "json",
                 success: function(result) {
+                    //console.log(result);dd()
                     var opt = '';
                     opt += '<option value="" disabled selected>Choose ..</option>';
                     for (var i = 0; i < result.length; i++) {
@@ -305,6 +307,8 @@
                     $('#size').change(function() {
                         for (const key in result) {
                             if (parseInt($(this).val()) == result[key].id) {
+                                $('#variant_id').val(result[key]
+                                    .id)
                                 $('#jumlah_produksi').val(result[key]
                                     .jumlah_produksi)
                                 $('#sisa_jumlah_produksi').val(result[key].sisa_jumlah_produksi)
@@ -328,6 +332,69 @@
             $('input[id^="harga"]').mask('000.000.000', {
                 reverse: true
             });
+            $("#jumlah_stock_product").inputmask('Regex', {
+                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
+            });
+
+        }
+
+        $('#form_stock').submit(function(e) {
+            e.preventDefault();
+
+            var btn = $(this).find("input[type=submit]:focus");
+            var tombol = btn[0].value;
+            var product_id = $('#id').val()
+            var variant_id = $('#variant_id').val()
+            var kode_produksi = $('#kode_produksi').val()
+            var size = $('#size').val()
+            var jumlah_produksi = $('#jumlah_produksi').val()
+            var sisa_jumlah_produksi = $('#sisa_jumlah_produksi').val()
+            var jumlah_stock_product = $('#jumlah_stock_product').val()
+            var transfer_date = $('#transfer_date').val()
+            var keterangan = $('#keterangan').val()
+
+            input = {
+                tombol,
+                product_id,
+                variant_id,
+                kode_produksi,
+                size,
+                jumlah_produksi,
+                sisa_jumlah_produksi,
+                jumlah_stock_product,
+                transfer_date,
+                keterangan
+            }
+
+
+            $.ajax({
+                url: "{{ route('product.log_stock') }}",
+                type: "POST",
+                data: {
+                    data: input
+                },
+                dataType: "json",
+                success: function(result) {
+                    if (result.status == false) {
+                        alert(result.msg);
+                        return false
+                    } else {
+                        call_toast(result)
+                        $(".inputForm").val('');
+                        $("#example1").DataTable().ajax.reload()
+                        setTimeout(function() {
+                            $('#modal-default').modal('hide');
+                        }, 1500);
+                    }
+                },
+                error: function(xhr, Status, err) {
+                    $("Terjadi error : " + Status);
+                }
+            });
+        })
+
+        function history(id){
+            console.log("ok");
         }
 
     </script>

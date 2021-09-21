@@ -155,6 +155,9 @@
                         $("#sisa_bahan").val(result.sisa_bahan)
                         $("#harga_satuan").val(result.harga_satuan);
                         $("#discount").val(result.discount)
+                        $('#kode').attr('readonly', true);
+                        $('#name').attr('readonly', true);
+                        $('#panjang').attr('readonly', true);
                         $('#sisa_hide').show();
                         $('#modal-xl').modal('show');
                     },

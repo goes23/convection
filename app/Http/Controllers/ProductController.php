@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Logstock;
 use Illuminate\Http\Request;
 use App\Product;
 use Image;
@@ -39,11 +40,13 @@ class ProductController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '<center>';
                     if (allowed_access(session('user'), 'product', 'edit')) :
-                        $button = '<center><button type="button" class="btn btn-warning btn-sm" onclick="stock(' . $data->id . ')">Stock</button>';
-                        $button .= '&nbsp;&nbsp;';
+                        $button = '<center><button type="button" class="btn btn-secondary btn-sm" onclick="history(' . $data->id . ')">History Stock</button>';
+                        $button .= '&nbsp;';
+                        $button .= '<button type="button" class="btn btn-warning btn-sm" onclick="stock(' . $data->id . ')">Stock</button>';
+                        $button .= '&nbsp;';
                         $button .= '<button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
                     endif;
-                    $button .= '&nbsp;&nbsp;';
+                    $button .= '&nbsp;';
                     if (allowed_access(session('user'), 'product', 'delete')) :
                         $button .= '<button type="button" class="btn btn-danger btn-sm" onClick="my_delete(' . $data->id . ')">Delete</button></center>';
                     endif;
@@ -241,5 +244,73 @@ class ProductController extends Controller
         $data = Variants::where('produksi_id', $id)->get();
 
         return response()->json($data);
+    }
+
+    public function log_stock(Request $request)
+    {
+        if (!$request->ajax()) {
+            return "error request";
+            exit;
+        }
+
+        if ($request['data']['jumlah_produksi'] < $request['data']['jumlah_stock_product']) {
+            $res = [
+                "status" => false,
+                "msg" => "jumlah request stock melebihi jumlah produksi..!!!"
+            ];
+            return response()->json($res);
+            exit;
+        }
+
+
+        $sisa_jumlah_produksi = 0;
+        $jumlah_stock_product = 0;
+        if ($request['data']['tombol'] == 'tambah') {
+
+            $sisa_jumlah_produksi = (($request['data']['jumlah_produksi'] - $request['data']['sisa_jumlah_produksi']) - $request['data']['jumlah_stock_product']) < 0 ? 0 : (($request['data']['jumlah_produksi'] - $request['data']['sisa_jumlah_produksi']) - $request['data']['jumlah_stock_product']);
+
+            $jumlah_stock_product = $request['data']['sisa_jumlah_produksi'] + $request['data']['jumlah_stock_product'] < 0 ? $request['data']['jumlah_produksi'] : $request['data']['sisa_jumlah_produksi'] + $request['data']['jumlah_stock_product'];
+        } else {
+
+            $sisa_jumlah_produksi = $request['data']['jumlah_produksi'] - ($request['data']['sisa_jumlah_produksi'] - $request['data']['jumlah_stock_product']);
+
+            $jumlah_stock_product =  $request['data']['sisa_jumlah_produksi'] - $request['data']['jumlah_stock_product'];
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $insert_log      = [];
+            $insert_log['product_id']    = $request['data']['product_id'];
+            $insert_log['produksi_id']   = $request['data']['kode_produksi'];
+            $insert_log['variant_id']    = $request['data']['variant_id'];
+            $insert_log['transaksi']     = $request['data']['tombol'];
+            $insert_log['keterangan']    = $request['data']['keterangan'];
+            $insert_log['qty']           = $request['data']['jumlah_stock_product'];
+            $insert_log['transfer_date'] = $request['data']['transfer_date'];
+            $insert_log['created_by']    = session('user');
+
+            Logstock::insert($insert_log);
+
+            $update = [];
+
+            $update['sisa_jumlah_produksi'] = $sisa_jumlah_produksi;
+            $update['jumlah_stock_product'] = $jumlah_stock_product;
+
+
+            $post = Variants::where(['id' => $request['data']['variant_id']])
+                ->update($update);
+
+
+            DB::commit();
+
+            return response()->json($post);
+            exit;
+        } catch (\PDOException $e) {
+            DB::rollBack();
+            return response()->json($e);
+        }
+        dd($sisa_jumlah_produksi);
+        dd($request->all());
     }
 }
