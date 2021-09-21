@@ -189,7 +189,6 @@
                                                                     <label for="price">Price <a class="tn">*</a></label>
                                                                     <input type="text" class="form-control price" id="price"
                                                                         name="orderitem[{{ $no }}][price]"
-
                                                                         placeholder="Enter price"
                                                                         value="{{ $val->sell_price }}" required>
                                                                 </div>
@@ -199,7 +198,6 @@
                                                                     <label for="qty">Quantity <a class="tn">*</a></label>
                                                                     <input type="text" class="form-control qty" id="qty"
                                                                         name="orderitem[{{ $no }}][qty]"
-
                                                                         placeholder="Enter quantity"
                                                                         value="{{ $val->qty }}" required>
                                                                 </div>
