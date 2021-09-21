@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Produksi;
 use App\Bahan;
 use App\Product;
+use App\Variants;
+use Illuminate\Support\Facades\DB;
 
 class ProduksiController extends Controller
 {
@@ -17,13 +19,15 @@ class ProduksiController extends Controller
     public function index(Request $request)
     {
         // dd("po");
-        $data_bahan = Bahan::where('status', 1)
+        $data_bahan = Bahan::where('sisa_bahan', '<>', 0)
             ->select('id', 'kode', 'name')
             ->get();
 
-        $data_product = Product::where('status', 1)
-            ->select('id', 'kode', 'name')
-            ->get();
+        $data_product = Product::all();
+
+        // $data_product = Product::where('status', 1)
+        //     ->select('id', 'kode', 'name')
+        //     ->get();
 
         $data_view            = array();
         $data_view["title_h1"]               = "Data Produksi";
@@ -47,19 +51,11 @@ class ProduksiController extends Controller
                     return $product;
                 })
                 ->rawColumns(['product'])
-                ->addColumn('status', function ($data) {
-                    if ($data->status == 1) {
-                        $button = '<center><button type="button" class="btn btn-warning btn-sm" onclick="active(' . $data->id . ',0)"> Active </button> </center>';
-                    } else {
-                        $button = '<center><button type="button" class="btn btn-sm" style="background-color: #cccccc;" onclick="active(' . $data->id . ',1)"> Not Active </button> </center>';
-                    }
-                    return $button;
-                })
-                ->rawColumns(['status'])
                 ->addColumn('action', function ($data) {
                     $button = '<center>';
                     if (allowed_access(session('user'), 'produksi', 'edit')) :
-                        $button = '<center><button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
+                        $button .= '<a type="button" href="/produksi/' . $data->id . '/form" class="btn btn-success btn-sm" >Edit</a>';
+                    // $button = '<center><button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
                     endif;
                     $button .= '&nbsp;&nbsp;';
                     if (allowed_access(session('user'), 'produksi', 'delete')) :
@@ -67,7 +63,7 @@ class ProduksiController extends Controller
                     endif;
                     return $button;
                 })
-                ->rawColumns(['action', 'status'])
+                ->rawColumns(['action'])
                 ->addIndexColumn()
                 ->make(true);
         }
@@ -75,11 +71,40 @@ class ProduksiController extends Controller
         return view('produksi/v_list', $data_view);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function form(Request $request, $id = '')
+    {
+        $data_bahan = Bahan::where('sisa_bahan', '<>', 0)
+            ->select('id', 'kode', 'name', 'panjang', 'sisa_bahan')
+            ->get();
+
+        $data_product = Product::all();
+
+        $data_view                = [];
+        $data_view['h1']                     = 'Form Produksi';
+        $data_view['breadcrumb_item']        = 'Produksi List';
+        $data_view['breadcrumb_item_active'] = 'Form Produksi';
+        $data_view['card_title']             = 'Form Produksi';
+        $data_view["bahan"]                  = $data_bahan;
+        $data_view["product"]                = $data_product;
+        // $data_view["size"]                   = $size;
+
+
+        if ($id == "") {
+            $data_view['status']                 = 0; // status add
+            $data_view['data_produksi']          = [];
+        } else {
+            $data_produksi = Produksi::with('variants')
+                ->where('produksi.id', $id)
+                ->get();
+            //dd($data_produksi[0]->product_id);
+
+            $data_view['data_produksi']          = $data_produksi;
+            $data_view['status']                 = 1;  // status edit
+        }
+        return view('produksi/v_form', $data_view);
+    }
+
+
     public function create(Request $request)
     {
     }
@@ -96,53 +121,120 @@ class ProduksiController extends Controller
             return "error request";
             exit;
         }
-        if ($request["id"]) {
-            $id = $request["id"];
-            $jumlah = $request["data"]["jumlah"];
-            if ($request["sisa"] == null) {
-                $sisa = $request["data"]["jumlah"];
-            } else {
-                $sisa = $request["sisa"];
-            }
+
+        $sisa_bahan = 0;
+        // if ($request['status'] == 0) { // add
+
+        if ($request['panjang_bahan'] > $request['sisa_bahan']) {
+            $res = [
+                'status_form' => $request['status'],
+                'status' => false,
+                'msg'   => 'Data request panjang bahan melebihi sisa bahan..!!'
+            ];
+            return response()->json($res);
+        }
+        $sisa_bahan = $request['sisa_bahan'] - $request['panjang_bahan'];
+        // } else {
+
+        //     if ($request['panjang_bahan'] > $request['panjang']) {
+        //         $res = [
+        //             'status_form' => $request['status'],
+        //             'status' => false,
+        //             'msg'   => 'Data request panjang bahan melebihi panjang bahan..!!'
+        //         ];
+        //         return response()->json($res);
+        //     } else {
+        //         $bahan_id = $request['bahan_id'];
+        //         $id = $request['id'];
+
+        //         $bahan = DB::select("SELECT panjang_bahan FROM produksi
+        //                                 WHERE bahan_id = $bahan_id
+        //                                 AND id != $id ");
+
+        //         $jml = 0;
+        //         foreach ($bahan as $val) {
+        //             $jml += $val->panjang_bahan;
+        //         }
+        //         $sisa_bahan = ($request['panjang'] - $jml) - $request['panjang_bahan'];
+
+        //         if($sisa_bahan < 0){
+        //             $res = [
+        //                 'status_form' => $request['status'],
+        //                 'status' => false,
+        //                 'msg'   => 'request melebihi panjang..!!'
+        //             ];
+        //             return response()->json($res);
+        //         }
+
+        //     }
+        // }
+
+        if ($request['id'] == null && $request['kode_produksi'] == null) {
+            $kode = generate_kode();
         } else {
-            $produksi = new Produksi();
-            $data = $produksi->get_data_produksi($request["data"]["bahan"], $request["data"]["product"]);
-
-            $id = "";
-            $jumlah = 0;
-            $sisa = 0;
-            if ($data) {
-                $id = $data[0]->id;
-                $jumlah = (int) $data[0]->jumlah + (int) $request["data"]["jumlah"];
-
-                if ($request["sisa"] == null) {
-                    $sisa = (int) $request["data"]["jumlah"] + (int) $data[0]->sisa;
-                } else {
-                    $sisa = $request["sisa"] + (int) $data[0]->sisa;
-                }
-            } else {
-                $id = $request["id"];
-                $jumlah = $request["data"]["jumlah"];
-
-                if ($request["sisa"] == null) {
-                    $sisa = $request["data"]["jumlah"];
-                } else {
-                    $sisa = $request["sisa"];
-                }
-            }
+            $kode = $request['kode_produksi'];
         }
 
-        $post = Produksi::UpdateOrCreate(["id" => $id], [
-            'bahan_id' => $request["data"]["bahan"],
-            'product_id' => $request["data"]["product"],
-            'jumlah' => $jumlah,
-            'sisa' => $sisa,
-            'status' => $request["data"]["status"],
-            'created_by' => session('user')
+        $total_stock = 0;
+        foreach($request['variants'] as $vals){
+            $total_stock += $vals['jumlah_produksi'];
+        }
 
-        ]);
+        $data = array();
+        $data['kode_produksi']            = $kode;
+        $data['product_id']               = $request['product_id'];
+        $data['bahan_id']                 = $request['bahan_id'];
+        $data['panjang_bahan']            = $request['panjang_bahan'];
+        $data['bidang']                   = $request['bidang'];
+        $data['total_stock']              = $total_stock;
+        $data['pemakaian']                = $request['pemakaian'];
+        $data['harga_potong_satuan']      =  str_replace(".", "", $request['harga_potong_satuan']);
+        $data['harga_jait_satuan']        =  str_replace(".", "", $request['harga_jait_satuan']);
+        $data['harga_finishing_satuan']   =  str_replace(".", "", $request['harga_finishing_satuan']);
+        $data['harga_aksesoris']          =  str_replace(".", "", $request['harga_aksesoris']);
+        $data['harga_modal_bahan_satuan'] =  str_replace(".", "", $request['harga_modal_bahan_satuan']);
+        $data['created_by']               = session('user');
 
-        return response()->json($post);
+        try {
+            DB::beginTransaction();
+
+            if ($request['id'] != null && $request['kode_produksi'] != null) {
+                $id = $request['id'];
+                DB::select("DELETE FROM variants
+                WHERE produksi_id = $id");
+            }
+
+            $post = Produksi::UpdateOrCreate(["id" => $request['id']], $data);
+
+            foreach ($request['variants'] as $val) {
+
+                $variant['kode_produksi']        = $kode;
+                $variant['produksi_id']          = $post->id;
+                $variant['product_id']           = $request['product_id'];
+                $variant['size']                 = $val['size'];
+                $variant['jumlah_produksi']      = $val['jumlah_produksi'];
+                $variant['sisa_jumlah_produksi'] = 0;
+                $variant['jumlah_stock_product'] = 0;
+
+                Variants::insert($variant);
+            }
+
+            $sisa_bahan = $request['sisa_bahan'] - $request['panjang_bahan'];
+            Bahan::where(['id' => $request['bahan_id']])
+                ->update(['sisa_bahan' => $sisa_bahan]);
+
+
+            DB::commit();
+            $res = [
+                // 'status_form' => $request['status'],
+                'status' => true,
+                // 'msg'   => 'Data request panjang bahan melebihi panjang bahan..!!'
+            ];
+            return response()->json($res);
+        } catch (\PDOException $e) {
+            DB::rollBack();
+            return response()->json($e);
+        }
     }
 
     /**
@@ -198,7 +290,21 @@ class ProduksiController extends Controller
             return "error request";
             exit;
         }
-        $delete = Produksi::find($id)->delete();
+
+        try {
+            DB::beginTransaction();
+
+            $delete = Produksi::where('id', $id)->delete();
+            variants::where('produksi_id', $id)->delete();
+
+            DB::commit();
+
+            return response()->json($delete);
+        } catch (\PDOException $e) {
+            DB::rollBack();
+            return response()->json($e);
+        }
+
 
         return response()->json($delete);
     }

@@ -42,9 +42,9 @@
                                         <th>No</th>
                                         <th>kode</th>
                                         <th>Name</th>
-                                        <th>Harga Modal</th>
-                                        <th>Stock</th>
-                                        <th>status</th>
+                                        <th>Foto</th>
+                                        <th>Harga Jual</th>
+                                        <th>Harga Modal Product</th>
                                         <th>action</th>
                                     </tr>
                                 </thead>
@@ -63,18 +63,16 @@
     @include('product.v_modal')
     {{-- MODAL FORM ADD & EDIT --}}
 
+    {{-- MODAL FORM ADD & EDIT --}}
+    @include('product.v_modal_stock')
+    {{-- MODAL FORM ADD & EDIT --}}
+
 
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
         $(document).ready(function() {
             $('.inputForm').val('');
-            $("#harga_modal").mask('000.000.000', {
-                reverse: true
-            });
-
-            $("#stock").inputmask('Regex', {
-                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
-            });
+            mask_number();
 
             $("#example1").DataTable({
                 processing: true,
@@ -98,19 +96,20 @@
                         name: 'name'
                     },
                     {
-                        data: 'harga_modal',
-                        name: 'harga_modal',
+                        data: 'img',
+                        name: 'img',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'harga_jual',
+                        name: 'harga_jual',
                         render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
                     },
                     {
-                        data: 'stock',
-                        name: 'stock'
-                    },
-                    {
-                        data: 'status',
-                        name: 'status',
-                        orderable: false,
-                        searchable: false
+                        data: 'harga_modal_product',
+                        name: 'harga_modal_product',
+                        render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
                     },
                     {
                         data: 'action',
@@ -139,9 +138,14 @@
                         $("#id").val(result.id)
                         $('#kode').val(result.kode);
                         $('#name').val(result.name);
-                        $('#harga_modal').val(result.harga_modal);
-                        $('#stock').val(result.stock);
-                        $("#status").val(result.status).change();
+                        $('#harga_jual').val(result.harga_jual);
+                        $("#harga_modal_product").val(result.harga_modal_product);
+                        $('.edit').show();
+                        if (result.foto != null) {
+                            $('#output').attr('src', "{{ asset('assets/img/') }}/" + result.foto);
+                        } else {
+                            $('#output').attr('src', "");
+                        }
                         $('#modal-default').modal('show');
                     },
                     error: function(xhr, Status, err) {
@@ -157,36 +161,25 @@
             var id = $('#id').val();
             var kode = $('#kode').val();
             var name = $('#name').val();
-            var harga_modal = $('#harga_modal').val();
-            var stock = $('#stock').val();
-            var status = $('#status').val();
 
             var object = {
                 kode,
-                name,
-                harga_modal,
-                status
+                name
             }
 
             if (required_fild(object) == false) {
                 return false;
             }
 
-            var dataInput = {
-                kode,
-                name,
-                harga_modal,
-                stock,
-                status
-            }
+            var dataInput = new FormData(this)
 
             $.ajax({
                 url: "{{ route('product.store') }}",
-                type: "post",
-                data: {
-                    "id": id,
-                    "data": dataInput,
-                },
+                type: "POST",
+                data: dataInput,
+                cache: false,
+                contentType: false,
+                processData: false,
                 dataType: "json",
                 success: function(result) {
                     call_toast(result)
@@ -221,7 +214,6 @@
                         type: "delete",
                         dataType: "json",
                         success: function(result) {
-                            console.log(result);
                             status_delete(result)
                             $("#example1").DataTable().ajax.reload()
                         },
@@ -238,12 +230,12 @@
             if (id != "") {
                 $(".inputForm").val('');
             }
+            $('.edit').hide();
             $('#modal-default').modal('show');
         }
 
         function active(id, active) {
             if (id == null) {
-                console.log('error bosq.')
                 return false
             }
             $.ajax({
@@ -262,6 +254,147 @@
                     $("Terjadi error : " + Status);
                 }
             });
+        }
+
+
+        function stock(id) {
+            $('#id').val(id)
+            $('#kode_produksi').val('');
+            $('#size').val('');
+            $('#jumlah_produksi').val('')
+            $('#sisa_jumlah_produksi').val('')
+            $.ajax({
+                url: "product/" + id + "/produksi",
+                type: "GET",
+                dataType: "json",
+                success: function(result) {
+                    if (result.length == 0) {
+                        alert("data belum di prosses di produksi..");
+                        return false;
+                    }
+                    var opt = '';
+                    opt += '<option value="" disabled selected>Choose ..</option>';
+                    for (var i = 0; i < result.length; i++) {
+                        opt += '<option value="' + result[i].id + '">' + result[i].kode_produksi +
+                            '</option>'
+                    }
+                    $('#kode_produksi').html(opt)
+                    $('#modal-stock').modal('show');
+                },
+                error: function(xhr, Status, err) {
+                    $("Terjadi error : " + Status);
+                }
+            });
+        }
+
+        $('#kode_produksi').change(function() {
+            var id = $('#kode_produksi').val();
+            $.ajax({
+                url: "product/" + id + "/variants",
+                type: "GET",
+                dataType: "json",
+                success: function(result) {
+                    //console.log(result);dd()
+                    var opt = '';
+                    opt += '<option value="" disabled selected>Choose ..</option>';
+                    for (var i = 0; i < result.length; i++) {
+                        opt += '<option value="' + result[i].id + '">' + result[i].size +
+                            '</option>'
+                    }
+                    $('#size').html(opt)
+                    $('#modal-stock').modal('show');
+
+                    $('#size').change(function() {
+                        for (const key in result) {
+                            if (parseInt($(this).val()) == result[key].id) {
+                                $('#variant_id').val(result[key]
+                                    .id)
+                                $('#jumlah_produksi').val(result[key]
+                                    .jumlah_produksi)
+                                $('#sisa_jumlah_produksi').val(result[key].sisa_jumlah_produksi)
+                                break;
+                            }
+                        }
+                    })
+                },
+                error: function(xhr, Status, err) {
+                    $("Terjadi error : " + Status);
+                }
+            });
+        })
+
+        var loadFile = function(event) {
+            var output = document.getElementById('output');
+            output.src = URL.createObjectURL(event.target.files[0]);
+        };
+
+        function mask_number() {
+            $('input[id^="harga"]').mask('000.000.000', {
+                reverse: true
+            });
+            $("#jumlah_stock_product").inputmask('Regex', {
+                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
+            });
+
+        }
+
+        $('#form_stock').submit(function(e) {
+            e.preventDefault();
+
+            var btn = $(this).find("input[type=submit]:focus");
+            var tombol = btn[0].value;
+            var product_id = $('#id').val()
+            var variant_id = $('#variant_id').val()
+            var kode_produksi = $('#kode_produksi').val()
+            var size = $('#size').val()
+            var jumlah_produksi = $('#jumlah_produksi').val()
+            var sisa_jumlah_produksi = $('#sisa_jumlah_produksi').val()
+            var jumlah_stock_product = $('#jumlah_stock_product').val()
+            var transfer_date = $('#transfer_date').val()
+            var keterangan = $('#keterangan').val()
+
+            input = {
+                tombol,
+                product_id,
+                variant_id,
+                kode_produksi,
+                size,
+                jumlah_produksi,
+                sisa_jumlah_produksi,
+                jumlah_stock_product,
+                transfer_date,
+                keterangan
+            }
+
+
+            $.ajax({
+                url: "{{ route('product.log_stock') }}",
+                type: "POST",
+                data: {
+                    data: input
+                },
+                dataType: "json",
+                success: function(result) {
+                    if (result.status == false) {
+                        alert(result.msg);
+                        return false
+                    } else {
+                        call_toast(result)
+                        $(".inputForm").val('');
+                        $("#example1").DataTable().ajax.reload()
+                        setTimeout(function() {
+                            $('#modal-default').modal('hide');
+                        }, 1500);
+                    }
+                },
+                error: function(xhr, Status, err) {
+                    $("Terjadi error : " + Status);
+                }
+            });
+        })
+
+        function history(id){
+            console.log("ok");
         }
 
     </script>

@@ -11,16 +11,17 @@ class CreateProductTable extends Migration
      *
      * @return void
      */
-    
+
     public function up()
     {
         Schema::create('product', function (Blueprint $table) {
             $table->id();
             $table->string('name',30);
             $table->string('kode',30);
-            $table->integer('harga_modal');
-            $table->integer('stock');
-            $table->integer('status')->comment('active');
+            $table->string('foto')->nullable();
+            $table->integer('harga_jual')->nullable();
+            $table->integer('harga_modal_product')->nullable();
+            // $table->integer('status')->comment('active');
             $table->integer('created_by');
             $table->timestamps();
             $table->softDeletes();

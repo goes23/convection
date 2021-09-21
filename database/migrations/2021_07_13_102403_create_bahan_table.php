@@ -11,18 +11,21 @@ class CreateBahanTable extends Migration
      *
      * @return void
      */
-   
+
     public function up()
     {
         Schema::create('bahan', function (Blueprint $table) {
             $table->id();
             $table->string('kode',30);
             $table->string('name',30);
-            $table->dateTime('buy_at');
             $table->integer('harga');
-            $table->integer('panjang');
+            $table->dateTime('buy_at');
             $table->string('satuan');
-            $table->integer('status')->comment('active');
+            $table->integer('panjang');
+            $table->integer('sisa_bahan');
+            $table->integer('harga_satuan');
+            $table->integer('discount');
+            //$table->integer('status')->comment('active');
             $table->integer('created_by');
             $table->timestamps();
             $table->softDeletes();

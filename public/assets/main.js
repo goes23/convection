@@ -24,6 +24,8 @@ function required_fild(object) {
 function status_delete(result) {
     if (result == true) {
         return Swal.fire("Deleted!", "Your file has been deleted.", "success");
+    } else if (result.status == false) {
+        return Swal.fire("Deleted!", result.msg, "error");
     } else {
         return Swal.fire("Deleted!", "Failed to delete.", "error");
     }
@@ -69,8 +71,8 @@ function loading() {
 }
 
 function unloading() {
-	$(".mask").hide();
-	$(".loading").hide();
+    $(".mask").hide();
+    $(".loading").hide();
 
     return false;
 }

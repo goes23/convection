@@ -31,20 +31,33 @@
                         <div class="card-body">
                             <div style=" padding: 0px 0px 18px 0px;">
                                 <?php if (allowed_access(session('user'), 'produksi', 'add')): ?>
+                                <Form method="post" action="{{ route('produksi.form') }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-info btn-sm">Tambah produksi</button>
+                                </Form>
+                                <?php endif; ?>
+
+                                <?php /* if (allowed_access(session('user'), 'produksi', 'add')): ?>
                                 <button type="button" class="btn btn-info btn-sm" onclick="add_btn()">Tambah
                                     produksi</button>
-                                <?php endif; ?>
+                                <?php endif; */?>
                             </div>
 
                             <table id="example1" class="table table-bordered table-striped" style="width: 100%">
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Bahan</th>
+                                        <th>Kode Produksi</th>
                                         <th>Product</th>
-                                        <th>Jumlah</th>
-                                        <th>Sisa</th>
-                                        <th>Status</th>
+                                        <th>Bahan</th>
+                                        <th>Bidang</th>
+                                        <th>Toral Stock</th>
+                                        <th>Pemakaian</th>
+                                        <th>Harga Potong</th>
+                                        <th>Harga Jait</th>
+                                        <th>Harga Finishing</th>
+                                        <th>Harga Aksesoris</th>
+                                        <th>Harga Modal Bahan</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -60,7 +73,7 @@
     </section>
 
     {{-- MODAL FORM ADD & EDIT --}}
-    @include('produksi.v_modal')
+    {{-- @include('produksi.v_modal') --}}
     {{-- MODAL FORM ADD & EDIT --}}
 
 
@@ -97,26 +110,53 @@
                         }
                     },
                     {
-                        data: 'bahan',
-                        name: 'bahan',
+                        data: 'kode_produksi',
+                        name: 'kode_produksi',
                     },
                     {
                         data: 'product',
                         name: 'product',
                     },
                     {
-                        data: 'jumlah',
-                        name: 'jumlah'
+                        data: 'bahan',
+                        name: 'bahan'
                     },
                     {
-                        data: 'sisa',
-                        name: 'sisa'
+                        data: 'bidang',
+                        name: 'bidang'
                     },
                     {
-                        data: 'status',
-                        name: 'status',
-                        orderable: false,
-                        searchable: false
+                        data: 'total_stock',
+                        name: 'total_stock'
+                    },
+                    {
+                        data: 'pemakaian',
+                        name: 'pemakaian'
+                    },
+                    {
+                        data: 'harga_potong_satuan',
+                        name: 'harga_potong_satuan',
+                        render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
+                    },
+                    {
+                        data: 'harga_jait_satuan',
+                        name: 'harga_jait_satuan',
+                        render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
+                    },
+                    {
+                        data: 'harga_finishing_satuan',
+                        name: 'harga_finishing_satuan',
+                        render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
+                    },
+                    {
+                        data: 'harga_aksesoris',
+                        name: 'harga_aksesoris',
+                        render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
+                    },
+                    {
+                        data: 'harga_modal_bahan_satuan',
+                        name: 'harga_modal_bahan_satuan',
+                        render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
                     },
                     {
                         data: 'action',
@@ -217,7 +257,7 @@
             });
         })
 
-        function my_delete(id = null) {
+        function my_delete(id) {
             if (id == null) {
                 return false
             }
@@ -246,47 +286,6 @@
                     });
                 }
             })
-        }
-
-        // $('#jumlah').keyup(function() {
-        //     var form = $('#forms').val()
-        //     console.log(form);
-        //     if (form == 'add') {
-        //         $('#sisa').val($(this).val());
-        //     }
-        // });
-
-        function add_btn() {
-            var id = $('#id').val();
-            if (id != "") {
-                $('.add').show();
-                // $("#forms").val('add');
-                $(".inputForm").val('');
-            }
-            $('#modal-default').modal('show');
-        }
-
-        function active(id, active) {
-            if (id == null) {
-                console.log('error bosq.')
-                return false
-            }
-            $.ajax({
-                url: {!! json_encode(url('produksi/active')) !!},
-                type: "POST",
-                data: {
-                    "id": id,
-                    "data": active,
-                },
-                dataType: "json",
-                success: function(result) {
-                    call_toast(result)
-                    $("#example1").DataTable().ajax.reload()
-                },
-                error: function(xhr, Status, err) {
-                    $("Terjadi error : " + Status);
-                }
-            });
         }
 
     </script>

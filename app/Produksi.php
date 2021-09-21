@@ -15,6 +15,12 @@ class Produksi extends Model
     protected $dates = ['deleted_at'];
 
 
+    public function variants()
+    {
+        return $this->hasMany('App\Variants');
+    }
+
+
     public function bahan()
     {
         return $this->belongsTo('App\Bahan', 'bahan_id');
@@ -27,10 +33,10 @@ class Produksi extends Model
 
     public function get_data_produksi($bahan, $product)
     {
-        return  DB::select("SELECT * 
-                            FROM produksi 
-                            WHERE bahan_id='{$bahan}' 
-                            AND product_id='{$product}' 
+        return  DB::select("SELECT *
+                            FROM produksi
+                            WHERE bahan_id='{$bahan}'
+                            AND product_id='{$product}'
                             AND deleted_at IS NULL
                             LIMIT 1");
     }

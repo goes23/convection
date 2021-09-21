@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Bahan;
+use App\Produksi;
 
 class BahanController extends Controller
 {
@@ -23,15 +24,6 @@ class BahanController extends Controller
 
         if ($request->ajax()) {
             return datatables()->of(Bahan::all())
-                ->addColumn('status', function ($data) {
-                    if ($data->status == 1) {
-                        $button = '<center><button type="button" class="btn btn-warning btn-sm" onclick="active(' . $data->id . ',0)"> Active </button> </center>';
-                    } else {
-                        $button = '<center><button type="button" class="btn btn-sm" style="background-color: #cccccc;" onclick="active(' . $data->id . ',1)"> Not Active </button> </center>';
-                    }
-                    return $button;
-                })
-                ->rawColumns(['status'])
                 ->addColumn('action', function ($data) {
                     $button = '<center>';
                     if (allowed_access(session('user'), 'bahan', 'edit')) :
@@ -43,7 +35,7 @@ class BahanController extends Controller
                     endif;
                     return $button;
                 })
-                ->rawColumns(['action', 'status'])
+                ->rawColumns(['action'])
                 ->addIndexColumn()
                 ->make(true);
         }
@@ -79,10 +71,12 @@ class BahanController extends Controller
             'kode' => $request["data"]["kode"],
             'name' => $request["data"]["name"],
             'buy_at' => $request["data"]["buy_at"],
-            'harga' => $harga,
+            'harga' => str_replace(".", "", $harga),
             'panjang' => $request["data"]["panjang"],
             'satuan' => $request["data"]["satuan"],
-            'status' => $request["data"]["status"],
+            'sisa_bahan' => $request["data"]["panjang"],
+            'harga_satuan' => str_replace(".", "", $request["data"]["harga_satuan"]),
+            'discount' => $request["data"]["discount"],
             'created_by' => session('user')
         ]);
 
@@ -143,9 +137,18 @@ class BahanController extends Controller
             return "error request";
             exit;
         }
-        $delete = Bahan::find($id)->delete();
 
-        return response()->json($delete);
+        $check_produksi = Produksi::where("bahan_id", $id)->exists();
+        if (!$check_produksi) {
+            $delete = Bahan::find($id)->delete();
+            return response()->json($delete);
+        } else {
+            $res = [
+                "status" => false,
+                "msg" => "Bahan sedang di proses di produksi ..!!!"
+            ];
+            return response()->json($res);
+        }
     }
 
     public function active(Request $request)

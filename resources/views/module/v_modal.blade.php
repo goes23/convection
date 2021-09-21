@@ -20,17 +20,17 @@
                         <div class="form-group">
                             <label for="name">Name <a class="tn">*</a></label>
                             <input type="text" class="form-control inputForm" id="name" name="name"
-                                aria-describedby="emailHelp" placeholder="Enter name" required>
+                                 placeholder="Enter name" required>
                         </div>
                         <div class="form-group" id="ctrl">
                             <label for="controller">Controller <a class="tn">*</a></label>
                             <input type="text" class="form-control inputForm" id="controller" name="controller"
-                                aria-describedby="emailHelp" placeholder="Enter controller">
+                                 placeholder="Enter controller">
                         </div>
                         <div class="form-group">
                             <label for="order">Order NO <a class="tn">*</a></label>
                             <input type="text" class="form-control inputForm" id="order" name="order"
-                                aria-describedby="emailHelp" placeholder="Enter order" required>
+                                 placeholder="Enter order" required>
                         </div>
                         <div class="form-group">
                             <label for="status">status <a class="tn">*</a></label>

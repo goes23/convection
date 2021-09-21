@@ -14,7 +14,7 @@
                         <div class="form-group">
                             <label for="name">Name Channel <a class="tn">*</a></label>
                             <input type="text" class="form-control inputForm" id="name" name="name"
-                                aria-describedby="emailHelp" placeholder="Enter name" required>
+                                 placeholder="Enter name" required>
                         </div>
                         <div class="form-group">
                             <label for="status">status <a class="tn">*</a></label>

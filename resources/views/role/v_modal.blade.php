@@ -14,7 +14,7 @@
                         <div class="form-group">
                             <label for="name">Name Role<a class="tn">*</a></label>
                             <input type="text" class="form-control inputForm" id="name" name="name"
-                                aria-describedby="emailHelp" placeholder="Enter name role" required>
+                                 placeholder="Enter name role" required>
                         </div>
                          <div class="form-group">
                             <label for="description">Description</label>
