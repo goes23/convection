@@ -253,28 +253,50 @@ class ProductController extends Controller
             exit;
         }
 
-        if ($request['data']['jumlah_produksi'] < $request['data']['jumlah_stock_product']) {
-            $res = [
-                "status" => false,
-                "msg" => "jumlah request stock melebihi jumlah produksi..!!!"
-            ];
-            return response()->json($res);
-            exit;
-        }
-
 
         $sisa_jumlah_produksi = 0;
         $jumlah_stock_product = 0;
         if ($request['data']['tombol'] == 'tambah') {
 
-            $sisa_jumlah_produksi = (($request['data']['jumlah_produksi'] - $request['data']['sisa_jumlah_produksi']) - $request['data']['jumlah_stock_product']) < 0 ? 0 : (($request['data']['jumlah_produksi'] - $request['data']['sisa_jumlah_produksi']) - $request['data']['jumlah_stock_product']);
+            $current    = $request['data']['jumlah_produksi'];
+            $sisa       = $request['data']['sisa_jumlah_produksi'];
+            $req        = $request['data']['input_jumlah_product'];
 
-            $jumlah_stock_product = $request['data']['sisa_jumlah_produksi'] + $request['data']['jumlah_stock_product'] < 0 ? $request['data']['jumlah_produksi'] : $request['data']['sisa_jumlah_produksi'] + $request['data']['jumlah_stock_product'];
+            if ($req > $sisa) {
+                $res = [
+                    "status" => false,
+                    "msg" => "jumlah request stock melebihi jumlah sisa..!!!"
+                ];
+                return response()->json($res);
+                exit;
+            }
+
+            $sisa_jumlah_produksi = $sisa - $req;
+            $plus = $request['data']['jumlah_stock_product'] + $req;
+
+            if ($plus >  $current) {
+                $res = [
+                    "status" => false,
+                    "msg" => "jumlah request stock melebihi jumlah produksi..!!!"
+                ];
+                return response()->json($res);
+                exit;
+            }
+
+            $jumlah_stock_product = $plus;
         } else {
+            $req  = $request['data']['input_jumlah_product'];
+            if ($req > $request['data']['jumlah_stock_product']) {
+                $res = [
+                    "status" => false,
+                    "msg" => "jumlah request stock melebihi jumlah product tersedia..!!!"
+                ];
+                return response()->json($res);
+                exit;
+            }
 
-            $sisa_jumlah_produksi = $request['data']['jumlah_produksi'] - ($request['data']['sisa_jumlah_produksi'] - $request['data']['jumlah_stock_product']);
-
-            $jumlah_stock_product =  $request['data']['sisa_jumlah_produksi'] - $request['data']['jumlah_stock_product'];
+            $jumlah_stock_product = $request['data']['jumlah_stock_product'] - $req;
+            $sisa_jumlah_produksi = $request['data']['sisa_jumlah_produksi'] + $req;
         }
 
         try {

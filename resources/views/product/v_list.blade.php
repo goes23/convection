@@ -312,6 +312,7 @@
                                 $('#jumlah_produksi').val(result[key]
                                     .jumlah_produksi)
                                 $('#sisa_jumlah_produksi').val(result[key].sisa_jumlah_produksi)
+                                $('#jumlah_stock_product').val(result[key].jumlah_stock_product)
                                 break;
                             }
                         }
@@ -350,6 +351,7 @@
             var jumlah_produksi = $('#jumlah_produksi').val()
             var sisa_jumlah_produksi = $('#sisa_jumlah_produksi').val()
             var jumlah_stock_product = $('#jumlah_stock_product').val()
+            var input_jumlah_product = $('#input_jumlah_product').val()
             var transfer_date = $('#transfer_date').val()
             var keterangan = $('#keterangan').val()
 
@@ -362,6 +364,7 @@
                 jumlah_produksi,
                 sisa_jumlah_produksi,
                 jumlah_stock_product,
+                input_jumlah_product,
                 transfer_date,
                 keterangan
             }
