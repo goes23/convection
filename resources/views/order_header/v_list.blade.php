@@ -33,7 +33,7 @@
                                 <?php if (allowed_access(session('user'), 'order_header', 'add')): ?>
                                 <Form method="post" action="{{ route('order_header.form') }}">
                                     @csrf
-                                    <button type="submit" class="btn btn-info btn-sm">Tambah Order Header </button>
+                                    <button type="submit" class="btn btn-info btn-sm">Tambah Order </button>
                                 </Form>
                                 <?php endif; ?>
                             </div>
@@ -170,7 +170,8 @@
                                                     <td>` + result.data_detail[0].order_item[i].purchase_code + `</td>
                                                     <td>` + result.data_detail[0].order_item[i].product_id + `</td>
                                                     <td>` + result.data_detail[0].order_item[i].qty + `</td>
-                                                    <td class="prices">` + result.data_detail[0].order_item[i].sell_price + `</td>
+                                                    <td class="prices">` + result.data_detail[0].order_item[i]
+                                .sell_price + `</td>
                                                     <td class="prices">` + result.data_detail[0].order_item[i].total + `</td>
                                                 </tr>`
                             no++
@@ -292,6 +293,5 @@
                 }
             });
         }
-
     </script>
 @endsection
