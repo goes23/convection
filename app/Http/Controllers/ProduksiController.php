@@ -96,7 +96,7 @@ class ProduksiController extends Controller
             $data_produksi = Produksi::with('variants')
                 ->where('produksi.id', $id)
                 ->get();
-            //dd($data_produksi[0]->product_id);
+            //dd($data_produksi);
 
             $data_view['data_produksi']          = $data_produksi;
             $data_view['status']                 = 1;  // status edit
@@ -176,7 +176,7 @@ class ProduksiController extends Controller
         }
 
         $total_stock = 0;
-        foreach($request['variants'] as $vals){
+        foreach ($request['variants'] as $vals) {
             $total_stock += $vals['jumlah_produksi'];
         }
 
@@ -208,13 +208,18 @@ class ProduksiController extends Controller
 
             foreach ($request['variants'] as $val) {
 
+
                 $variant['kode_produksi']        = $kode;
                 $variant['produksi_id']          = $post->id;
                 $variant['product_id']           = $request['product_id'];
                 $variant['size']                 = $val['size'];
                 $variant['jumlah_produksi']      = $val['jumlah_produksi'];
-                $variant['sisa_jumlah_produksi'] = 0;
+                $variant['sisa_jumlah_produksi'] = $val['jumlah_produksi'];
+                //$variant['sisa_jumlah_produksi'] = 0;
                 $variant['jumlah_stock_product'] = 0;
+                $variant['harga_jual']           = $val['harga_jual'];
+                $variant['harga_jual_akhir']     = $val['harga_jual_akhir'];
+                $variant['keterangan']           = $val['keterangan'];
 
                 Variants::insert($variant);
             }

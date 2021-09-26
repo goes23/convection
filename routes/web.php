@@ -55,6 +55,7 @@ Route::group(['middleware' => ['ceklogin', 'checkpermission']], function () {
     Route::post('product/active', 'ProductController@active');
     Route::get('product/{id}/produksi', 'ProductController@get_data_produksi')->name('get.get_data_produksi');
     Route::get('product/{id}/variants', 'ProductController@get_data_variants')->name('get.get_data_variants');
+    Route::get('product/{id}/history', 'ProductController@history')->name('get.history');
     Route::post('product/log_stock', 'ProductController@log_stock')->name('product.log_stock');
 
 
@@ -76,6 +77,8 @@ Route::group(['middleware' => ['ceklogin', 'checkpermission']], function () {
 
     Route::resource('log_stock', 'LogStockController');
     Route::get('log_stock/{id}/get_sisa', 'LogStockController@get_sisa')->name('log_stock.get_sisa');
+
+    Route::resource('upah', 'UpahController');
 });
 
 

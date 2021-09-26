@@ -53,9 +53,16 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="jumlah_stock_product">Jumlah stock product <a class="tn">*</a></label>
+                                <label for="jumlah_stock_product">Jumlah stock product tersedia <a class="tn">*</a></label>
                                 <input type="text" class="form-control inputForm" id="jumlah_stock_product"
-                                    name="jumlah_stock_product" placeholder="Enter jumlah stock product">
+                                    name="jumlah_stock_product" placeholder="Enter jumlah stock product" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="input_jumlah_product">input jumlah product <a class="tn">*</a></label>
+                                <input type="text" class="form-control inputForm" id="input_jumlah_product"
+                                    name="input_jumlah_product" placeholder="Enter jumlah product" require>
                             </div>
                         </div>
                         <div class="col-md-4">

@@ -67,6 +67,10 @@
     @include('product.v_modal_stock')
     {{-- MODAL FORM ADD & EDIT --}}
 
+    {{-- MODAL FORM ADD & EDIT --}}
+    @include('product.v_modal_history')
+    {{-- MODAL FORM ADD & EDIT --}}
+
 
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
@@ -312,6 +316,7 @@
                                 $('#jumlah_produksi').val(result[key]
                                     .jumlah_produksi)
                                 $('#sisa_jumlah_produksi').val(result[key].sisa_jumlah_produksi)
+                                $('#jumlah_stock_product').val(result[key].jumlah_stock_product)
                                 break;
                             }
                         }
@@ -350,6 +355,7 @@
             var jumlah_produksi = $('#jumlah_produksi').val()
             var sisa_jumlah_produksi = $('#sisa_jumlah_produksi').val()
             var jumlah_stock_product = $('#jumlah_stock_product').val()
+            var input_jumlah_product = $('#input_jumlah_product').val()
             var transfer_date = $('#transfer_date').val()
             var keterangan = $('#keterangan').val()
 
@@ -362,6 +368,7 @@
                 jumlah_produksi,
                 sisa_jumlah_produksi,
                 jumlah_stock_product,
+                input_jumlah_product,
                 transfer_date,
                 keterangan
             }
@@ -393,9 +400,19 @@
             });
         })
 
-        function history(id){
-            console.log("ok");
+        function history(id) {
+            $.ajax({
+                url: "product/" + id + "/history",
+                type: "GET",
+                dataType: "json",
+                success: function(result) {
+                    $('#modals').html(result.html);
+                    $('#modal-history').modal('show');
+                },
+                error: function(xhr, Status, err) {
+                    $("Terjadi error : " + Status);
+                }
+            });
         }
-
     </script>
 @endsection
