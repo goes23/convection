@@ -26,6 +26,7 @@ class ProductController extends Controller
         $data_view["breadcrumb_item_active"] = "Product";
         $data_view["modal_title"]            = "Form Product";
         $data_view["card_title"]             = "Input & Update Data Product";
+        $data_view["history"]                = [];
 
 
         if ($request->ajax()) {
@@ -332,7 +333,23 @@ class ProductController extends Controller
             DB::rollBack();
             return response()->json($e);
         }
-        dd($sisa_jumlah_produksi);
-        dd($request->all());
+    }
+
+
+    public function history(Request $request, $id)
+    {
+        if (!$request->ajax()) {
+            return "error request";
+            exit;
+        }
+
+        $product = new Product();
+        $data = $product->history($id);
+
+        $data_view = [];
+        $data_view['history'] = $data;
+        $html = view('product/content', $data_view)->render();
+
+        return response()->json(array('html' => $html));
     }
 }

@@ -67,6 +67,10 @@
     @include('product.v_modal_stock')
     {{-- MODAL FORM ADD & EDIT --}}
 
+    {{-- MODAL FORM ADD & EDIT --}}
+    @include('product.v_modal_history')
+    {{-- MODAL FORM ADD & EDIT --}}
+
 
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
@@ -396,9 +400,19 @@
             });
         })
 
-        function history(id){
-            console.log("ok");
+        function history(id) {
+            $.ajax({
+                url: "product/" + id + "/history",
+                type: "GET",
+                dataType: "json",
+                success: function(result) {
+                    $('#modals').html(result.html);
+                    $('#modal-history').modal('show');
+                },
+                error: function(xhr, Status, err) {
+                    $("Terjadi error : " + Status);
+                }
+            });
         }
-
     </script>
 @endsection
