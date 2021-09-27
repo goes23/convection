@@ -97,7 +97,7 @@
                                                                         class="tn">*</a></label>
                                                                 <input type="text" class="form-control "
                                                                     id="sisa_jumlah_produksi" placeholder="0"
-                                                                    value="{{ $val['id'] }}" readonly>
+                                                                    value="{{ $item['id'] }}" readonly>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-2">
