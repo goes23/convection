@@ -67,7 +67,6 @@ class PenjualanController extends Controller
         $penjualan = new Penjualan();
         $data_product = $penjualan->get_data_product();
 
-
         if ($request->id == "") {
             $data_view                = [];
             $data_view['h1']                     = 'Form Penjualan';
@@ -78,11 +77,11 @@ class PenjualanController extends Controller
             $data_view['product']                = $data_product;
             $data_view['data_order']             = [];
             $data_view['status']                 = 0; //add
-            return view('penjualan/v_form', $data_view);
         } else {
-            $data_order = Penjualan::with('order_item', 'channel')
+            $data_order = Penjualan::with('item_penjualan', 'channel')
                 ->where('penjualan.id', $id)
                 ->get();
+                //dd($data_order);
 
             $data_view                = [];
             $data_view['h1']                     = 'Edit Form Penjualan';
@@ -90,13 +89,12 @@ class PenjualanController extends Controller
             $data_view['breadcrumb_item_active'] = 'Edit Form Penjualan';
             $data_view['card_title']             = 'Edit Form Order';
             $data_view['channel']                = Channel::all();
-            //dd($data_view['channel']);
-            $data_view['product']                = [];
-            // $data_view['product']                = Product::where('stock', '!=', 0)->get();
+            $data_view['product']                = $data_product;
             $data_view['data_order']             = $data_order;
             $data_view['status']                 = 1; // edit
-            return view('penjualan/v_form', $data_view);
         }
+
+        return view('penjualan/v_form', $data_view);
     }
 
     public function store(Request $request)
@@ -115,7 +113,7 @@ class PenjualanController extends Controller
                 return response()->json($res);
             }
         }
-        dd($request->all());
+        // dd($request->all());
 
         if ($request->purchase_code != "" && $request->id != "") {
             $purchase_code = $request->purchase_code;
@@ -151,13 +149,13 @@ class PenjualanController extends Controller
             endif;
 
             foreach ($request->orderitem as $val) {
-                $price = str_replace(".", "", $val['sale_price']);
+                $price = str_replace(".", "", $val['sell_price']);
                 $total = (int) $val['qty'] * (int) $price;
                 ItemPenjualan::UpdateOrCreate(['id' => $val['id']], [
                     'purchase_code' => $post->purchase_code,
                     'penjualan_id' => $post->id,
                     'product_id' => $val['product'],
-                    'sell_price'   => str_replace(".", "", $val['sale_price']),
+                    'sell_price'   => str_replace(".", "", $val['sell_price']),
                     'qty'   => $val['qty'],
                     'size'   => $val['size'],
                     'total'   => $total,

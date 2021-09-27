@@ -60,6 +60,10 @@
     @include('upah.v_modal')
     {{-- MODAL FORM ADD & EDIT --}}
 
+    {{-- MODAL FORM ADD & EDIT --}}
+    @include('upah.v_pembayaran')
+    {{-- MODAL FORM ADD & EDIT --}}
+
 
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
@@ -250,6 +254,50 @@
             $('#total_upah').mask('000.000.000', {
                 reverse: true
             });
+
+            $('#jumlah_pembayaran').mask('000.000.000', {
+                reverse: true
+            });
+
         }
+
+        function bayar(id) {
+            $('#id_upah').val(id)
+            $('#modal-pembayaran').modal('show');
+        }
+
+        $('#pembayaran').submit(function(e) {
+            e.preventDefault();
+
+            var btn = $(this).find("input[type=submit]:focus");
+            var tombol = btn[0].value;
+            var id_upah = $('#id_upah').val();
+            var jumlah_pembayaran = $('#jumlah_pembayaran').val()
+            var tanggal_pembayaran = $('#tgl_pembayaran').val()
+
+
+            var object = {
+                tombol,
+                id_upah,
+                jumlah_pembayaran,
+                tanggal_pembayaran
+            }
+
+            $.ajax({
+                url: "{{ route('upah.bayar') }}",
+                type: "post",
+                data: object,
+                dataType: "json",
+                success: function(result) {
+                    console.log(result);
+                    status_delete(result)
+                    $("#example1").DataTable().ajax.reload()
+                },
+                error: function(xhr, Status, err) {
+                    $("Terjadi error : " + Status);
+                }
+            });
+            console.log("ok");
+        })
     </script>
 @endsection

@@ -24,6 +24,11 @@ class Product extends Model
         return $this->hasMany('App\Logstock');
     }
 
+    public function variants()
+    {
+        return $this->hasMany('App\Variants');
+    }
+
     public function history($id)
     {
         return DB::table('product')

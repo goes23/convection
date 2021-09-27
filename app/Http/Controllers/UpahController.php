@@ -31,7 +31,7 @@ class UpahController extends Controller
                     if (allowed_access(session('user'), 'upah', 'edit')) :
                         $button = '<center><button type="button" class="btn btn-info btn-sm" onclick="edit(' . $data->id . ')">History Pembayaran</button>';
                         $button .= '&nbsp;';
-                        $button .= '<button type="button" class="btn btn-warning btn-sm" onclick="edit(' . $data->id . ')">Pembayaran</button>';
+                        $button .= '<button type="button" class="btn btn-warning btn-sm" onclick="bayar(' . $data->id . ')">Pembayaran</button>';
                         $button .= '&nbsp;';
                         $button .= '<button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
                     endif;
@@ -99,5 +99,15 @@ class UpahController extends Controller
         }
         $delete = Upah::find($id)->delete();
         return response()->json($delete);
+    }
+
+    public function bayar(Request $request)
+    {
+        if (!$request->ajax()) {
+            return "error request";
+            exit;
+        }
+
+        dd($request->all());
     }
 }

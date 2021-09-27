@@ -350,9 +350,6 @@
 
         $('#form_stock').submit(function(e) {
             e.preventDefault();
-
-
-
             var btn = $(this).find("input[type=submit]:focus");
             var tombol = btn[0].value;
             var product_id = $('#id').val()

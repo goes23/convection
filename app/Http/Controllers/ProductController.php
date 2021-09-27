@@ -45,7 +45,8 @@ class ProductController extends Controller
                         $button .= '&nbsp;';
                         $button .= '<button type="button" class="btn btn-warning btn-sm" onclick="stock(' . $data->id . ')">Stock</button>';
                         $button .= '&nbsp;';
-                        $button .= '<button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
+                        $button .= '<a type="button" href="/product/' . $data->id . '/form" class="btn btn-success btn-sm" >Edit</a>';
+                    // $button .= '<button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
                     endif;
                     $button .= '&nbsp;';
                     if (allowed_access(session('user'), 'product', 'delete')) :
@@ -372,5 +373,22 @@ class ProductController extends Controller
         $html = view('product/content', $data_view)->render();
 
         return response()->json(array('html' => $html));
+    }
+
+    public function form($id = "")
+    {
+        // Logstock::with('product')->get()
+        $data_product = Product::with('variants')->where('id', $id)->get();
+        //dd($data_product);
+
+        $data_view                = [];
+        $data_view['h1']                     = 'Form Product';
+        $data_view['breadcrumb_item']        = 'Product List';
+        $data_view['breadcrumb_item_active'] = 'Form Product';
+        $data_view['card_title']             = 'Form Product';
+        $data_view['product']                = $data_product;
+
+
+        return view('product/v_form', $data_view);
     }
 }

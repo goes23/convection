@@ -182,6 +182,7 @@
                                                             <label for="keterangan">Keterangan <a
                                                                     class="tn">*</a></label>
                                                             <textarea class="form-control keterangan"
+                                                                name="orderitem[{{ $no }}][keterangan]"
                                                                 id="keterangan{{ $no }}" rows="3"></textarea>
                                                         </div>
                                                     </div>
@@ -194,7 +195,7 @@
                             @else
                                 @foreach ($data_order as $item)
                                     <?php $no = 0; ?>
-                                    @foreach ($item->order_item as $val)
+                                    @foreach ($item->item_penjualan as $val)
                                         <div class="col-md-12">
                                             <div class="container-fluid" id="item<?php echo $no; ?>">
                                                 <div class="card card-secondary">
@@ -231,12 +232,37 @@
                                                             </div>
                                                             <div class="col-md-3">
                                                                 <div class="form-group">
-                                                                    <label for="price">Price <a
+                                                                    <label for="harga_jual">Harga Jual <a
                                                                             class="tn">*</a></label>
-                                                                    <input type="text" class="form-control price" id="price"
-                                                                        name="orderitem[{{ $no }}][price]"
-                                                                        placeholder="Enter price"
-                                                                        value="{{ $val->sell_price }}" required>
+                                                                    <input type="text" class="form-control harga_jual"
+                                                                        id="harga_jual{{ $no }}"
+                                                                        name="orderitem[{{ $no }}][harga_jual]"
+                                                                        value="{{$val->harga_jual}}"
+                                                                        readonly>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <div class="form-group">
+                                                                    <label for="size">Size <a
+                                                                            class="tn">*</a></label>
+                                                                    <select class="form-control select3"
+                                                                        id="size{{ $no }}"
+                                                                        name="orderitem[{{ $no }}][size]"
+                                                                        data-placeholder="Select a size"
+                                                                        data-dropdown-css-class="select2-purple"
+                                                                        style="width: 100%" required>
+
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <div class="form-group">
+                                                                    <label for="qty_product">Quantity product<a
+                                                                            class="tn">*</a></label>
+                                                                    <input type="text" class="form-control qty_product"
+                                                                        id="qty_product{{ $no }}"
+                                                                        name="orderitem[{{ $no }}][qty_product]"
+                                                                        placeholder="" readonly>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-3">
@@ -245,8 +271,27 @@
                                                                             class="tn">*</a></label>
                                                                     <input type="text" class="form-control qty" id="qty"
                                                                         name="orderitem[{{ $no }}][qty]"
-                                                                        placeholder="Enter quantity"
-                                                                        value="{{ $val->qty }}" required>
+                                                                        placeholder="Enter quantity" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <div class="form-group">
+                                                                    <label for="sell_price">Harga jual akhir <a
+                                                                            class="tn">*</a></label>
+                                                                    <input type="text" class="form-control sell_price"
+                                                                        id="sell_price{{ $no }}"
+                                                                        name="orderitem[{{ $no }}][sell_price]"
+                                                                        placeholder="Enter harga jual akhir" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <div class="form-group">
+                                                                    <label for="keterangan">Keterangan <a
+                                                                            class="tn">*</a></label>
+                                                                    <textarea class="form-control keterangan"
+                                                                        name="orderitem[{{ $no }}][keterangan]"
+                                                                        id="keterangan{{ $no }}"
+                                                                        rows="3"></textarea>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -412,6 +457,7 @@
                 dataType: "json",
                 success: function(result) {
                     console.log(result);
+                    return false
                     if (result.status == false) {
                         alert(result.msg)
                         return false

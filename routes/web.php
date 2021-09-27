@@ -57,6 +57,8 @@ Route::group(['middleware' => ['ceklogin', 'checkpermission']], function () {
     Route::get('product/{id}/variants', 'ProductController@get_data_variants')->name('get.get_data_variants');
     Route::get('product/{id}/history', 'ProductController@history')->name('get.history');
     Route::post('product/log_stock', 'ProductController@log_stock')->name('product.log_stock');
+    Route::get('product/{id}/form', 'ProductController@form')->name('get.form');
+
 
 
 
@@ -81,4 +83,5 @@ Route::group(['middleware' => ['ceklogin', 'checkpermission']], function () {
     Route::get('log_stock/{id}/get_sisa', 'LogStockController@get_sisa')->name('log_stock.get_sisa');
 
     Route::resource('upah', 'UpahController');
+    Route::post('upah/bayar', 'UpahController@bayar')->name('upah.bayar');
 });

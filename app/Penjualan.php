@@ -14,9 +14,9 @@ class Penjualan extends Model
     protected $guarded = [];
     protected $dates = ['deleted_at'];
 
-    public function order_item()
+    public function item_penjualan()
     {
-        return $this->hasMany('App\PenjualanItem');
+        return $this->hasMany('App\ItemPenjualan');
     }
 
     public function channel()

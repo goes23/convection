@@ -15,4 +15,11 @@ class Variants extends Model
 
         return $this->belongsTo('App\Produksi', 'id');
     }
+
+    public function product()
+    {
+        //return $this->belongsTo('App\Penjualan', 'penjualan_id');
+
+        return $this->belongsTo('App\Product', 'id');
+    }
 }
