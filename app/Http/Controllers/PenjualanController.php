@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\OrderHeader;
+use App\Penjualan;
 use App\Channel;
-use App\OrderItem;
+use App\ItemPenjualan;
 use App\Product;
 use Illuminate\Support\Facades\DB;
 use stdClass;
 
-class OrderHeaderController extends Controller
+class PenjualanController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,16 +20,16 @@ class OrderHeaderController extends Controller
     public function index(Request $request)
     {
         $data_view            = array();
-        $data_view["title_h1"]               = "Data Order Header";
+        $data_view["title_h1"]               = "Data Penjualan";
         $data_view["breadcrumb_item"]        = "Home";
-        $data_view["breadcrumb_item_active"] = "Order Header";
-        $data_view["modal_title"]            = "Form Order Header";
-        $data_view["card_title"]             = "Input & Update Data Order Header";
+        $data_view["breadcrumb_item_active"] = "Penjualan";
+        $data_view["modal_title"]            = "Form Penjualan";
+        $data_view["card_title"]             = "Input & Update Data Penjualan";
 
-        //dd(OrderHeader::with('channel')->get());
+        //dd(Penjualan::with('channel')->get());
 
         if ($request->ajax()) {
-            return datatables()->of(OrderHeader::with('channel')->get())
+            return datatables()->of(Penjualan::with('channel')->get())
                 ->addColumn('status', function ($data) {
                     if ($data->status == 1) {
                         $button = '<center><button type="button" class="btn btn-warning btn-sm" onclick="active(' . $data->id . ',0)"> Active </button> </center>';
@@ -43,12 +43,12 @@ class OrderHeaderController extends Controller
                     $button = '<center>';
                     $button .= '<button type="button" class="btn btn-secondary btn-sm" onClick="detail(' . $data->id . ')">Detail</button>';
                     $button .= '&nbsp;';
-                    if (allowed_access(session('user'), 'order_header', 'edit')) :
+                    if (allowed_access(session('user'), 'penjualan', 'edit')) :
                         //$button .='<a href="" class="btn btn-xs btn-info pull-right">Edit</a>';
-                        $button .= '<a type="button" href="/order_header/' . $data->id . '/form" class="btn btn-success btn-sm" >Edit</a>';
+                        $button .= '<a type="button" href="/penjualan/' . $data->id . '/form" class="btn btn-success btn-sm" >Edit</a>';
                     endif;
                     $button .= '&nbsp;';
-                    if (allowed_access(session('user'), 'order_header', 'delete')) :
+                    if (allowed_access(session('user'), 'penjualan', 'delete')) :
                         $button .= '<button type="button" class="btn btn-danger btn-sm" onClick="my_delete(' . $data->id . ')">Delete</button></center>';
                     endif;
                     return $button;
@@ -58,40 +58,44 @@ class OrderHeaderController extends Controller
                 ->make(true);
         }
 
-        return view('order_header/v_list', $data_view);
+        return view('penjualan/v_list', $data_view);
     }
 
     public function form(Request $request, $id = "")
     {
+
+        $penjualan = new Penjualan();
+        $data_product = $penjualan->get_data_product();
+
+
         if ($request->id == "") {
             $data_view                = [];
-            $data_view['h1']                     = 'Form Order Header';
-            $data_view['breadcrumb_item']        = 'Order Header List';
-            $data_view['breadcrumb_item_active'] = 'Form Order Header';
+            $data_view['h1']                     = 'Form Penjualan';
+            $data_view['breadcrumb_item']        = 'Penjualan List';
+            $data_view['breadcrumb_item_active'] = 'Form Penjualan';
             $data_view['card_title']             = 'Form Order';
             $data_view['channel']                = Channel::all();
-            // $data_view['product']                = Product::where('stock', '!=', 0)->get();
-            $data_view['product']                = [];
+            $data_view['product']                = $data_product;
             $data_view['data_order']             = [];
-            $data_view['status']                 = 'add';
-            return view('order_header/v_form', $data_view);
+            $data_view['status']                 = 0; //add
+            return view('penjualan/v_form', $data_view);
         } else {
-            $data_order = OrderHeader::with('order_item', 'channel')
-                ->where('order_header.id', $id)
+            $data_order = Penjualan::with('order_item', 'channel')
+                ->where('penjualan.id', $id)
                 ->get();
 
             $data_view                = [];
-            $data_view['h1']                     = 'Edit Form Order Header';
-            $data_view['breadcrumb_item']        = 'Edit Order Header List';
-            $data_view['breadcrumb_item_active'] = 'Edit Form Order Header';
+            $data_view['h1']                     = 'Edit Form Penjualan';
+            $data_view['breadcrumb_item']        = 'Edit Penjualan List';
+            $data_view['breadcrumb_item_active'] = 'Edit Form Penjualan';
             $data_view['card_title']             = 'Edit Form Order';
             $data_view['channel']                = Channel::all();
             //dd($data_view['channel']);
             $data_view['product']                = [];
             // $data_view['product']                = Product::where('stock', '!=', 0)->get();
             $data_view['data_order']             = $data_order;
-            $data_view['status']                 = 'edit';
-            return view('order_header/v_form', $data_view);
+            $data_view['status']                 = 1; // edit
+            return view('penjualan/v_form', $data_view);
         }
     }
 
@@ -102,6 +106,17 @@ class OrderHeaderController extends Controller
             exit;
         }
 
+        foreach ($request['orderitem'] as $value) {
+            if ($value['qty_product'] < $value['qty']) {
+                $res = [
+                    "status" => false,
+                    "msg" => "pastikan input qty tidak 0 dan tidak boleh lebih besar dari qty product ..!!"
+                ];
+                return response()->json($res);
+            }
+        }
+        dd($request->all());
+
         if ($request->purchase_code != "" && $request->id != "") {
             $purchase_code = $request->purchase_code;
         } else {
@@ -110,8 +125,9 @@ class OrderHeaderController extends Controller
         try {
             DB::beginTransaction();
 
-            $post = OrderHeader::UpdateOrCreate(["id" => $request->id, "purchase_code" => $purchase_code], [
+            $post = Penjualan::UpdateOrCreate(["id" => $request->id, "purchase_code" => $purchase_code], [
                 'purchase_code' => $purchase_code,
+                'kode_pesanan' => $request->kode_pesanan,
                 'customer_name' => $request->customer_name,
                 'customer_phone' => $request->customer_phone,
                 'customer_address' => $request->customer_address,
@@ -130,20 +146,22 @@ class OrderHeaderController extends Controller
                 $conditon = trim($concat, ",");
 
                 DB::select("DELETE FROM order_item
-                    WHERE order_header_id = $request->id
+                    WHERE penjualan_id = $request->id
                     AND id NOT IN ($conditon)");
             endif;
 
             foreach ($request->orderitem as $val) {
-                $price = str_replace(".", "", $val['price']);
+                $price = str_replace(".", "", $val['sale_price']);
                 $total = (int) $val['qty'] * (int) $price;
-                OrderItem::UpdateOrCreate(['id' => $val['id']], [
+                ItemPenjualan::UpdateOrCreate(['id' => $val['id']], [
                     'purchase_code' => $post->purchase_code,
-                    'order_header_id' => $post->id,
+                    'penjualan_id' => $post->id,
                     'product_id' => $val['product'],
-                    'sell_price'   => $price,
+                    'sell_price'   => str_replace(".", "", $val['sale_price']),
                     'qty'   => $val['qty'],
-                    'total'   => $total
+                    'size'   => $val['size'],
+                    'total'   => $total,
+                    'keterangan'   => $val['keterangan']
                 ]);
             }
 
@@ -163,7 +181,7 @@ class OrderHeaderController extends Controller
             exit;
         }
 
-        $data = OrderHeader::where(["id" => $id])->first();
+        $data = Penjualan::where(["id" => $id])->first();
 
         return response()->json($data);
     }
@@ -176,9 +194,9 @@ class OrderHeaderController extends Controller
         }
         try {
             DB::beginTransaction();
-            $delete = OrderHeader::find($id)->delete();
+            $delete = Penjualan::find($id)->delete();
 
-            OrderItem::where('order_header_id', $id)->delete();
+            ItemPenjualan::where('penjualan_id', $id)->delete();
 
             DB::commit();
 
@@ -196,7 +214,7 @@ class OrderHeaderController extends Controller
             exit;
         }
 
-        $update = OrderHeader::where(['id' => $request['id']])
+        $update = Penjualan::where(['id' => $request['id']])
             ->update(['status' => $request['data']]);
 
         return response()->json($update);
@@ -209,13 +227,21 @@ class OrderHeaderController extends Controller
             exit;
         }
 
-        $data_detail = OrderHeader::with('order_item', 'channel')
-            ->where('order_header.id', $id)
+        $data_detail = Penjualan::with('order_item', 'channel')
+            ->where('penjualan.id', $id)
             ->get();
         $data = [];
 
         $data['data_detail'] = $data_detail;
 
         return response()->json($data);
+    }
+
+    public function get_data_product(Request $request, $id)
+    {
+        $penjualan = new Penjualan();
+        $data_variant = $penjualan->get_data_variant($id);
+
+        return response()->json($data_variant);
     }
 }

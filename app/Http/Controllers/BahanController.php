@@ -64,6 +64,7 @@ class BahanController extends Controller
             return "error request";
             exit;
         }
+
         $id = $request["id"];
         $harga = str_replace(".", "", $request["data"]["harga"]);
 

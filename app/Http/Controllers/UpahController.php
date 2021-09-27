@@ -29,9 +29,13 @@ class UpahController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '<center>';
                     if (allowed_access(session('user'), 'upah', 'edit')) :
-                        $button = '<center><button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
+                        $button = '<center><button type="button" class="btn btn-info btn-sm" onclick="edit(' . $data->id . ')">History Pembayaran</button>';
+                        $button .= '&nbsp;';
+                        $button .= '<button type="button" class="btn btn-warning btn-sm" onclick="edit(' . $data->id . ')">Pembayaran</button>';
+                        $button .= '&nbsp;';
+                        $button .= '<button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
                     endif;
-                    $button .= '&nbsp;&nbsp;';
+                    $button .= '&nbsp;';
                     if (allowed_access(session('user'), 'upah', 'delete')) :
                         $button .= '<button type="button" class="btn btn-danger btn-sm" onClick="my_delete(' . $data->id . ')">Delete</button></center>';
                     endif;
@@ -51,11 +55,12 @@ class UpahController extends Controller
             return "error request";
             exit;
         }
+        dd($request->all());
 
         $post = Upah::UpdateOrCreate(["id" => $request['id']], [
             'produksi_id' => $request["kode_produksi"],
             'total_upah' => str_replace(".", "", $request["total_upah"]),
-            'sisa_upah' => str_replace(".", "", $request["sisa_upah"]),
+            'sisa_upah' => str_replace(".", "", $request["total_upah"]),
             'date_transaksi' => $request["date_transaksi"]
         ]);
         if ($post) {

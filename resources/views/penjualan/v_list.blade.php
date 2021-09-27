@@ -30,10 +30,10 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div style=" padding: 0px 0px 18px 0px;">
-                                <?php if (allowed_access(session('user'), 'order_header', 'add')): ?>
-                                <Form method="post" action="{{ route('order_header.form') }}">
+                                <?php if (allowed_access(session('user'), 'penjualan', 'add')): ?>
+                                <Form method="post" action="{{ route('penjualan.form') }}">
                                     @csrf
-                                    <button type="submit" class="btn btn-info btn-sm">Tambah Order </button>
+                                    <button type="submit" class="btn btn-info btn-sm">Tambah Penjualan </button>
                                 </Form>
                                 <?php endif; ?>
                             </div>
@@ -66,7 +66,7 @@
     </section>
 
     {{-- MODAL FORM ADD & EDIT --}}
-    @include('order_header.v_modal_detail')
+    @include('penjualan.v_modal_detail')
     {{-- MODAL FORM ADD & EDIT --}}
 
 
@@ -87,7 +87,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('order_header.index') }}",
+                    url: "{{ route('penjualan.index') }}",
                     type: "GET"
                 },
                 columns: [{
@@ -156,7 +156,7 @@
             if (id) {
                 $('#detail_order_item').html('');
                 $.ajax({
-                    url: "order_header/" + id + "/detail",
+                    url: "penjualan/" + id + "/detail",
                     type: "GET",
                     dataType: "json",
                     success: function(result) {
@@ -224,7 +224,7 @@
         function form_edit(id) {
             if (id) {
                 $.ajax({
-                    url: "{{ route('order_header.form') }}",
+                    url: "{{ route('penjualan.form') }}",
                     type: "post",
                     data: {
                         "id": id
@@ -255,7 +255,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "order_header/" + id,
+                        url: "penjualan/" + id,
                         type: "delete",
                         dataType: "json",
                         success: function(result) {
@@ -277,7 +277,7 @@
                 return false
             }
             $.ajax({
-                url: {!! json_encode(url('order_header/active')) !!},
+                url: {!! json_encode(url('penjualan/active')) !!},
                 type: "POST",
                 data: {
                     "id": id,

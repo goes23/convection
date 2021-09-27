@@ -22,9 +22,9 @@ class CreateVariantsTable extends Migration
             $table->integer('jumlah_produksi');
             $table->integer('sisa_jumlah_produksi')->nullabel();
             $table->integer('jumlah_stock_product')->nullabel();
-            $table->integer('harga_jual')->nullabel();
-            $table->integer('harga_jual_akhir')->nullabel();
-            $table->text('keterangan')->nullabel();
+            // $table->integer('harga_jual')->nullabel();
+            // $table->integer('harga_jual_akhir')->nullabel();
+            // $table->text('keterangan')->nullabel();
             $table->timestamps();
         });
     }

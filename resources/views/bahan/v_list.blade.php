@@ -155,8 +155,8 @@
                         $("#sisa_bahan").val(result.sisa_bahan)
                         $("#harga_satuan").val(result.harga_satuan);
                         $("#discount").val(result.discount)
-                        $('#kode').attr('readonly', true);
-                        $('#name').attr('readonly', true);
+                        // $('#kode').attr('readonly', true);
+                        // $('#name').attr('readonly', true);
                         $('#panjang').attr('readonly', true);
                         $('#sisa_hide').show();
                         $('#modal-xl').modal('show');
@@ -184,6 +184,17 @@
             var harga_satuan = $('#harga_satuan').val();
             var discount = $('#discount').val();
 
+            var obj_check = {
+                kode,
+                name,
+                buy_at,
+                harga,
+                panjang,
+                satuan,
+                // sisa_bahan,
+                harga_satuan,
+            }
+
             var object = {
                 kode,
                 name,
@@ -196,7 +207,7 @@
                 discount
             }
 
-            if (required_fild(object) == false) {
+            if (required_fild(obj_check) == false) {
                 return false;
             }
             loading()
@@ -302,6 +313,5 @@
                 regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
             });
         }
-
     </script>
 @endsection

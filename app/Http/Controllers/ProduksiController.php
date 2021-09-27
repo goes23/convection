@@ -121,7 +121,7 @@ class ProduksiController extends Controller
             return "error request";
             exit;
         }
-
+        //dd($_POST);
         $sisa_bahan = 0;
         // if ($request['status'] == 0) { // add
 
@@ -207,21 +207,16 @@ class ProduksiController extends Controller
             $post = Produksi::UpdateOrCreate(["id" => $request['id']], $data);
 
             foreach ($request['variants'] as $val) {
-
-
+                $jumlah_product = isset($val['jumlah_stock_product']) ? $val['jumlah_stock_product'] : null;
                 $variant['kode_produksi']        = $kode;
                 $variant['produksi_id']          = $post->id;
                 $variant['product_id']           = $request['product_id'];
                 $variant['size']                 = $val['size'];
                 $variant['jumlah_produksi']      = $val['jumlah_produksi'];
-                $variant['sisa_jumlah_produksi'] = $val['jumlah_produksi'];
-                //$variant['sisa_jumlah_produksi'] = 0;
-                $variant['jumlah_stock_product'] = 0;
-                $variant['harga_jual']           = $val['harga_jual'];
-                $variant['harga_jual_akhir']     = $val['harga_jual_akhir'];
-                $variant['keterangan']           = $val['keterangan'];
+                $variant['sisa_jumlah_produksi'] = $val['sisa_jumlah_produksi'];
+                $variant['jumlah_stock_product'] = $jumlah_product;
 
-                Variants::insert($variant);
+                Variants::UpdateOrCreate(["id" => $val['id']], $variant);
             }
 
             $sisa_bahan = $request['sisa_bahan'] - $request['panjang_bahan'];

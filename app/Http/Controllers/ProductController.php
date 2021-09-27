@@ -41,7 +41,7 @@ class ProductController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '<center>';
                     if (allowed_access(session('user'), 'product', 'edit')) :
-                        $button = '<center><button type="button" class="btn btn-secondary btn-sm" onclick="history(' . $data->id . ')">History Stock</button>';
+                        $button = '<center><button type="button" class="btn btn-info btn-sm" onclick="history(' . $data->id . ')">History Stock</button>';
                         $button .= '&nbsp;';
                         $button .= '<button type="button" class="btn btn-warning btn-sm" onclick="stock(' . $data->id . ')">Stock</button>';
                         $button .= '&nbsp;';
@@ -199,9 +199,30 @@ class ProductController extends Controller
         }
 
         $check_produksi = Produksi::where("product_id", $id)->exists();
+
         if (!$check_produksi) {
-            $delete = Product::find($id)->delete();
-            return response()->json($delete);
+
+            try {
+
+                /* DELETE FOTO/FILE */
+
+                $photoname = Product::where('id', $id)->first()->foto;
+
+                $image_path = public_path('/assets/img/') . $photoname;
+                $image_path_thumbnail = public_path('/thumbnail/') . $photoname;
+
+                if (File::exists($image_path)) { // cek jika ada foto maka hapus
+                    File::delete($image_path);
+                    File::delete($image_path_thumbnail);
+                }
+                $delete = Product::find($id)->delete();
+                return response()->json($delete);
+            } catch (\PDOException $e) {
+
+                return response()->json($e);
+            }
+
+            /* DELETE FOTO/FILE */
         } else {
             $res = [
                 "status" => false,

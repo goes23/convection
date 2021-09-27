@@ -13,8 +13,8 @@ class Channel extends Model
     protected $guarded = [];
     protected $dates = ['deleted_at'];
 
-    public function order_header()
+    public function penjualan()
     {
-        return $this->hasMany('App\OrderHeader');
+        return $this->hasMany('App\Penjualan');
     }
 }

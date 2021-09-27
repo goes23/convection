@@ -15,7 +15,7 @@
                         <select class="form-control" id="kode_produksi" name="kode_produksi" required>
                             <option value="">choose..</option>
                             @foreach ($produksi as $item)
-                                <option value="{{ $item->id }}">{{ $item->kode_produksi }}</option>
+                                <option value="{{ $item->id }}">{{ $item->id }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -24,11 +24,11 @@
                         <input type="text" class="form-control inputForm" id="total_upah" name="total_upah"
                             aria-describedby="emailHelp" placeholder="Enter total upah" required>
                     </div>
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label for="sisa_upah">Sisa Upah <a class="tn">*</a></label>
                         <input type="text" class="form-control inputForm" id="sisa_upah" name="sisa_upah"
                             aria-describedby="emailHelp" placeholder="Enter sisa upah" required>
-                    </div>
+                    </div> --}}
                     <div class="form-group">
                         <label for="date_transaksi">Tanggal transaksi<a class="tn">*</a></label>
                         <input type="date" class="form-control inputForm" id="date_transaksi" name="date_transaksi"

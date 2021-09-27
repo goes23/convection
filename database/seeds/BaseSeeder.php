@@ -110,7 +110,7 @@ class BaseSeeder extends Seeder
         Module::create([
             'parent_id' => 2,
             'name' => 'Order Header',
-            'controller' => 'order_header',
+            'controller' => 'penjualan',
             'order_no' => 5,
             'status' => 1
         ]);

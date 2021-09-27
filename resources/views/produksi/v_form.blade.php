@@ -11,7 +11,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a
-                                href="{{ route('order_header.index') }}">{{ $breadcrumb_item }}</a>
+                                href="{{ route('penjualan.index') }}">{{ $breadcrumb_item }}</a>
                         </li>
                         <li class="breadcrumb-item active">{{ $breadcrumb_item_active }}</li>
                     </ol>
@@ -46,8 +46,7 @@
                                     <label for="product">Product <a class="tn">*</a></label>
                                     <select class="form-control select2" id="product" data-placeholder="Select a product"
                                         data-dropdown-css-class="select2-purple" style="width: 100%;" name="product_id"
-                                        required <?php echo isset($data_produksi[0]->product_id) ?
-                                        'disabled="disabled"' : ''; ?>>
+                                        required <?php echo isset($data_produksi[0]->product_id) ? 'disabled="disabled"' : ''; ?>>
                                         <option value="" disabled selected>Choose .. </option>
                                         @foreach ($product as $val)
                                             @php
@@ -68,8 +67,7 @@
                                     <label for="bahan">Bahan <a class="tn">*</a></label>
                                     <select class="form-control select2" id="bahan" data-placeholder="Select a bahan"
                                         data-dropdown-css-class="select2-purple" style="width: 100%;" name="bahan_id"
-                                        required <?php echo isset($data_produksi[0]->bahan_id) ?
-                                        'disabled="disabled"' : ''; ?>>
+                                        required <?php echo isset($data_produksi[0]->bahan_id) ? 'disabled="disabled"' : ''; ?>>
                                         <option value="" disabled selected>Choose .. </option>
                                         @foreach ($bahan as $vals)
                                             @php
@@ -106,7 +104,8 @@
                                         placeholder="panjang" readonly>
                                 </div>
                                 <div class="form-group">
-                                    <label for="panjang_bahan">Panjang bahan di gunakan <a class="tn">*</a></label>
+                                    <label for="panjang_bahan">Panjang bahan di gunakan <a
+                                            class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="panjang_bahan"
                                         name="panjang_bahan" placeholder="Enter panjang bahan di gunakan"
                                         value="{{ isset($data_produksi[0]->panjang_bahan) ? $data_produksi[0]->panjang_bahan : '' }}">
@@ -127,21 +126,24 @@
                                         value="{{ isset($data_produksi[0]->pemakaian) ? $data_produksi[0]->pemakaian : '' }}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="harga_potong_satuan">Harga Potong Satuan <a class="tn">*</a></label>
+                                    <label for="harga_potong_satuan">Harga Potong Satuan <a
+                                            class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="harga_potong_satuan"
                                         name="harga_potong_satuan" placeholder="Enter harga potong satuan"
                                         value="{{ isset($data_produksi[0]->harga_potong_satuan) ? (int) $data_produksi[0]->harga_potong_satuan : '' }}"
                                         required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="harga_jait_satuan">Harga Jait Satuan <a class="tn">*</a></label>
+                                    <label for="harga_jait_satuan">Harga Jahit Satuan <a
+                                            class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="harga_jait_satuan"
                                         name="harga_jait_satuan" placeholder="Enter harga jait satuan"
                                         value="{{ isset($data_produksi[0]->harga_jait_satuan) ? explode(' ', $data_produksi[0]->harga_jait_satuan)[0] : '' }}"
                                         required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="harga_finishing_satuan">Harga Finishing Satuan <a class="tn">*</a></label>
+                                    <label for="harga_finishing_satuan">Harga Finishing Satuan <a
+                                            class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="harga_finishing_satuan"
                                         name="harga_finishing_satuan" placeholder="Enter harga finishing satuan"
                                         value="{{ isset($data_produksi[0]->harga_finishing_satuan) ? $data_produksi[0]->harga_finishing_satuan : '' }}">
@@ -193,7 +195,9 @@
                                                                 <option value="L">L</option>
                                                                 <option value="XL">XL</option>
                                                                 <option value="XXL">XXL</option>
-
+                                                                <option value="XXXL">XXXL</option>
+                                                                <option value="4XL">4XL</option>
+                                                                <option value="5XL">5XL</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -202,39 +206,23 @@
                                                             <label for="jumlah_produksi">Jumlah Produksi <a
                                                                     class="tn">*</a></label>
                                                             <input type="text" class="form-control jumlah_produksi"
-                                                                id="jumlah_produksi"
+                                                                id="jumlah_produksi{{ $no }}" onkeyup="clone({{ $no }})"
                                                                 name="variants[{{ $no }}][jumlah_produksi]"
                                                                 placeholder="Enter jumlah produksi" required>
                                                         </div>
                                                     </div>
+
                                                     <div class="col-md-3">
                                                         <div class="form-group">
-                                                            <label for="harga_jual">Harga Jual <a class="tn">*</a></label>
-                                                            <input type="text" class="form-control harga_jual"
-                                                                id="harga_jual"
-                                                                name="variants[{{ $no }}][harga_jual]"
-                                                                placeholder="Enter harga jual" required>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <label for="harga_jual_akhir">Harga Jual Akhir <a
+                                                            <label for="sisa_jumlah_produksi">Sisa Produksi <a
                                                                     class="tn">*</a></label>
-                                                            <input type="text" class="form-control harga_jual_akhir"
-                                                                id="harga_jual"
-                                                                name="variants[{{ $no }}][harga_jual_akhir]"
-                                                                placeholder="Enter harga jual akhir" required>
+                                                            <input type="text" class="form-control sisa_jumlah_produksi"
+                                                                id="sisa_jumlah_produksi{{ $no }}"
+                                                                name="variants[{{ $no }}][sisa_jumlah_produksi]"
+                                                                placeholder="Enter harga jual" readonly>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-10">
-                                                        <div class="form-group">
-                                                            <label for="keterangan">Keterangan <a class="tn">*</a></label>
-                                                            <textarea type="text" class="form-control keterangan"
-                                                                id="harga_jual"
-                                                                name="variants[{{ $no }}][keterangan]"
-                                                                placeholder="Enter jumlah keterangan"></textarea>
-                                                        </div>
-                                                    </div>
+
                                                 </div>
                                                 <div id="items"></div>
                                             </div>
@@ -252,13 +240,14 @@
                                                 <div class="card-body">
                                                     <?php $no = 0; ?>
                                                     @foreach ($item->variants as $val)
-                                                   
+
                                                         <div class="row" id="row{{ $no }}">
-                                                            <input type="hidden" id="id_order_item"
-                                                                name="variants[{{ $no }}][id]" value="">
+                                                            <input type="hidden" id="id"
+                                                                name="variants[{{ $no }}][id]" value="{{ $val->id }}">
                                                             <div class="col-md-3">
                                                                 <div class="form-group">
-                                                                    <label for="size">Size <a class="tn">*</a></label>
+                                                                    <label for="size">Size <a
+                                                                            class="tn">*</a></label>
                                                                     <select class="form-control inputForm" id="size"
                                                                         name="variants[{{ $no }}][size]"
                                                                         data-placeholder="Select a size"
@@ -271,7 +260,9 @@
                                                                         <option value="L" @php echo $val->size =='L' ?'selected="selected"' : '' ;@endphp>L</option>
                                                                         <option value="XL" @php echo $val->size =='XL' ?'selected="selected"' : ''; @endphp>XL</option>
                                                                         <option value="XXL" @php echo $val->size =='XXL' ?'selected="selected"' : ''; @endphp>XXL</option>
-
+                                                                        <option value="XXXL" @php echo $val->size =='XXXL' ?'selected="selected"' : ''; @endphp>XXXL</option>
+                                                                        <option value="4XL" @php echo $val->size =='4XL' ?'selected="selected"' : ''; @endphp>4XL</option>
+                                                                        <option value="5XL" @php echo $val->size =='5XL' ?'selected="selected"' : ''; @endphp>5XL</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -288,36 +279,21 @@
                                                             </div>
                                                             <div class="col-md-3">
                                                                 <div class="form-group">
-                                                                    <label for="harga_jual">Harga Jual <a
+                                                                    <label for="sisa_jumlah_produksi">Sisa Produksi <a
                                                                             class="tn">*</a></label>
                                                                     <input type="text" class="form-control "
-                                                                        id="harga_jual"
-                                                                        name="variants[{{ $no }}][harga_jual]" 
-                                                                        placeholder="Enter harga jual" 
-                                                                        value="{{ $val->harga_jual }}" required>
+                                                                        id="sisa_jumlah_produksi"
+                                                                        name="variants[{{ $no }}][sisa_jumlah_produksi]"
+                                                                        placeholder="Enter harga jual"
+                                                                        value="{{ $val->sisa_jumlah_produksi }}"
+                                                                        readonly>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-3">
-                                                                <div class="form-group">
-                                                                    <label for="harga_jual_akhir">Harga Jual Akhir <a
-                                                                            class="tn">*</a></label>
-                                                                    <input type="text" class="form-control "
-                                                                        id="harga_jual"
-                                                                        name="variants[{{ $no }}][harga_jual_akhir]"
-                                                                        placeholder="Enter harga jual akhir"  
-                                                                        value="{{ $val->harga_jual_akhir }}" required>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-10">
-                                                                <div class="form-group">
-                                                                    <label for="keterangan">Keterangan <a
-                                                                            class="tn">*</a></label>
-                                                                    <textarea type="text" class="form-control keterangan"
-                                                                        id="harga_jual"
-                                                                        name="variants[{{ $no }}][keterangan]"
-                                                                        placeholder="Enter jumlah keterangan"> {{ $val->keterangan }} </textarea>
-                                                                </div>
-                                                            </div>
+
+                                                            <input type="hidden" class="form-control jumlah_stock_product"
+                                                                id="jumlah_stock_product{{ $no }}"
+                                                                name="variants[{{ $no }}][jumlah_stock_product]" value="{{ $val->jumlah_stock_product }}" readonly>
+
                                                             <div class="col-md-2">
                                                                 <div class="form-group">
                                                                     <br>
@@ -364,7 +340,8 @@
             } else {
                 // console.log($('#panjang_bahan').val())
                 var val = $('#bahan').val();
-                var bahan = <?php echo json_encode($bahan); ?>;            for (var i = 0; i < bahan.length; i++) {
+                var bahan = <?php echo json_encode($bahan); ?>;
+                for (var i = 0; i < bahan.length; i++) {
                     if (parseInt(val) == parseInt(bahan[i].id)) {
                         $('#panjang').val(bahan[i].panjang)
                         $('#sisa_bahan').val(parseInt(bahan[i].sisa_bahan) + parseInt($('#panjang_bahan').val()))
@@ -404,48 +381,33 @@
                                                                 <option value="L">L</option>
                                                                 <option value="XL">XL</option>
                                                                 <option value="XXL">XXL</option>
+                                                                <option value="XXXL">XXXL</option>
+                                                                <option value="4XL">4XL</option>
+                                                                <option value="5XL">5XL</option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label for="jumlah_produksi">Jumlah Produksi <a class="tn">*</a></label>
-                                                            <input type="text" class="form-control" id="jumlah_produksi" name="variants[` +
+                                                            <input type="text" class="form-control" id="jumlah_produksi` +
+                    i + `" name="variants[` +
                     i +
-                    `][jumlah_produksi]" placeholder="Enter jumlah_produksi" required>
+                    `][jumlah_produksi]" placeholder="Enter jumlah_produksi" onkeyup="clone(` + i + `)" required>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3">
                                                                 <div class="form-group">
-                                                                    <label for="harga_jual">Harga Jual <a
+                                                                    <label for="sisa_jumlah_produksi">Sisa Produksi <a
                                                                             class="tn">*</a></label>
-                                                                    <input type="text" class="form-control harga_jual"
-                                                                        id="harga_jual"
-                                                                        name="variants[` + i + `][harga_jual]"
-                                                                        placeholder="Enter harga jual" required>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-3">
-                                                                <div class="form-group">
-                                                                    <label for="harga_jual_akhir">Harga Jual Akhir <a
-                                                                            class="tn">*</a></label>
-                                                                    <input type="text" class="form-control harga_jual_akhir"
-                                                                        id="harga_jual"
-                                                                        name="variants[` + i + `][harga_jual_akhir]"
-                                                                        placeholder="Enter harga jual akhir" required>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-10">
-                                                                <div class="form-group">
-                                                                    <label for="keterangan">Keterangan <a
-                                                                            class="tn">*</a></label>
-                                                                    <textarea type="text" class="form-control keterangan"
-                                                                        id="harga_jual"
+                                                                    <input type="text" class="form-control sisa_jumlah_produksi"
+                                                                        id="sisa_jumlah_produksi` + i + `"
                                                                         name="variants[` + i +
-                    `][keterangan]"
-                                                                        placeholder="Enter jumlah keterangan"></textarea>
+                    `][sisa_jumlah_produksi]"
+                                                                        placeholder="Enter harga jual" readonly>
                                                                 </div>
                                                             </div>
+
                                                     <div class="col-md-2">
                                                         <div class="form-group">
                                                             <br>
@@ -483,7 +445,8 @@
                 dataType: "json",
                 success: function(result) {
                     if (result.status == false) {
-
+                        alert("error insert");
+                        return false;
                     } else {
                         call_toast(result);
                         setTimeout(function() {
@@ -510,11 +473,17 @@
             $("#pemakaian").inputmask('Regex', {
                 regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
             });
+
+            $("#panjang_bahan").inputmask('Regex', {
+                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
+            });
+
         }
 
         $('#bahan').change(function() {
             var val = $(this).val();
-            var bahan = <?php echo json_encode($bahan); ?>;        for (var i = 0; i < bahan.length; i++) {
+            var bahan = <?php echo json_encode($bahan); ?>;
+            for (var i = 0; i < bahan.length; i++) {
                 if (parseInt(val) == parseInt(bahan[i].id)) {
                     $('#panjang').val(bahan[i].panjang)
                     $('#sisa_bahan').val(bahan[i].sisa_bahan)
@@ -548,5 +517,10 @@
             }
         }
 
+        function clone(param) {
+            console.log(param);
+            var value = $('#jumlah_produksi' + param).val()
+            $('#sisa_jumlah_produksi' + param).val(value)
+        }
     </script>
 @endsection

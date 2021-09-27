@@ -29,7 +29,7 @@ function generate_purchase_code()
     do {
         $purchase_code = random('order');
         $verification = DB::select((" SELECT EXISTS
-                                        (SELECT purchase_code FROM order_header WHERE purchase_code ='{$purchase_code}')
+                                        (SELECT purchase_code FROM penjualan WHERE purchase_code ='{$purchase_code}')
                                          as verification"));
     } while ($verification[0]->verification == 1);
     return $purchase_code;
