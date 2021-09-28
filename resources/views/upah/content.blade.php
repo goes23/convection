@@ -1,5 +1,5 @@
 @extends('product.v_modal_history')
-<h5 class="text-center">History Stock</h5>
+<h5 class="text-center">History Pembayaran</h5>
 <table class="table table-striped" id="history-table" width="100%">
     <thead id="tblHead">
         <tr>

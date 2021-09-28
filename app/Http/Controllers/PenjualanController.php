@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Penjualan;
 use App\Channel;
 use App\ItemPenjualan;
+use App\Pengeluaran;
 use App\Product;
 use Illuminate\Support\Facades\DB;
 use stdClass;
@@ -81,7 +82,7 @@ class PenjualanController extends Controller
             $data_order = Penjualan::with('item_penjualan', 'channel')
                 ->where('penjualan.id', $id)
                 ->get();
-                //dd($data_order);
+            //dd($data_order);
 
             $data_view                = [];
             $data_view['h1']                     = 'Edit Form Penjualan';
@@ -205,18 +206,6 @@ class PenjualanController extends Controller
         }
     }
 
-    public function active(Request $request)
-    {
-        if (!$request->ajax()) {
-            return "error request";
-            exit;
-        }
-
-        $update = Penjualan::where(['id' => $request['id']])
-            ->update(['status' => $request['data']]);
-
-        return response()->json($update);
-    }
 
     public function detail(Request $request, $id)
     {
@@ -225,12 +214,12 @@ class PenjualanController extends Controller
             exit;
         }
 
-        $data_detail = Penjualan::with('order_item', 'channel')
-            ->where('penjualan.id', $id)
-            ->get();
-        $data = [];
+        $penjualan = new Penjualan();
+        $detail = $penjualan->detail($id);
 
-        $data['data_detail'] = $data_detail;
+        //$data['data_header'] = Penjualan::where('id', $id)->first();
+        $data['data_detail'] = $detail;
+        //dd($data['data_header']->id);
 
         return response()->json($data);
     }

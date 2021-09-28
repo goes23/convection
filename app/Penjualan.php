@@ -49,6 +49,19 @@ class Penjualan extends Model
                             JOIN variants ON variants.product_id = product.id
                             WHERE variants.jumlah_stock_product IS NOT NULL
                             ");
+    }
 
+    public function detail($id)
+    {
+        return DB::select(" SELECT
+                            purchase_code
+                            ,(SELECT name FROM product WHERE product.id = item_penjualan.product_id ) as product_name
+                            ,sell_price
+                            ,qty
+                            ,(SELECT size FROM variants WHERE variants.id = item_penjualan.size ) as size
+                            ,total
+                            FROM item_penjualan
+                            WHERE penjualan_id = $id
+                            ");
     }
 }

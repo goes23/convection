@@ -9,7 +9,7 @@
             </div>
             <div class="modal-body">
                 <div class="col-md-8">
-                    <div class="card card-default">
+                    {{-- <div class="card card-default">
                         <div class="card-header">
                             <h3 class="card-title details" id="purchase_code_detail"></h3>
                         </div>
@@ -57,7 +57,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="col-md-12">
                     <div class="details" id="detail_order_item"></div>
