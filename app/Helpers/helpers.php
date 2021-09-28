@@ -171,7 +171,7 @@ function get_menu_build($id)
             } else {
                 $active = 'class="nav-link"';
             }
-            $submenu .= '<li class="nav-item">
+            $submenu .= '<li class="nav-item" style="margin-left: 15px;">
                             <a href="' . URL::to('/' . $sub->controller . '') . '" ' . $active . '>
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>' . $sub->name . '</p>
