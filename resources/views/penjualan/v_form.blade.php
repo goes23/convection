@@ -196,6 +196,7 @@
                                 @foreach ($data_order as $item)
                                     <?php $no = 0; ?>
                                     @foreach ($item->item_penjualan as $val)
+                                        <?php //dd($val); ?>
                                         <div class="col-md-12">
                                             <div class="container-fluid" id="item<?php echo $no; ?>">
                                                 <div class="card card-secondary">
@@ -221,6 +222,7 @@
                                                                         name="orderitem[{{ $no }}][product]"
                                                                         data-placeholder="Select a product"
                                                                         style="width: 100%" required>
+                                                                        <option value="">choose ..</option>
                                                                         @foreach ($product as $vals)
                                                                             <option value="{{ $vals->id }}"
                                                                                 {{ (int) $val->product_id == (int) $vals->id ? 'selected=selected' : '' }}>
@@ -237,8 +239,7 @@
                                                                     <input type="text" class="form-control harga_jual"
                                                                         id="harga_jual{{ $no }}"
                                                                         name="orderitem[{{ $no }}][harga_jual]"
-                                                                        value="{{$val->harga_jual}}"
-                                                                        readonly>
+                                                                        value="{{ $val->sell_price }}" readonly>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-3">
@@ -250,7 +251,8 @@
                                                                         name="orderitem[{{ $no }}][size]"
                                                                         data-placeholder="Select a size"
                                                                         data-dropdown-css-class="select2-purple"
-                                                                        style="width: 100%" required>
+                                                                        value="{{ $val->size }}" style="width: 100%"
+                                                                        required>
 
                                                                     </select>
                                                                 </div>
@@ -262,7 +264,8 @@
                                                                     <input type="text" class="form-control qty_product"
                                                                         id="qty_product{{ $no }}"
                                                                         name="orderitem[{{ $no }}][qty_product]"
-                                                                        placeholder="" readonly>
+                                                                        value="{{ $val->qty }}" placeholder=""
+                                                                        readonly>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-3">
@@ -281,6 +284,7 @@
                                                                     <input type="text" class="form-control sell_price"
                                                                         id="sell_price{{ $no }}"
                                                                         name="orderitem[{{ $no }}][sell_price]"
+                                                                        value="{{ $val->sell_price }}"
                                                                         placeholder="Enter harga jual akhir" required>
                                                                 </div>
                                                             </div>
@@ -291,7 +295,7 @@
                                                                     <textarea class="form-control keterangan"
                                                                         name="orderitem[{{ $no }}][keterangan]"
                                                                         id="keterangan{{ $no }}"
-                                                                        rows="3"></textarea>
+                                                                        rows="3">{{ $val->keterangan }}</textarea>
                                                                 </div>
                                                             </div>
                                                         </div>

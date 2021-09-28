@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Pembayaran;
 use App\Produksi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Upah;
 
 class UpahController extends Controller
@@ -29,7 +31,7 @@ class UpahController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '<center>';
                     if (allowed_access(session('user'), 'upah', 'edit')) :
-                        $button = '<center><button type="button" class="btn btn-info btn-sm" onclick="edit(' . $data->id . ')">History Pembayaran</button>';
+                        $button = '<center><button type="button" class="btn btn-info btn-sm" onclick="history(' . $data->id . ')">History Pembayaran</button>';
                         $button .= '&nbsp;';
                         $button .= '<button type="button" class="btn btn-warning btn-sm" onclick="bayar(' . $data->id . ')">Pembayaran</button>';
                         $button .= '&nbsp;';
@@ -55,7 +57,6 @@ class UpahController extends Controller
             return "error request";
             exit;
         }
-        dd($request->all());
 
         $post = Upah::UpdateOrCreate(["id" => $request['id']], [
             'produksi_id' => $request["kode_produksi"],
@@ -108,6 +109,64 @@ class UpahController extends Controller
             exit;
         }
 
-        dd($request->all());
+
+        if ($request['tombol'] == 'pembayaran') {
+            $jumlah_pembayaran = str_replace(".", "", $request['jumlah_pembayaran']);
+            $sisa = $request['sisa_upah'];
+
+            if ($sisa < $jumlah_pembayaran) {
+                $res = [
+                    "status" => false,
+                    "msg" => "jumlah pembayaran lebih besar dari sisa..."
+                ];
+                return response()->json($res);
+                exit;
+            }
+
+            try {
+                DB::beginTransaction();
+
+                $sisa = $sisa - $jumlah_pembayaran < 0 ? 0 : $sisa - $jumlah_pembayaran;
+
+                $log = [];
+                $log['upah_id'] = $request['id_upah'];
+                $log['jumlah_pembayaran'] =  str_replace(".", "", $request['jumlah_pembayaran']);
+                $log['tanggal_pembayaran'] = $request['tanggal_pembayaran'];
+                $log['keterangan'] = $request['tombol'];
+
+
+                Pembayaran::insert($log);
+
+
+                $post = Upah::where('id', $request['id_upah'])
+                    ->update(['sisa_upah' => $sisa]);
+
+                DB::commit();
+                return response()->json($post);
+                exit;
+            } catch (\PDOException $e) {
+                DB::rollBack();
+                return response()->json($e);
+            }
+        } else {
+            dd($request->all());
+        }
+    }
+
+    public function history(Request $request, $id)
+    {
+        if (!$request->ajax()) {
+            return "error request";
+            exit;
+        }
+
+        $product = new Upah();
+        $data = $product->history($id);
+
+        $data_view = [];
+        $data_view['history'] = $data;
+        $html = view('upah/content', $data_view)->render();
+
+        return response()->json(array('html' => $html));
     }
 }

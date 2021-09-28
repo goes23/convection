@@ -84,6 +84,7 @@ Route::group(['middleware' => ['ceklogin', 'checkpermission']], function () {
 
     Route::resource('upah', 'UpahController');
     Route::post('upah/bayar', 'UpahController@bayar')->name('upah.bayar');
+    Route::get('upah/{id}/history', 'UpahController@history')->name('get.history');
 
 
     Route::resource('hutang', 'HutangController');

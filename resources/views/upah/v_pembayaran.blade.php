@@ -12,13 +12,20 @@
                     <input type="hidden" class="form-control inputForm" id="id_upah" name="id" value="">
 
                     <div class="form-group">
-                        <label for="jumlah_pembayaran">Jumlah pembayaran <a class="tn">*</a></label>
-                        <input type="text" class="form-control inputForm" id="jumlah_pembayaran" name="jumlah_pembayaran"
-                            aria-describedby="emailHelp" placeholder="Enter jumlah pembayaran" required>
+                        <label for="sisa_upah">Sisa Upah <a class="tn">*</a></label>
+                        <input type="text" class="form-control inputForm" id="sisa_upah" name="sisa_upah"
+                            aria-describedby="emailHelp" readonly>
                     </div>
 
                     <div class="form-group">
-                        <label for="tgl_pembayaran">Tanggal pembayaran<a class="tn">*</a></label>
+                        <label for="jumlah_pembayaran">Jumlah Pembayaran <a class="tn">*</a></label>
+                        <input type="text" class="form-control inputForm" id="jumlah_pembayaran"
+                            name="jumlah_pembayaran" aria-describedby="emailHelp" placeholder="Enter jumlah pembayaran"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tgl_pembayaran">Tanggal Pembayaran<a class="tn">*</a></label>
                         <input type="date" class="form-control inputForm" id="tgl_pembayaran" name="tgl_pembayaran"
                             aria-describedby="emailHelp" placeholder="Enter jumlah" required>
                     </div>
