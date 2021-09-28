@@ -11,8 +11,15 @@ class Variants extends Model
 
     public function produksi()
     {
-        //return $this->belongsTo('App\OrderHeader', 'order_header_id');
+        //return $this->belongsTo('App\Penjualan', 'penjualan_id');
 
         return $this->belongsTo('App\Produksi', 'id');
+    }
+
+    public function product()
+    {
+        //return $this->belongsTo('App\Penjualan', 'penjualan_id');
+
+        return $this->belongsTo('App\Product', 'id');
     }
 }

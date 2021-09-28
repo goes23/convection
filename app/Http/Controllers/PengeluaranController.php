@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Pengeluaran;
 use Illuminate\Http\Request;
-use App\Bahan;
-use App\Produksi;
 
-class BahanController extends Controller
+class PengeluaranController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,21 +15,21 @@ class BahanController extends Controller
     public function index(Request $request)
     {
         $data_view            = array();
-        $data_view["title_h1"]               = "Data Bahan";
+        $data_view["title_h1"]               = "Data Pengeluaran";
         $data_view["breadcrumb_item"]        = "Home";
-        $data_view["breadcrumb_item_active"] = "Bahan";
-        $data_view["modal_title"]            = "Form Bahan";
-        $data_view["card_title"]             = "Input & Update Data Bahan";
+        $data_view["breadcrumb_item_active"] = "Pengeluaran";
+        $data_view["modal_title"]            = "Form Pengeluaran";
+        $data_view["card_title"]             = "Input & Update Data Pengeluaran";
 
         if ($request->ajax()) {
-            return datatables()->of(Bahan::all())
+            return datatables()->of(Pengeluaran::all())
                 ->addColumn('action', function ($data) {
                     $button = '<center>';
-                    if (allowed_access(session('user'), 'bahan', 'edit')) :
+                    if (allowed_access(session('user'), 'pengeluaran', 'edit')) :
                         $button = '<center><button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
                     endif;
                     $button .= '&nbsp;&nbsp;';
-                    if (allowed_access(session('user'), 'bahan', 'delete')) :
+                    if (allowed_access(session('user'), 'pengeluaran', 'delete')) :
                         $button .= '<button type="button" class="btn btn-danger btn-sm" onClick="my_delete(' . $data->id . ')">Delete</button></center>';
                     endif;
                     return $button;
@@ -40,16 +39,18 @@ class BahanController extends Controller
                 ->make(true);
         }
 
-        return view('bahan/v_list', $data_view);
+        return view('pengeluaran/v_list', $data_view);
     }
+
 
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create()
     {
+        //
     }
 
     /**
@@ -65,20 +66,10 @@ class BahanController extends Controller
             exit;
         }
 
-        $id = $request["id"];
-        $harga = str_replace(".", "", $request["data"]["harga"]);
-
-        $post = Bahan::UpdateOrCreate(["id" => $id], [
-            'kode' => $request["data"]["kode"],
-            'name' => $request["data"]["name"],
-            'buy_at' => $request["data"]["buy_at"],
-            'harga' => str_replace(".", "", $harga),
-            'panjang' => $request["data"]["panjang"],
-            'satuan' => $request["data"]["satuan"],
-            'sisa_bahan' => $request["data"]["panjang"],
-            'harga_satuan' => str_replace(".", "", $request["data"]["harga_satuan"]),
-            'discount' => $request["data"]["discount"],
-            'created_by' => session('user')
+        $post = Pengeluaran::UpdateOrCreate(["id" => $request['id']], [
+            'name' => $request["name"],
+            'jumlah_pengeluaran' => str_replace(".", "", $request["jumlah_pengeluaran"]),
+            'tanggal_pengeluaran' => $request["tanggal_pengeluaran"]
         ]);
 
 
@@ -109,7 +100,7 @@ class BahanController extends Controller
             exit;
         }
 
-        $data = Bahan::where(["id" => $id])->first();
+        $data = Pengeluaran::where(["id" => $id])->first();
 
         return response()->json($data);
     }
@@ -138,30 +129,8 @@ class BahanController extends Controller
             return "error request";
             exit;
         }
+        $delete = Pengeluaran::find($id)->delete();
 
-        $check_produksi = Produksi::where("bahan_id", $id)->exists();
-        if (!$check_produksi) {
-            $delete = Bahan::find($id)->delete();
-            return response()->json($delete);
-        } else {
-            $res = [
-                "status" => false,
-                "msg" => "Bahan sedang di proses di produksi ..!!!"
-            ];
-            return response()->json($res);
-        }
-    }
-
-    public function active(Request $request)
-    {
-        if (!$request->ajax()) {
-            return "error request";
-            exit;
-        }
-
-        $update = Bahan::where(['id' => $request['id']])
-            ->update(['status' => $request['data']]);
-
-        return response()->json($update);
+        return response()->json($delete);
     }
 }

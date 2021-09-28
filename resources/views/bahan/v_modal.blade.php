@@ -79,7 +79,7 @@
                                     <div class="form-group">
                                         <label for="discount">Discount <a class="tn">*</a></label>
                                         <input type="text" class="form-control inputForm" id="discount" name="discount"
-                                             placeholder="Enter satuan" required>
+                                             placeholder="Enter satuan">
                                     </div>
                                 </div>
 

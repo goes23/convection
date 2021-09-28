@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOrderHeaderTable extends Migration
+class CreatePenjualanTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateOrderHeaderTable extends Migration
      */
     public function up()
     {
-        Schema::create('order_header', function (Blueprint $table) {
+        Schema::create('penjualan', function (Blueprint $table) {
             $table->id();
             $table->string('purchase_code');
+            $table->string('kode_pesanan');
             $table->string('customer_name');
             $table->string('customer_phone');
             $table->string('customer_address');
@@ -37,6 +38,6 @@ class CreateOrderHeaderTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_header');
+        Schema::dropIfExists('penjualan');
     }
 }

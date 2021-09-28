@@ -279,7 +279,7 @@
                     var opt = '';
                     opt += '<option value="" disabled selected>Choose ..</option>';
                     for (var i = 0; i < result.length; i++) {
-                        opt += '<option value="' + result[i].id + '">' + result[i].kode_produksi +
+                        opt += '<option value="' + result[i].id + '">' + result[i].id +
                             '</option>'
                     }
                     $('#kode_produksi').html(opt)
@@ -341,11 +341,15 @@
                 regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
             });
 
+            $("#input_jumlah_product").inputmask('Regex', {
+                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
+            });
+
+
         }
 
         $('#form_stock').submit(function(e) {
             e.preventDefault();
-
             var btn = $(this).find("input[type=submit]:focus");
             var tombol = btn[0].value;
             var product_id = $('#id').val()
@@ -358,6 +362,11 @@
             var input_jumlah_product = $('#input_jumlah_product').val()
             var transfer_date = $('#transfer_date').val()
             var keterangan = $('#keterangan').val()
+
+            if (input_jumlah_product == 0) {
+                alert("Input jumlah product tidak boleh 0");
+                return false;
+            }
 
             input = {
                 tombol,
@@ -390,7 +399,7 @@
                         $(".inputForm").val('');
                         $("#example1").DataTable().ajax.reload()
                         setTimeout(function() {
-                            $('#modal-default').modal('hide');
+                            $('#modal-stock').modal('hide');
                         }, 1500);
                     }
                 },

@@ -110,8 +110,8 @@
                         }
                     },
                     {
-                        data: 'kode_produksi',
-                        name: 'kode_produksi',
+                        data: 'id',
+                        name: 'id',
                     },
                     {
                         data: 'product',

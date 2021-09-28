@@ -16,15 +16,15 @@ class CreateBahanTable extends Migration
     {
         Schema::create('bahan', function (Blueprint $table) {
             $table->id();
-            $table->string('kode',30);
-            $table->string('name',30);
+            $table->string('kode', 30);
+            $table->string('name', 30);
             $table->integer('harga');
             $table->dateTime('buy_at');
             $table->string('satuan');
             $table->integer('panjang');
             $table->integer('sisa_bahan');
             $table->integer('harga_satuan');
-            $table->integer('discount');
+            $table->integer('discount')->nullable();
             //$table->integer('status')->comment('active');
             $table->integer('created_by');
             $table->timestamps();

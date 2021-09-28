@@ -41,11 +41,12 @@ class ProductController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '<center>';
                     if (allowed_access(session('user'), 'product', 'edit')) :
-                        $button = '<center><button type="button" class="btn btn-secondary btn-sm" onclick="history(' . $data->id . ')">History Stock</button>';
+                        $button = '<center><button type="button" class="btn btn-info btn-sm" onclick="history(' . $data->id . ')">History Stock</button>';
                         $button .= '&nbsp;';
                         $button .= '<button type="button" class="btn btn-warning btn-sm" onclick="stock(' . $data->id . ')">Stock</button>';
                         $button .= '&nbsp;';
-                        $button .= '<button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
+                        $button .= '<a type="button" href="/product/' . $data->id . '/form" class="btn btn-success btn-sm" >Edit</a>';
+                    // $button .= '<button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
                     endif;
                     $button .= '&nbsp;';
                     if (allowed_access(session('user'), 'product', 'delete')) :
@@ -199,9 +200,30 @@ class ProductController extends Controller
         }
 
         $check_produksi = Produksi::where("product_id", $id)->exists();
+
         if (!$check_produksi) {
-            $delete = Product::find($id)->delete();
-            return response()->json($delete);
+
+            try {
+
+                /* DELETE FOTO/FILE */
+
+                $photoname = Product::where('id', $id)->first()->foto;
+
+                $image_path = public_path('/assets/img/') . $photoname;
+                $image_path_thumbnail = public_path('/thumbnail/') . $photoname;
+
+                if (File::exists($image_path)) { // cek jika ada foto maka hapus
+                    File::delete($image_path);
+                    File::delete($image_path_thumbnail);
+                }
+                $delete = Product::find($id)->delete();
+                return response()->json($delete);
+            } catch (\PDOException $e) {
+
+                return response()->json($e);
+            }
+
+            /* DELETE FOTO/FILE */
         } else {
             $res = [
                 "status" => false,
@@ -351,5 +373,22 @@ class ProductController extends Controller
         $html = view('product/content', $data_view)->render();
 
         return response()->json(array('html' => $html));
+    }
+
+    public function form($id = "")
+    {
+        // Logstock::with('product')->get()
+        $data_product = Product::with('variants')->where('id', $id)->get();
+        //dd($data_product);
+
+        $data_view                = [];
+        $data_view['h1']                     = 'Form Product';
+        $data_view['breadcrumb_item']        = 'Product List';
+        $data_view['breadcrumb_item_active'] = 'Form Product';
+        $data_view['card_title']             = 'Form Product';
+        $data_view['product']                = $data_product;
+
+
+        return view('product/v_form', $data_view);
     }
 }
