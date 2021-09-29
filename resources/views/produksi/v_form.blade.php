@@ -10,8 +10,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a
-                                href="{{ route('penjualan.index') }}">{{ $breadcrumb_item }}</a>
+                        <li class="breadcrumb-item"><a href="{{ route('penjualan.index') }}">{{ $breadcrumb_item }}</a>
                         </li>
                         <li class="breadcrumb-item active">{{ $breadcrumb_item_active }}</li>
                     </ol>
@@ -184,7 +183,7 @@
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label for="size">Size <a class="tn">*</a></label>
-                                                            <select class="form-control inputForm" id="size"
+                                                            <select class="form-control size" id="size{{ $no }}"
                                                                 name="variants[{{ $no }}][size]"
                                                                 data-placeholder="Select a size"
                                                                 data-dropdown-css-class="select2-purple" style="width: 100%"
@@ -206,7 +205,8 @@
                                                             <label for="jumlah_produksi">Jumlah Produksi <a
                                                                     class="tn">*</a></label>
                                                             <input type="text" class="form-control jumlah_produksi"
-                                                                id="jumlah_produksi{{ $no }}" onkeyup="clone({{ $no }})"
+                                                                id="jumlah_produksi{{ $no }}"
+                                                                onkeyup="clone({{ $no }})"
                                                                 name="variants[{{ $no }}][jumlah_produksi]"
                                                                 placeholder="Enter jumlah produksi" required>
                                                         </div>
@@ -243,12 +243,14 @@
 
                                                         <div class="row" id="row{{ $no }}">
                                                             <input type="hidden" id="id"
-                                                                name="variants[{{ $no }}][id]" value="{{ $val->id }}">
+                                                                name="variants[{{ $no }}][id]"
+                                                                value="{{ $val->id }}">
                                                             <div class="col-md-3">
                                                                 <div class="form-group">
                                                                     <label for="size">Size <a
                                                                             class="tn">*</a></label>
-                                                                    <select class="form-control inputForm" id="size"
+                                                                    <select class="form-control size"
+                                                                        id="size{{ $no }}"
                                                                         name="variants[{{ $no }}][size]"
                                                                         data-placeholder="Select a size"
                                                                         data-dropdown-css-class="select2-purple"
@@ -292,7 +294,8 @@
 
                                                             <input type="hidden" class="form-control jumlah_stock_product"
                                                                 id="jumlah_stock_product{{ $no }}"
-                                                                name="variants[{{ $no }}][jumlah_stock_product]" value="{{ $val->jumlah_stock_product }}" readonly>
+                                                                name="variants[{{ $no }}][jumlah_stock_product]"
+                                                                value="{{ $val->jumlah_stock_product }}" readonly>
 
                                                             <div class="col-md-2">
                                                                 <div class="form-group">
@@ -331,12 +334,13 @@
     <script>
         $(document).ready(function() {
             mask_number();
+            select_change();
             var status = {{ $status }}
             $('#status').val(status)
             if (status != 1) {
                 $('#product').val('');
                 $('#bahan').val('');
-                $('#size').val('').change();
+                $('#size').val('');
             } else {
                 // console.log($('#panjang_bahan').val())
                 var val = $('#bahan').val();
@@ -371,7 +375,8 @@
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label for="size">Size <a class="tn">*</a></label>
-                                                            <select class="form-control inputForm" id="size" name="variants[` +
+                                                            <select class="form-control size" id="size` + i +
+                    `" name="variants[` +
                     i +
                     `][size]" data-placeholder="Select a size" data-dropdown-css-class="select2-purple" style="width: 100%;"
                                                                 required>
@@ -419,6 +424,7 @@
                                                 </div>
                                                 `);
                 mask();
+                select_change();
             })
         })
 
@@ -521,6 +527,20 @@
             console.log(param);
             var value = $('#jumlah_produksi' + param).val()
             $('#sisa_jumlah_produksi' + param).val(value)
+        }
+
+        function select_change() {
+            $('.size').change(function() {
+                var value = $(this).val();
+                var attr = $(this).attr("id")
+                $(".size").not(this).each(function() {
+                    if ($(this).val() == value) {
+                        alert('Ukuran tidak boleh sama..');
+                        $('#' + attr).val('');
+                    }
+                });
+
+            })
         }
     </script>
 @endsection

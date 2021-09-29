@@ -30,16 +30,16 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div style=" padding: 0px 0px 18px 0px;">
-                                <?php if (allowed_access(session('user'), 'produksi', 'add')): ?>
-                                <Form method="post" action="{{ route('produksi.form') }}">
+                                <?php if (allowed_access(session('user'), 'order_produksi', 'add')): ?>
+                                <Form method="post" action="{{ route('order_produksi.form') }}">
                                     @csrf
-                                    <button type="submit" class="btn btn-info btn-sm">Tambah produksi</button>
+                                    <button type="submit" class="btn btn-info btn-sm">Tambah order produksi</button>
                                 </Form>
                                 <?php endif; ?>
 
-                                <?php /* if (allowed_access(session('user'), 'produksi', 'add')): ?> ?>
+                                <?php /* if (allowed_access(session('user'), 'order_produksi', 'add')): ?>
                                 <button type="button" class="btn btn-info btn-sm" onclick="add_btn()">Tambah
-                                    produksi</button>
+                                    order_produksi</button>
                                 <?php endif; */?>
                             </div>
 
@@ -47,7 +47,7 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Kode Produksi</th>
+                                        <th>Kode Order produksi</th>
                                         <th>Product</th>
                                         <th>Bahan</th>
                                         <th>Bidang</th>
@@ -73,7 +73,7 @@
     </section>
 
     {{-- MODAL FORM ADD & EDIT --}}
-    {{-- @include('produksi.v_modal') --}}
+    {{-- @include('order_produksi.v_modal') --}}
     {{-- MODAL FORM ADD & EDIT --}}
 
 
@@ -81,7 +81,6 @@
     <script>
         $(document).ready(function() {
             $('.inputForm').val('');
-            $('.size').val('');
             $('#bahan').select2({
                 dropdownParent: $('#modal-default')
             });
@@ -100,7 +99,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('produksi.index') }}",
+                    url: "{{ route('order_produksi.index') }}",
                     type: "GET"
                 },
                 columns: [{
@@ -179,7 +178,7 @@
         function edit(id) {
             if (id) {
                 $.ajax({
-                    url: "produksi/" + id + "/edit",
+                    url: "order_produksi/" + id + "/edit",
                     type: "GET",
                     dataType: "json",
                     success: function(result) {
@@ -233,7 +232,7 @@
             }
 
             $.ajax({
-                url: "{{ route('produksi.store') }}",
+                url: "{{ route('order_produksi.store') }}",
                 type: "post",
                 data: {
                     "id": id,
@@ -273,7 +272,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "produksi/" + id,
+                        url: "order_produksi/" + id,
                         type: "delete",
                         dataType: "json",
                         success: function(result) {
@@ -288,5 +287,6 @@
                 }
             })
         }
+
     </script>
 @endsection

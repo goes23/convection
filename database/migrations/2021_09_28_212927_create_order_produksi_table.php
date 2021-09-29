@@ -15,7 +15,14 @@ class CreateOrderProduksiTable extends Migration
     {
         Schema::create('order_produksi', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->integer('harga_modal_satuan');
+            $table->integer('harga_jual_satuan');
+            $table->integer('qty');
+            $table->integer('total_pembayaran');
+            $table->integer('sisa_pembayaran');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
