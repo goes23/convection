@@ -196,7 +196,8 @@
                                 @foreach ($data_order as $item)
                                     <?php $no = 0; ?>
                                     @foreach ($item->item_penjualan as $val)
-                                        <?php //dd($val); ?>
+                                        <?php //dd($val);
+                                        ?>
                                         <div class="col-md-12">
                                             <div class="container-fluid" id="item<?php echo $no; ?>">
                                                 <div class="card card-secondary">
@@ -327,6 +328,7 @@
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
         $(document).ready(function() {
+            select_change();
             if ({{ $status }} == 0) {
                 $('.select2').val('')
             }
@@ -435,6 +437,7 @@
                         </div>
                     </div>`);
                 mask();
+                select_change();
             })
         })
 
@@ -479,48 +482,50 @@
             });
         })
 
-        $('.select2').on('change', function() {
-            console.log("ok");
-            var id = $(this).val();
-            var iterasi = $(this).attr('id');
-            if (id != "") {
-                $.ajax({
-                    url: id + "/get_data_product",
-                    type: "GET",
-                    dataType: "json",
-                    success: function(result) {
-                        $('#harga_jual' + iterasi).val(result[0].harga_jual)
-                        var select = "";
-                        select += '<option value="">choose..</option>'
-                        for (var i = 0; i < result.length; i++) {
-                            select += '<option value="' + result[i].v_id + '">' + result[i].size +
-                                '</option>';
-                        }
-                        $('#size' + iterasi).html(select);
-
-                        $('#size' + iterasi).on('change', function() {
-                            var value = $(this).val();
-                            var qty_prod = 0;
-                            for (let n = 0; n < result.length; n++) {
-                                if (parseInt(result[n].v_id) == parseInt(value)) {
-                                    $('#qty_product' + iterasi).val(result[n]
-                                        .jumlah_stock_product)
-                                    break;
-                                }
-
+        function select_change() {
+            $('.select2').on('change', function() {
+                console.log("ok");
+                var id = $(this).val();
+                var iterasi = $(this).attr('id');
+                if (id != "") {
+                    $.ajax({
+                        url: id + "/get_data_product",
+                        type: "GET",
+                        dataType: "json",
+                        success: function(result) {
+                            $('#harga_jual' + iterasi).val(result[0].harga_jual)
+                            var select = "";
+                            select += '<option value="">choose..</option>'
+                            for (var i = 0; i < result.length; i++) {
+                                select += '<option value="' + result[i].v_id + '">' + result[i].size +
+                                    '</option>';
                             }
-                        })
+                            $('#size' + iterasi).html(select);
 
-                    },
-                    error: function(xhr, Status, err) {
-                        $("Terjadi error : " + Status);
-                    }
-                });
-            } else {
-                $('#harga_jual' + iterasi).val('')
-                $('#size' + iterasi).html('');
-                return false;
-            }
-        });
+                            $('#size' + iterasi).on('change', function() {
+                                var value = $(this).val();
+                                var qty_prod = 0;
+                                for (let n = 0; n < result.length; n++) {
+                                    if (parseInt(result[n].v_id) == parseInt(value)) {
+                                        $('#qty_product' + iterasi).val(result[n]
+                                            .jumlah_stock_product)
+                                        break;
+                                    }
+
+                                }
+                            })
+
+                        },
+                        error: function(xhr, Status, err) {
+                            $("Terjadi error : " + Status);
+                        }
+                    });
+                } else {
+                    $('#harga_jual' + iterasi).val('')
+                    $('#size' + iterasi).html('');
+                    return false;
+                }
+            });
+        }
     </script>
 @endsection

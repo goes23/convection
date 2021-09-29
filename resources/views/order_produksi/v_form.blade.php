@@ -53,30 +53,27 @@
                             <!-- /.col -->
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="harga_modal_satuan">Harga Modal Satuan <a
-                                            class="tn">*</a></label>
-                                    <input type="text" class="form-control inputForm" id="harga_modal_satuan"
-                                        name="harga_modal_satuan" placeholder="Enter harga modal satuan"
-                                        value="{{ isset($data_produksi[0]->harga_modal_satuan) ? (int) $data_produksi[0]->harga_modal_satuan : '' }}"
+                                    <label for="harga_jual_satuan">Harga Jual Satuan <a class="tn">*</a></label>
+                                    <input type="text" class="form-control inputForm" id="harga_jual_satuan"
+                                        name="harga_jual_satuan" placeholder="Enter harga jual satuan"
+                                        value="{{ isset($data_produksi[0]->harga_jual_satuan) ? (int) $data_produksi[0]->harga_jual_satuan : '' }}"
                                         required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="harga_modal_satuan">Harga Modal Satuan <a
-                                            class="tn">*</a></label>
-                                    <input type="text" class="form-control inputForm" id="harga_modal_satuan"
-                                        name="harga_modal_satuan" placeholder="Enter harga modal satuan"
-                                        value="{{ isset($data_produksi[0]->harga_modal_satuan) ? (int) $data_produksi[0]->harga_modal_satuan : '' }}"
+                                    <label for="qty">Quantity <a class="tn">*</a></label>
+                                    <input type="text" class="form-control inputForm" id="qty" name="qty"
+                                        placeholder="Enter quantity"
+                                        value="{{ isset($data_produksi[0]->qty) ? (int) $data_produksi[0]->qty : '' }}"
                                         required>
                                 </div>
                             </div>
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="harga_modal_satuan">Harga Modal Satuan <a
-                                            class="tn">*</a></label>
-                                    <input type="text" class="form-control inputForm" id="harga_modal_satuan"
-                                        name="harga_modal_satuan" placeholder="Enter harga modal satuan"
-                                        value="{{ isset($data_produksi[0]->harga_modal_satuan) ? (int) $data_produksi[0]->harga_modal_satuan : '' }}"
+                                    <label for="total_pembayaran">Total Pembayaran <a class="tn">*</a></label>
+                                    <input type="text" class="form-control inputForm" id="total_pembayaran"
+                                        name="total_pembayaran" placeholder="Enter total pembayaran"
+                                        value="{{ isset($data_produksi[0]->total_pembayaran) ? (int) $data_produksi[0]->total_pembayaran : '' }}"
                                         required>
                                 </div>
 

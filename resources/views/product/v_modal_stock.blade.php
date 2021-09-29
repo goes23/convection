@@ -55,7 +55,7 @@
                             <div class="form-group">
                                 <label for="jumlah_stock_product">Jumlah stock product tersedia <a class="tn">*</a></label>
                                 <input type="text" class="form-control inputForm" id="jumlah_stock_product"
-                                    name="jumlah_stock_product" placeholder="Enter jumlah stock product" readonly>
+                                    name="jumlah_stock_product" placeholder="0" readonly>
                             </div>
                         </div>
                         <div class="col-md-4">

@@ -276,7 +276,6 @@ class ProductController extends Controller
             exit;
         }
 
-
         $sisa_jumlah_produksi = 0;
         $jumlah_stock_product = 0;
         if ($request['data']['tombol'] == 'tambah') {
@@ -331,7 +330,7 @@ class ProductController extends Controller
             $insert_log['variant_id']    = $request['data']['variant_id'];
             $insert_log['transaksi']     = $request['data']['tombol'];
             $insert_log['keterangan']    = $request['data']['keterangan'];
-            $insert_log['qty']           = $request['data']['jumlah_stock_product'];
+            $insert_log['qty']           = $request['data']['input_jumlah_product'];
             $insert_log['transfer_date'] = $request['data']['transfer_date'];
             $insert_log['created_by']    = session('user');
 

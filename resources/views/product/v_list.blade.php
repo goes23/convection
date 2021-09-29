@@ -273,7 +273,11 @@
                 dataType: "json",
                 success: function(result) {
                     if (result.length == 0) {
-                        alert("data belum di prosses di produksi..");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Product belum di prosess di produksi',
+                        })
                         return false;
                     }
                     var opt = '';

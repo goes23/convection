@@ -27,8 +27,6 @@ class PenjualanController extends Controller
         $data_view["modal_title"]            = "Form Penjualan";
         $data_view["card_title"]             = "Input & Update Data Penjualan";
 
-        //dd(Penjualan::with('channel')->get());
-
         if ($request->ajax()) {
             return datatables()->of(Penjualan::with('channel')->get())
                 ->addColumn('status', function ($data) {

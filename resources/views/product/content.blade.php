@@ -19,7 +19,7 @@
             <tr>
                 <td>{{ $no++ }}</td>
                 <td>{{ $item->name }}</td>
-                <td>{{ $item->kode_produksi }}</td>
+                <td>{{ $item->produksi_id }}</td>
                 <td>{{ $item->size }}</td>
                 <td>{{ $item->qty }}</td>
                 <td>{{ $item->transaksi }}</td>
