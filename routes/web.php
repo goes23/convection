@@ -90,4 +90,8 @@ Route::group(['middleware' => ['ceklogin', 'checkpermission']], function () {
     Route::resource('hutang', 'HutangController');
 
     Route::resource('pengeluaran', 'PengeluaranController');
+
+    Route::resource('order_produksi', 'OrderProduksiController');
+    Route::post('order_produksi/form', 'OrderProduksiController@form')->name('order_produksi.form');
+    Route::get('order_produksi/{id}/form', 'OrderProduksiController@form')->name('get.form');
 });
