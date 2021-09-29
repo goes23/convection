@@ -37,7 +37,7 @@
                                 </Form>
                                 <?php endif; ?>
 
-                                <?php /* if (allowed_access(session('user'), 'order_produksi', 'add')): ?>
+                                <?php /* if (allowed_access(session('user'), 'order_produksi', 'add')): ?> ?>
                                 <button type="button" class="btn btn-info btn-sm" onclick="add_btn()">Tambah
                                     order_produksi</button>
                                 <?php endif; */?>
@@ -45,19 +45,15 @@
 
                             <table id="example1" class="table table-bordered table-striped" style="width: 100%">
                                 <thead>
+
                                     <tr>
                                         <th>No</th>
-                                        <th>Kode Order produksi</th>
-                                        <th>Product</th>
-                                        <th>Bahan</th>
-                                        <th>Bidang</th>
-                                        <th>Toral Stock</th>
-                                        <th>Pemakaian</th>
-                                        <th>Harga Potong</th>
-                                        <th>Harga Jait</th>
-                                        <th>Harga Finishing</th>
-                                        <th>Harga Aksesoris</th>
-                                        <th>Harga Modal Bahan</th>
+                                        <th>Nama</th>
+                                        <th>Harga Modal Satuan</th>
+                                        <th>Harga Jual Satuan</th>
+                                        <th>Qty</th>
+                                        <th>Total Pembayaran</th>
+                                        <th>Sisa Pembayaran</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -110,52 +106,31 @@
                         }
                     },
                     {
-                        data: 'id',
-                        name: 'id',
+                        data: 'name',
+                        name: 'name',
                     },
                     {
-                        data: 'product',
-                        name: 'product',
-                    },
-                    {
-                        data: 'bahan',
-                        name: 'bahan'
-                    },
-                    {
-                        data: 'bidang',
-                        name: 'bidang'
-                    },
-                    {
-                        data: 'total_stock',
-                        name: 'total_stock'
-                    },
-                    {
-                        data: 'pemakaian',
-                        name: 'pemakaian'
-                    },
-                    {
-                        data: 'harga_potong_satuan',
-                        name: 'harga_potong_satuan',
+                        data: 'harga_modal_satuan',
+                        name: 'harga_modal_satuan',
                         render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
                     },
                     {
-                        data: 'harga_jait_satuan',
-                        name: 'harga_jait_satuan',
+                        data: 'harga_jual_satuan',
+                        name: 'harga_jual_satuan',
                         render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
                     },
                     {
-                        data: 'harga_finishing_satuan',
-                        name: 'harga_finishing_satuan',
+                        data: 'qty',
+                        name: 'qty'
+                    },
+                    {
+                        data: 'total_pembayaran',
+                        name: 'total_pembayaran',
                         render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
                     },
                     {
-                        data: 'harga_aksesoris',
-                        name: 'harga_aksesoris',
-                        render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
-                    },
-                    {
-                        data: 'harga_modal_bahan_satuan',
-                        name: 'harga_modal_bahan_satuan',
+                        data: 'sisa_pembayaran',
+                        name: 'sisa_pembayaran',
                         render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
                     },
                     {
@@ -287,6 +262,5 @@
                 }
             })
         }
-
     </script>
 @endsection
