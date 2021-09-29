@@ -265,12 +265,16 @@
         }
 
         function bayar(id) {
+            $('.byr').val('')
             $.ajax({
                 url: "upah/" + id + "/edit",
                 type: "GET",
                 dataType: "json",
                 success: function(result) {
+                    // console.log(result);
+                    // return
                     $("#id_upah").val(result.id)
+                    $('#total_upah').val(result.total_upah);
                     $('#sisa_upah').val(result.sisa_upah);
                     $('#modal-pembayaran').modal('show');
                 },
@@ -287,6 +291,7 @@
             var btn = $(this).find("input[type=submit]:focus");
             var tombol = btn[0].value;
             var id_upah = $('#id_upah').val();
+            var total_upah = $('#total_upah').val();
             var sisa_upah = $('#sisa_upah').val()
             var jumlah_pembayaran = $('#jumlah_pembayaran').val()
             var tanggal_pembayaran = $('#tgl_pembayaran').val()
@@ -295,6 +300,7 @@
             var object = {
                 tombol,
                 id_upah,
+                total_upah,
                 sisa_upah,
                 jumlah_pembayaran,
                 tanggal_pembayaran
@@ -306,6 +312,10 @@
                 data: object,
                 dataType: "json",
                 success: function(result) {
+                    if (result.status == false) {
+                        alert(result.msg);
+                        return false;
+                    }
                     call_toast(result)
                     $("#example1").DataTable().ajax.reload()
                     setTimeout(function() {

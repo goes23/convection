@@ -38,7 +38,7 @@ class Product extends Model
             ->select(
                 'product.name',
                 'log_stock.produksi_id',
-                'log_stock.variant_id AS size',
+                'log_stock.variant_id AS size', // sub query harusnya
                 'log_stock.qty',
                 'log_stock.transaksi',
                 'log_stock.keterangan',

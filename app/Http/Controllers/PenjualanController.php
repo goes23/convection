@@ -112,7 +112,7 @@ class PenjualanController extends Controller
                 return response()->json($res);
             }
         }
-        // dd($request->all());
+        dd($request->all());
 
         if ($request->purchase_code != "" && $request->id != "") {
             $purchase_code = $request->purchase_code;

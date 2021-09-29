@@ -207,7 +207,7 @@ class ProduksiController extends Controller
             $post = Produksi::UpdateOrCreate(["id" => $request['id']], $data);
 
             foreach ($request['variants'] as $val) {
-                $jumlah_product = isset($val['jumlah_stock_product']) ? $val['jumlah_stock_product'] : null;
+                $jumlah_product = isset($val['jumlah_stock_product']) ? $val['jumlah_stock_product'] : 0;
                 $variant['kode_produksi']        = $kode;
                 $variant['produksi_id']          = $post->id;
                 $variant['product_id']           = $request['product_id'];

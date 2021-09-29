@@ -535,7 +535,12 @@
                 var attr = $(this).attr("id")
                 $(".size").not(this).each(function() {
                     if ($(this).val() == value) {
-                        alert('Ukuran tidak boleh sama..');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Ukuran tidak boleh sama..!!',
+                        })
+                        return false;
                         $('#' + attr).val('');
                     }
                 });

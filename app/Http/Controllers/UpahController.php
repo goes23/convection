@@ -149,7 +149,39 @@ class UpahController extends Controller
                 return response()->json($e);
             }
         } else {
-            dd($request->all());
+            $sisa = $request['total_upah'] -  str_replace(".", "", $request['jumlah_pembayaran']);
+            if ($sisa < 0) {
+                $res = [
+                    "status" => false,
+                    "msg" => "jumlah pembayaran lebih besar dari sisa..."
+                ];
+                return response()->json($res);
+                exit;
+            }
+
+            try {
+                DB::beginTransaction();
+
+                $log = [];
+                $log['upah_id'] = $request['id_upah'];
+                $log['jumlah_pembayaran'] =  str_replace(".", "", $request['jumlah_pembayaran']);
+                $log['tanggal_pembayaran'] = $request['tanggal_pembayaran'];
+                $log['keterangan'] = $request['tombol'];
+
+
+                Pembayaran::insert($log);
+
+
+                $post = Upah::where('id', $request['id_upah'])
+                    ->update(['sisa_upah' => $sisa]);
+
+                DB::commit();
+                return response()->json($post);
+                exit;
+            } catch (\PDOException $e) {
+                DB::rollBack();
+                return response()->json($e);
+            }
         }
     }
 

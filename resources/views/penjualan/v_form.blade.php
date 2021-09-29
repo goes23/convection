@@ -329,6 +329,7 @@
     <script>
         $(document).ready(function() {
             select_change();
+            select_change2();
             if ({{ $status }} == 0) {
                 $('.select2').val('')
             }
@@ -438,6 +439,7 @@
                     </div>`);
                 mask();
                 select_change();
+                select_change2();
             })
         })
 
@@ -484,7 +486,6 @@
 
         function select_change() {
             $('.select2').on('change', function() {
-                console.log("ok");
                 var id = $(this).val();
                 var iterasi = $(this).attr('id');
                 if (id != "") {
@@ -493,6 +494,8 @@
                         type: "GET",
                         dataType: "json",
                         success: function(result) {
+                            // console.log(result);
+                            // return false
                             $('#harga_jual' + iterasi).val(result[0].harga_jual)
                             var select = "";
                             select += '<option value="">choose..</option>'
@@ -526,6 +529,27 @@
                     return false;
                 }
             });
+        }
+
+
+        function select_change2() {
+            $('.select3').change(function() {
+                console.log("ok");
+                // var value = $(this).val();
+                // var attr = $(this).attr("id")
+                // $(".size").not(this).each(function() {
+                //     if ($(this).val() == value) {
+                //         Swal.fire({
+                //             icon: 'error',
+                //             title: 'Oops...',
+                //             text: 'Ukuran tidak boleh sama..!!',
+                //         })
+                //         return false;
+                //         $('#' + attr).val('');
+                //     }
+                // });
+
+            })
         }
     </script>
 @endsection

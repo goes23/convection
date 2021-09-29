@@ -51,6 +51,7 @@ class Penjualan extends Model
                             FROM product
                             JOIN variants ON variants.product_id = product.id
                             WHERE variants.jumlah_stock_product IS NOT NULL
+                            AND product.id = $id
                             ");
     }
 
