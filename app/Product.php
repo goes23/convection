@@ -31,15 +31,14 @@ class Product extends Model
 
     public function history($id)
     {
-        return DB::table('product')
-            ->leftjoin('log_stock', 'log_stock.product_id', '=', 'product.id')
-            ->leftjoin('produksi', 'produksi.id', '=', 'log_stock.produksi_id')
-            ->leftjoin('variants', 'variants.produksi_id', '=', 'produksi.id')
-            ->where('product.id', '=', $id)
+
+        return DB::table('log_stock')
+            ->join('product', 'log_stock.product_id', '=', 'product.id')
+            ->where('log_stock.product_id', '=', $id)
             ->select(
                 'product.name',
-                'produksi.kode_produksi',
-                'variants.size',
+                'log_stock.produksi_id',
+                DB::raw("(SELECT size FROM variants WHERE variants.id = log_stock.variant_id) as size"),
                 'log_stock.qty',
                 'log_stock.transaksi',
                 'log_stock.keterangan',

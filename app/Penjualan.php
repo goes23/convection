@@ -31,8 +31,11 @@ class Penjualan extends Model
                             ,product.name
                             FROM product
                             JOIN variants ON variants.product_id = product.id
+                            -- WHERE variants.jumlah_stock_product IS NOT NULL
+                            WHERE variants.jumlah_stock_product > 0
                             GROUP BY product.id
                             ");
+        //dd($test);
     }
 
 
@@ -48,6 +51,7 @@ class Penjualan extends Model
                             FROM product
                             JOIN variants ON variants.product_id = product.id
                             WHERE variants.jumlah_stock_product IS NOT NULL
+                            AND product.id = $id
                             ");
     }
 
@@ -63,5 +67,39 @@ class Penjualan extends Model
                             FROM item_penjualan
                             WHERE penjualan_id = $id
                             ");
+    }
+
+    public function get_data_order($id)
+    {
+        return  DB::select("SELECT id
+        ,purchase_code
+        ,kode_pesanan
+        ,customer_name
+        ,customer_phone
+        ,customer_address
+        ,channel_id
+        ,purchase_date
+        ,total_purchase
+        ,shipping_price FROM penjualan WHERE id = $id");
+    }
+
+    public function get_data_item($pc)
+    {
+        $test = DB::select(" SELECT i.id
+                                    ,i.purchase_code
+                                    ,i.penjualan_id
+                                    ,(SELECT harga_jual FROM product WHERE product.id = i.product_id ) as harga_jual
+                                    ,(SELECT jumlah_stock_product FROM variants WHERE variants.product_id = i.product_id  AND variants.size = i.size ) as jumlah_stock_product
+                                    ,(SELECT GROUP_CONCAT(size) FROM variants WHERE variants.product_id = i.product_id ) as size_concat
+                                    ,i.product_id
+                                    ,i.sell_price
+                                    ,i.qty
+                                    ,i.size
+                                    ,i.total
+                                    ,i.keterangan
+                             FROM item_penjualan as i
+                             WHERE purchase_code = '$pc'");
+
+        return $test;
     }
 }

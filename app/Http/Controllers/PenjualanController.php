@@ -8,6 +8,7 @@ use App\Channel;
 use App\ItemPenjualan;
 use App\Pengeluaran;
 use App\Product;
+use App\Variants;
 use Illuminate\Support\Facades\DB;
 use stdClass;
 
@@ -26,8 +27,6 @@ class PenjualanController extends Controller
         $data_view["breadcrumb_item_active"] = "Penjualan";
         $data_view["modal_title"]            = "Form Penjualan";
         $data_view["card_title"]             = "Input & Update Data Penjualan";
-
-        //dd(Penjualan::with('channel')->get());
 
         if ($request->ajax()) {
             return datatables()->of(Penjualan::with('channel')->get())
@@ -79,10 +78,16 @@ class PenjualanController extends Controller
             $data_view['data_order']             = [];
             $data_view['status']                 = 0; //add
         } else {
-            $data_order = Penjualan::with('item_penjualan', 'channel')
-                ->where('penjualan.id', $id)
-                ->get();
-            //dd($data_order);
+            // $data_order = Penjualan::with('item_penjualan', 'channel')
+            //     ->where('penjualan.id', $id)
+            //     ->get();
+
+
+            $penjualan = new Penjualan();
+            $data_order = $penjualan->get_data_order($id);
+            $item = new Penjualan();
+            $data_item = $item->get_data_item($data_order[0]->purchase_code);
+            //dd($data_item);
 
             $data_view                = [];
             $data_view['h1']                     = 'Edit Form Penjualan';
@@ -92,7 +97,8 @@ class PenjualanController extends Controller
             $data_view['channel']                = Channel::all();
             $data_view['product']                = $data_product;
             $data_view['data_order']             = $data_order;
-            $data_view['status']                 = 1; // edit
+            $data_view['item']                   = $data_item;
+            $data_view['status']                 = 1;                      // edit
         }
 
         return view('penjualan/v_form', $data_view);
@@ -144,7 +150,7 @@ class PenjualanController extends Controller
                 }
                 $conditon = trim($concat, ",");
 
-                DB::select("DELETE FROM order_item
+                DB::select("DELETE FROM item_penjualan
                     WHERE penjualan_id = $request->id
                     AND id NOT IN ($conditon)");
             endif;
@@ -224,11 +230,32 @@ class PenjualanController extends Controller
         return response()->json($data);
     }
 
-    public function get_data_product(Request $request, $id)
+    public function get_data_product(Request $request)
     {
+        if (!$request->ajax()) {
+            return "error request";
+            exit;
+        }
+
         $penjualan = new Penjualan();
-        $data_variant = $penjualan->get_data_variant($id);
+        $data_variant = $penjualan->get_data_variant($request['id']);
 
         return response()->json($data_variant);
+    }
+
+
+    public function variant(Request $request)
+    {
+        if (!$request->ajax()) {
+            return "error request";
+            exit;
+        }
+
+        $data = DB::table('variants')
+            ->select('jumlah_stock_product')
+            ->where('product_id', $request['id'])
+            ->where('size', $request['size'])
+            ->get();
+        return response()->json($data[0]);
     }
 }
