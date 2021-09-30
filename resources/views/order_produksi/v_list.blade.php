@@ -37,7 +37,7 @@
                                 </Form>
                                 <?php endif; ?>
 
-                                <?php /* if (allowed_access(session('user'), 'order_produksi', 'add')): ?> ?>
+                                <?php /* if (allowed_access(session('user'), 'order_produksi', 'add')): ?> ?> ?> ?> ?> ?> ?> ?>
                                 <button type="button" class="btn btn-info btn-sm" onclick="add_btn()">Tambah
                                     order_produksi</button>
                                 <?php endif; */?>
@@ -69,7 +69,7 @@
     </section>
 
     {{-- MODAL FORM ADD & EDIT --}}
-    {{-- @include('order_produksi.v_modal') --}}
+    @include('order_produksi.v_modal')
     {{-- MODAL FORM ADD & EDIT --}}
 
 
@@ -261,6 +261,10 @@
                     });
                 }
             })
+        }
+
+        function bayars(id) {
+            $('#modal-default').modal('show');
         }
     </script>
 @endsection

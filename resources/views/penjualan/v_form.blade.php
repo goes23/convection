@@ -60,7 +60,8 @@
                                     <label for="kode_pesanan">Kode Pesanan <a class="tn">*</a></label>
                                     <input type="text" class="form-control inputForm" id="kode_pesanan" name="kode_pesanan"
                                         placeholder="Enter kode pesanan"
-                                        value="{{ isset($data_order[0]->kode_pesanan) ? $data_order[0]->kode_pesanan : '' }}">
+                                        value="{{ isset($data_order[0]->kode_pesanan) ? $data_order[0]->kode_pesanan : '' }}"
+                                        required>
                                 </div>
                             </div>
                             <!-- /.col -->
@@ -128,18 +129,19 @@
                                                     </div>
                                                     <div class="col-md-3">
                                                         <div class="form-group">
-                                                            <label for="harga_jual">Harga Jual <a
+                                                            <label for="harga_jual">Harga Jual Product <a
                                                                     class="tn">*</a></label>
                                                             <input type="text" class="form-control harga_jual"
                                                                 id="harga_jual{{ $no }}"
-                                                                name="orderitem[{{ $no }}][harga_jual]" readonly>
+                                                                name="orderitem[{{ $no }}][harga_jual]"
+                                                                placeholder="0" readonly>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label for="size">Size <a class="tn">*</a></label>
                                                             <select class="form-control select3"
-                                                                id="size{{ $no }}"
+                                                                id="size-{{ $no }}"
                                                                 name="orderitem[{{ $no }}][size]"
                                                                 data-placeholder="Select a size"
                                                                 data-dropdown-css-class="select2-purple" style="width: 100%"
@@ -153,9 +155,9 @@
                                                             <label for="qty_product">Quantity product<a
                                                                     class="tn">*</a></label>
                                                             <input type="text" class="form-control qty_product"
-                                                                id="qty_product{{ $no }}"
+                                                                id="qty_product-{{ $no }}"
                                                                 name="orderitem[{{ $no }}][qty_product]"
-                                                                placeholder="" readonly>
+                                                                placeholder="0" readonly>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3">
@@ -193,123 +195,132 @@
                                     <div id="items"></div>
                                 </div>
                             @else
-                                @foreach ($data_order as $item)
-                                    <?php $no = 0; ?>
-                                    @foreach ($item->item_penjualan as $val)
-                                        <?php //dd($val);
-                                        ?>
-                                        <div class="col-md-12">
-                                            <div class="container-fluid" id="item<?php echo $no; ?>">
-                                                <div class="card card-secondary">
-                                                    <div class="card-header">
-                                                        <div class="card-tools">
-                                                            <button type="button" class="btn btn-tool"
-                                                                onclick="removeitem(<?php echo $no; ?>)">
-                                                                <i class="fas fa-times"></i>
-                                                            </button>
-                                                        </div>
+                                {{-- @foreach ($data_order as $item) --}}
+                                <?php $no = 0; ?>
+                                {{-- @foreach ($item->item_penjualan as $val) --}}
+                                @foreach ($item as $val)
+                                    <div class="col-md-12">
+                                        <div class="container-fluid" id="item<?php echo $no; ?>">
+                                            <div class="card card-secondary">
+                                                <div class="card-header">
+                                                    <div class="card-tools">
+                                                        <button type="button" class="btn btn-tool"
+                                                            onclick="removeitem(<?php echo $no; ?>)">
+                                                            <i class="fas fa-times"></i>
+                                                        </button>
                                                     </div>
-                                                    <div class="card-body">
-                                                        <div class="row">
-                                                            <input type="hidden" id="id_order_item"
-                                                                name="orderitem[{{ $no }}][id]"
-                                                                value="{{ $val->id }}">
-                                                            <div class="col-md-3">
-                                                                {{-- {{ $val->product_id }} --}}
-                                                                <div class="form-group">
-                                                                    <label for="product">Product <a
-                                                                            class="tn">*</a></label>
-                                                                    <select class="form-control" id="product"
-                                                                        name="orderitem[{{ $no }}][product]"
-                                                                        data-placeholder="Select a product"
-                                                                        style="width: 100%" required>
-                                                                        <option value="">choose ..</option>
-                                                                        @foreach ($product as $vals)
-                                                                            <option value="{{ $vals->id }}"
-                                                                                {{ (int) $val->product_id == (int) $vals->id ? 'selected=selected' : '' }}>
-                                                                                {{ $vals->name }}
-                                                                            </option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <input type="hidden" id="id_order_item"
+                                                            name="orderitem[{{ $no }}][id]"
+                                                            value="{{ $val->id }}">
+                                                        <div class="col-md-3">
+                                                            {{-- {{ $val->product_id }} --}}
+                                                            <div class="form-group">
+                                                                <label for="product">Product <a
+                                                                        class="tn">*</a></label>
+                                                                <select class="form-control select2"
+                                                                    id="{{ $no }}"
+                                                                    name="orderitem[{{ $no }}][product]"
+                                                                    data-placeholder="Select a product" style="width: 100%"
+                                                                    required>
+                                                                    <option value="">choose ..</option>
+                                                                    @foreach ($product as $vals)
+                                                                        <option value="{{ $vals->id }}"
+                                                                            {{ (int) $val->product_id == (int) $vals->id ? 'selected=selected' : '' }}>
+                                                                            {{ $vals->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
                                                             </div>
-                                                            <div class="col-md-3">
-                                                                <div class="form-group">
-                                                                    <label for="harga_jual">Harga Jual <a
-                                                                            class="tn">*</a></label>
-                                                                    <input type="text" class="form-control harga_jual"
-                                                                        id="harga_jual{{ $no }}"
-                                                                        name="orderitem[{{ $no }}][harga_jual]"
-                                                                        value="{{ $val->sell_price }}" readonly>
-                                                                </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
+                                                                <label for="harga_jual">Harga Jual Product <a
+                                                                        class="tn">*</a></label>
+                                                                <input type="text" class="form-control harga_jual"
+                                                                    id="harga_jual{{ $no }}"
+                                                                    name="orderitem[{{ $no }}][harga_jual]"
+                                                                    value="{{ $val->harga_jual }}" value="" readonly>
                                                             </div>
-                                                            <div class="col-md-3">
-                                                                <div class="form-group">
-                                                                    <label for="size">Size <a
-                                                                            class="tn">*</a></label>
-                                                                    <select class="form-control select3"
-                                                                        id="size{{ $no }}"
-                                                                        name="orderitem[{{ $no }}][size]"
-                                                                        data-placeholder="Select a size"
-                                                                        data-dropdown-css-class="select2-purple"
-                                                                        value="{{ $val->size }}" style="width: 100%"
-                                                                        required>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
+                                                                <label for="size">Size <a
+                                                                        class="tn">*</a></label>
+                                                                <select class="form-control select3"
+                                                                    id="size-{{ $no }}"
+                                                                    name="orderitem[{{ $no }}][size]"
+                                                                    data-placeholder="Select a size"
+                                                                    data-dropdown-css-class="select2-purple"
+                                                                    style="width: 100%" required>
+                                                                    @php
+                                                                        $datas = explode(',', $val->size_concat);
+                                                                    @endphp
+                                                                    @foreach ($datas as $item)
 
-                                                                    </select>
-                                                                </div>
+                                                                        <option value="{{ $item }}"
+                                                                            {{ $val->size == $item ? 'selected="selected"' : '' }}>
+                                                                            {{ $item }}</option>
+                                                                    @endforeach
+
+                                                                </select>
                                                             </div>
-                                                            <div class="col-md-3">
-                                                                <div class="form-group">
-                                                                    <label for="qty_product">Quantity product<a
-                                                                            class="tn">*</a></label>
-                                                                    <input type="text" class="form-control qty_product"
-                                                                        id="qty_product{{ $no }}"
-                                                                        name="orderitem[{{ $no }}][qty_product]"
-                                                                        value="{{ $val->qty }}" placeholder=""
-                                                                        readonly>
-                                                                </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
+                                                                <label for="qty_product">Quantity product<a
+                                                                        class="tn">*</a></label>
+                                                                <input type="text" class="form-control qty_product"
+                                                                    id="qty_product-{{ $no }}"
+                                                                    name="orderitem[{{ $no }}][qty_product]"
+                                                                    value="{{ $val->jumlah_stock_product }}"
+                                                                    placeholder="" readonly>
                                                             </div>
-                                                            <div class="col-md-3">
-                                                                <div class="form-group">
-                                                                    <label for="qty">Quantity <a
-                                                                            class="tn">*</a></label>
-                                                                    <input type="text" class="form-control qty" id="qty"
-                                                                        name="orderitem[{{ $no }}][qty]"
-                                                                        placeholder="Enter quantity" required>
-                                                                </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
+                                                                <label for="qty">Quantity <a
+                                                                        class="tn">*</a></label>
+                                                                <input type="text" class="form-control qty" id="qty"
+                                                                    name="orderitem[{{ $no }}][qty]"
+                                                                    placeholder="Enter quantity"
+                                                                    value="{{ $val->qty }}" required>
                                                             </div>
-                                                            <div class="col-md-3">
-                                                                <div class="form-group">
-                                                                    <label for="sell_price">Harga jual akhir <a
-                                                                            class="tn">*</a></label>
-                                                                    <input type="text" class="form-control sell_price"
-                                                                        id="sell_price{{ $no }}"
-                                                                        name="orderitem[{{ $no }}][sell_price]"
-                                                                        value="{{ $val->sell_price }}"
-                                                                        placeholder="Enter harga jual akhir" required>
-                                                                </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
+                                                                <label for="sell_price">Harga jual akhir <a
+                                                                        class="tn">*</a></label>
+                                                                <input type="text" class="form-control sell_price"
+                                                                    id="sell_price{{ $no }}"
+                                                                    name="orderitem[{{ $no }}][sell_price]"
+                                                                    value="{{ $val->sell_price }}"
+                                                                    placeholder="Enter harga jual akhir" required>
                                                             </div>
-                                                            <div class="col-md-3">
-                                                                <div class="form-group">
-                                                                    <label for="keterangan">Keterangan <a
-                                                                            class="tn">*</a></label>
-                                                                    <textarea class="form-control keterangan"
-                                                                        name="orderitem[{{ $no }}][keterangan]"
-                                                                        id="keterangan{{ $no }}"
-                                                                        rows="3">{{ $val->keterangan }}</textarea>
-                                                                </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
+                                                                <label for="keterangan">Keterangan <a
+                                                                        class="tn">*</a></label>
+                                                                <textarea class="form-control keterangan"
+                                                                    name="orderitem[{{ $no }}][keterangan]"
+                                                                    id="keterangan{{ $no }}"
+                                                                    rows="3">{{ $val->keterangan }}</textarea>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <?php $no++; ?>
-                                    @endforeach
-                                    <div class="col-md-12">
-                                        <div id="items"></div>
                                     </div>
+                                    <?php $no++; ?>
                                 @endforeach
+                                <div class="col-md-12">
+                                    <div id="items"></div>
+                                </div>
+                                {{-- @endforeach --}}
 
                             @endif
                         </div>
@@ -330,22 +341,21 @@
         $(document).ready(function() {
             select_change();
             select_change2();
-            if ({{ $status }} == 0) {
+            mask();
+            if ({{ $status }} == 0) { // ADD
                 $('.select2').val('')
+                $('.qty_product').val('')
+                $('.harga_jual').val('')
+            } else { // EDIT
+                var id = 0;
+                $(".select2").not(this).each(function() {
+                    $(this.id).val(this.value).change();
+                    // $(id).
+                    id++
+                })
             }
+
             var i = 0 + {{ $no }};
-            $("#qty").inputmask('Regex', {
-                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
-            });
-
-            $("#shipping_price").mask('000.000.000', {
-                reverse: true
-            });
-
-            $(".sell_price").mask('000.000.000', {
-                reverse: true
-            });
-
             $('#add_order_item').click(function() {
                 i++
                 $('#items').append(`<div class="container-fluid" id="item` + i + `">
@@ -375,7 +385,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label for="harga_jual">Harga Jual <a
+                                            <label for="harga_jual">Harga Jual Product <a
                                                     class="tn">*</a></label>
                                             <input type="text" class="form-control harga_jual"
                                                 id="harga_jual` + i + `"
@@ -386,7 +396,7 @@
                                         <div class="form-group">
                                             <label for="size">Size <a class="tn">*</a></label>
                                             <select class="form-control select3"
-                                                id="size` + i + `"
+                                                id="size-` + i + `"
                                                 name="orderitem[` + i + `][size]"
                                                 data-placeholder="Select a size"
                                                 data-dropdown-css-class="select2-purple" style="width: 100%"
@@ -400,7 +410,7 @@
                                             <label for="qty_product">Quantity product<a
                                                     class="tn">*</a></label>
                                             <input type="text" class="form-control qty_product"
-                                                id="qty_product` + i + `"
+                                                id="qty_product-` + i + `"
                                                 name="orderitem[` + i + `][qty_product]"
                                                 placeholder="" readonly>
                                         </div>
@@ -429,6 +439,7 @@
                                             <label for="keterangan">Keterangan <a
                                                     class="tn">*</a></label>
                                             <textarea class="form-control keterangan"
+                                            name="orderitem[` + i + `][keterangan]"
                                                 id="keterangan` + i + `" rows="3"></textarea>
                                         </div>
                                     </div>
@@ -448,6 +459,18 @@
         }
 
         function mask() {
+            $("#qty").inputmask('Regex', {
+                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
+            });
+
+            $("#shipping_price").mask('000.000.000', {
+                reverse: true
+            });
+
+            $(".sell_price").mask('000.000.000', {
+                reverse: true
+            });
+
             $('input[id^="sell_price"]').mask('000.000.000', {
                 reverse: true
             });
@@ -465,11 +488,13 @@
                 data: $('#order').serialize(),
                 dataType: "json",
                 success: function(result) {
-                    console.log(result);
-                    return false
                     if (result.status == false) {
-                        alert(result.msg)
-                        return false
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: result.msg,
+                        })
+                        return false;
                     } else {
                         call_toast(result);
                         setTimeout(function() {
@@ -484,40 +509,38 @@
             });
         })
 
+
         function select_change() {
+
             $('.select2').on('change', function() {
+                //$("#" + this.id).addClass("p" + this.value);
+                // $("#" + this.id).addClass(this.value).siblings(this.value).removeClass(this
+                //     .value);
+                // console.log(this);
+
+                //    $('.select2').each(function(){
+                //     console.log("ok");
+                //    })
                 var id = $(this).val();
+                var urls = "{{ route('penjualan.getdata') }}";
                 var iterasi = $(this).attr('id');
                 if (id != "") {
                     $.ajax({
-                        url: id + "/get_data_product",
-                        type: "GET",
+                        url: urls,
+                        type: "POST",
+                        data: {
+                            id: id
+                        },
                         dataType: "json",
                         success: function(result) {
-                            // console.log(result);
-                            // return false
                             $('#harga_jual' + iterasi).val(result[0].harga_jual)
                             var select = "";
                             select += '<option value="">choose..</option>'
                             for (var i = 0; i < result.length; i++) {
-                                select += '<option value="' + result[i].v_id + '">' + result[i].size +
+                                select += '<option value="' + result[i].size + '">' + result[i].size +
                                     '</option>';
                             }
-                            $('#size' + iterasi).html(select);
-
-                            $('#size' + iterasi).on('change', function() {
-                                var value = $(this).val();
-                                var qty_prod = 0;
-                                for (let n = 0; n < result.length; n++) {
-                                    if (parseInt(result[n].v_id) == parseInt(value)) {
-                                        $('#qty_product' + iterasi).val(result[n]
-                                            .jumlah_stock_product)
-                                        break;
-                                    }
-
-                                }
-                            })
-
+                            $('#size-' + iterasi).html(select);
                         },
                         error: function(xhr, Status, err) {
                             $("Terjadi error : " + Status);
@@ -531,25 +554,33 @@
             });
         }
 
-
         function select_change2() {
             $('.select3').change(function() {
-                console.log("ok");
-                // var value = $(this).val();
-                // var attr = $(this).attr("id")
-                // $(".size").not(this).each(function() {
-                //     if ($(this).val() == value) {
-                //         Swal.fire({
-                //             icon: 'error',
-                //             title: 'Oops...',
-                //             text: 'Ukuran tidak boleh sama..!!',
-                //         })
-                //         return false;
-                //         $('#' + attr).val('');
-                //     }
-                // });
+                var id_pr = this.id.split("-")[1];
+                var idp = $("#" + id_pr).val()
+                var size = this.value
+                $.ajax({
+                    url: "{{ route('penjualan.variant') }}",
+                    type: "post",
+                    data: {
+                        id: idp,
+                        size: size
+                    },
+                    dataType: "json",
+                    success: function(result) {
+                        $("#qty_product-" + id_pr).val(result.jumlah_stock_product)
+                    },
+                    error: function(xhr, Status, err) {
+                        $("Terjadi error : " + Status);
+                    }
+                });
 
             })
         }
+
+        $(".qty").blur(function() {
+            console.log(this);
+
+        });
     </script>
 @endsection

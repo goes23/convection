@@ -38,7 +38,7 @@ class Product extends Model
             ->select(
                 'product.name',
                 'log_stock.produksi_id',
-                'log_stock.variant_id AS size', // sub query harusnya
+                DB::raw("(SELECT size FROM variants WHERE variants.id = log_stock.variant_id) as size"),
                 'log_stock.qty',
                 'log_stock.transaksi',
                 'log_stock.keterangan',

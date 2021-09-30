@@ -75,7 +75,8 @@ Route::group(['middleware' => ['ceklogin', 'checkpermission']], function () {
     Route::post('penjualan/form', 'PenjualanController@form')->name('penjualan.form');
     Route::get('penjualan/{id}/form', 'PenjualanController@form')->name('get.form');
     Route::get('penjualan/{id}/detail', 'PenjualanController@detail')->name('penjualan.detail');
-    Route::get('penjualan/{id}/get_data_product', 'PenjualanController@get_data_product')->name('get.get_data_product');
+    Route::post('penjualan/get_data_product', 'PenjualanController@get_data_product')->name('penjualan.getdata');
+    Route::post('penjualan/variant', 'PenjualanController@variant')->name('penjualan.variant');
 
     //Route::post('penjualan/form', 'PenjualanController@form')->name('penjualan.form');
 

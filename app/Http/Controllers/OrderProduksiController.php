@@ -27,7 +27,7 @@ class OrderProduksiController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '<center>';
                     if (allowed_access(session('user'), 'order_produksi', 'edit')) :
-                        $button .= '<button type="button" class="btn btn-warning btn-sm" onclick="bayar(' . $data->id . ')">Pembayaran</button>';
+                        $button .= '<button type="button" class="btn btn-warning btn-sm" onclick="bayars(' . $data->id . ')">Pembayaran</button>';
                         $button .= '&nbsp;';
                         $button .= '<a type="button" href="/order_produksi/' . $data->id . '/form" class="btn btn-success btn-sm" >Edit</a>';
                     // $button = '<center><button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
