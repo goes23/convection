@@ -540,8 +540,8 @@
                             title: 'Oops...',
                             text: 'Ukuran tidak boleh sama..!!',
                         })
-                        return false;
                         $('#' + attr).val('');
+                        return false;
                     }
                 });
 
