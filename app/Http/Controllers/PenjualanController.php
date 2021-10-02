@@ -66,6 +66,7 @@ class PenjualanController extends Controller
 
         $penjualan = new Penjualan();
         $data_product = $penjualan->get_data_product();
+        //dd($data_product);
 
         if ($request->id == "") {
             $data_view                = [];
@@ -87,7 +88,7 @@ class PenjualanController extends Controller
             $data_order = $penjualan->get_data_order($id);
             $item = new Penjualan();
             $data_item = $item->get_data_item($data_order[0]->purchase_code);
-            //dd($data_item);
+           // dd($data_item);
 
             $data_view                = [];
             $data_view['h1']                     = 'Edit Form Penjualan';
@@ -236,9 +237,12 @@ class PenjualanController extends Controller
             return "error request";
             exit;
         }
+        $produksi_id = explode("-", $request['produksi_id'])[0];
+        // dd($produksi_id);
 
         $penjualan = new Penjualan();
-        $data_variant = $penjualan->get_data_variant($request['id']);
+        $data_variant = $penjualan->get_data_variant($request['id'], $produksi_id);
+        //dd($data_variant);
 
         return response()->json($data_variant);
     }

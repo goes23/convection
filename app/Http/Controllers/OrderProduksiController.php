@@ -27,6 +27,8 @@ class OrderProduksiController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '<center>';
                     if (allowed_access(session('user'), 'order_produksi', 'edit')) :
+                        $button = '<button type="button" class="btn btn-info btn-sm" onclick="history(' . $data->id . ')">History Pembayaran</button>';
+                        $button .= '&nbsp;';
                         $button .= '<button type="button" class="btn btn-warning btn-sm" onclick="bayars(' . $data->id . ')">Pembayaran</button>';
                         $button .= '&nbsp;';
                         $button .= '<a type="button" href="/order_produksi/' . $data->id . '/form" class="btn btn-success btn-sm" >Edit</a>';
@@ -169,5 +171,15 @@ class OrderProduksiController extends Controller
         $delete = OrderProduksi::find($id)->delete();
 
         return response()->json($delete);
+    }
+
+    public function get_data(Request $request, $id)
+    {
+        if (!$request->ajax()) {
+            return "error request";
+            exit;
+        }
+        $data = OrderProduksi::where('id', $id)->first();
+        return response()->json($data);
     }
 }

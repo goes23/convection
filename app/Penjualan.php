@@ -29,17 +29,18 @@ class Penjualan extends Model
         return DB::select(" SELECT
                             product.id
                             ,product.name
+                            ,variants.produksi_id
                             FROM product
                             JOIN variants ON variants.product_id = product.id
                             -- WHERE variants.jumlah_stock_product IS NOT NULL
                             WHERE variants.jumlah_stock_product > 0
-                            GROUP BY product.id
+                            GROUP BY product.id , variants.produksi_id
                             ");
         //dd($test);
     }
 
 
-    public function get_data_variant($id)
+    public function get_data_variant($id, $pro)
     {
         return DB::select(" SELECT
                             product.id
@@ -52,6 +53,7 @@ class Penjualan extends Model
                             JOIN variants ON variants.product_id = product.id
                             WHERE variants.jumlah_stock_product IS NOT NULL
                             AND product.id = $id
+                            AND variants.produksi_id = $pro
                             ");
     }
 
@@ -98,7 +100,8 @@ class Penjualan extends Model
                                     ,i.total
                                     ,i.keterangan
                              FROM item_penjualan as i
-                             WHERE purchase_code = '$pc'");
+                             WHERE purchase_code = '$pc'
+                            ");
 
         return $test;
     }

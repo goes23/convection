@@ -121,7 +121,7 @@
                                                                 <option value="">choose ..</option>
                                                                 @foreach ($product as $val)
                                                                     <option value="{{ $val->id }}">
-                                                                        {{ $val->name }}
+                                                                        {{ $val->produksi_id . ' - ' . $val->name }}
                                                                     </option>
                                                                 @endforeach
                                                             </select>
@@ -229,7 +229,7 @@
                                                                     @foreach ($product as $vals)
                                                                         <option value="{{ $vals->id }}"
                                                                             {{ (int) $val->product_id == (int) $vals->id ? 'selected=selected' : '' }}>
-                                                                            {{ $vals->name }}
+                                                                            {{ $vals->produksi_id . ' - ' . $vals->name }}
                                                                         </option>
                                                                     @endforeach
                                                                 </select>
@@ -377,7 +377,7 @@
                                                 required>
                                                 <option value="">choose ..</option>
                                                 @foreach ($product as $val)
-                                                    <option value="{{ $val->id }}"> {{ $val->name }}
+                                                    <option value="{{ $val->id }}"> {{ $val->produksi_id . ' - ' . $val->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -522,6 +522,7 @@
                 //     console.log("ok");
                 //    })
                 var id = $(this).val();
+                var produksi_id = $(this).find('option:selected').text().replace(/ /g,'');
                 var urls = "{{ route('penjualan.getdata') }}";
                 var iterasi = $(this).attr('id');
                 if (id != "") {
@@ -529,7 +530,8 @@
                         url: urls,
                         type: "POST",
                         data: {
-                            id: id
+                            id: id,
+                            produksi_id:produksi_id
                         },
                         dataType: "json",
                         success: function(result) {

@@ -73,7 +73,7 @@
                                     <input type="text" class="form-control harga" id="total_pembayaran"
                                         name="total_pembayaran" placeholder="Enter total pembayaran"
                                         value="{{ isset($data[0]->total_pembayaran) ? (int) $data[0]->total_pembayaran : '' }}"
-                                        required>
+                                        {{ isset($data[0]->harga_modal_satuan) ? 'readonly' : '' }} required>
                                 </div>
 
                             </div>

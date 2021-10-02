@@ -37,7 +37,7 @@
                                 </Form>
                                 <?php endif; ?>
 
-                                <?php /* if (allowed_access(session('user'), 'order_produksi', 'add')): ?> ?> ?> ?> ?> ?> ?> ?>
+                                <?php /* if (allowed_access(session('user'), 'order_produksi', 'add')): ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?>
                                 <button type="button" class="btn btn-info btn-sm" onclick="add_btn()">Tambah
                                     order_produksi</button>
                                 <?php endif; */?>
@@ -264,7 +264,20 @@
         }
 
         function bayars(id) {
-            $('#modal-default').modal('show');
+            $.ajax({
+                url: "order_produksi/" + id + "/get_data",
+                type: "get",
+                dataType: "json",
+                success: function(result) {
+                    $('#sisa_pembayaran').val(result.sisa_pembayaran)
+                    $('#modal-default').modal('show');
+                   // mask();
+                },
+                error: function(xhr, Status, err) {
+                    $("Terjadi error : " + Status);
+                }
+            });
+
         }
     </script>
 @endsection
