@@ -101,7 +101,7 @@
                             @if ($status != 1)
                                 <?php $no = 0; ?>
                                 <div class="col-md-12">
-                                    <div class="container-fluid" id="item{{ $no }}">
+                                    <div class="container-fluid cont" id="item{{ $no }}">
                                         <div class="card card-secondary">
                                             <div class="card-header">
                                             </div>
@@ -113,7 +113,7 @@
                                                         <div class="form-group">
                                                             <label for="product">Product <a
                                                                     class="tn">*</a></label>
-                                                            <select class="form-control select2" id="{{ $no }}"
+                                                            <select class="form-control selectp" id="{{ $no }}"
                                                                 name="orderitem[{{ $no }}][product]"
                                                                 data-placeholder="Select a product"
                                                                 data-dropdown-css-class="select2-purple" style="width: 100%"
@@ -121,7 +121,7 @@
                                                                 <option value="">choose ..</option>
                                                                 @foreach ($product as $val)
                                                                     <option value="{{ $val->id }}">
-                                                                        {{ $val->produksi_id . ' - ' . $val->name }}
+                                                                        {{ $val->name }}
                                                                     </option>
                                                                 @endforeach
                                                             </select>
@@ -200,7 +200,7 @@
                                 {{-- @foreach ($item->item_penjualan as $val) --}}
                                 @foreach ($item as $val)
                                     <div class="col-md-12">
-                                        <div class="container-fluid" id="item<?php echo $no; ?>">
+                                        <div class="container-fluid cont" id="item<?php echo $no; ?>">
                                             <div class="card card-secondary">
                                                 <div class="card-header">
                                                     <div class="card-tools">
@@ -220,7 +220,7 @@
                                                             <div class="form-group">
                                                                 <label for="product">Product <a
                                                                         class="tn">*</a></label>
-                                                                <select class="form-control select2"
+                                                                <select class="form-control selectp"
                                                                     id="{{ $no }}"
                                                                     name="orderitem[{{ $no }}][product]"
                                                                     data-placeholder="Select a product" style="width: 100%"
@@ -229,7 +229,7 @@
                                                                     @foreach ($product as $vals)
                                                                         <option value="{{ $vals->id }}"
                                                                             {{ (int) $val->product_id == (int) $vals->id ? 'selected=selected' : '' }}>
-                                                                            {{ $vals->produksi_id . ' - ' . $vals->name }}
+                                                                            {{ $vals->name }}
                                                                         </option>
                                                                     @endforeach
                                                                 </select>
@@ -343,22 +343,17 @@
             select_change2();
             mask();
             if ({{ $status }} == 0) { // ADD
-                $('.select2').val('')
+                $('.selectp').val('')
                 $('.qty_product').val('')
                 $('.harga_jual').val('')
             } else { // EDIT
                 var id = 0;
-                $(".select2").not(this).each(function() {
-                    $(this.id).val(this.value).change();
-                    // $(id).
-                    id++
-                })
             }
 
             var i = 0 + {{ $no }};
             $('#add_order_item').click(function() {
                 i++
-                $('#items').append(`<div class="container-fluid" id="item` + i + `">
+                $('#items').append(`<div class="container-fluid cont" id="item` + i + `">
                         <div class="card card-secondary">
                             <div class="card-header">
                                 <div class="card-tools">
@@ -373,11 +368,11 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="product">Product <a class="tn">*</a></label>
-                                            <select class="form-control select2" id="` + i + `" name="orderitem[` + i + `][product]" data-placeholder="Select a product" data-dropdown-css-class="select2-purple" style="width: 100%;"
+                                            <select class="form-control selectp" id="` + i + `" name="orderitem[` + i + `][product]" data-placeholder="Select a product" data-dropdown-css-class="select2-purple" style="width: 100%;"
                                                 required>
                                                 <option value="">choose ..</option>
                                                 @foreach ($product as $val)
-                                                    <option value="{{ $val->id }}"> {{ $val->produksi_id . ' - ' . $val->name }}
+                                                    <option value="{{ $val->id }}"> {{ $val->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -511,18 +506,8 @@
 
 
         function select_change() {
-
-            $('.select2').on('change', function() {
-                //$("#" + this.id).addClass("p" + this.value);
-                // $("#" + this.id).addClass(this.value).siblings(this.value).removeClass(this
-                //     .value);
-                // console.log(this);
-
-                //    $('.select2').each(function(){
-                //     console.log("ok");
-                //    })
+            $('.selectp').on('change', function() {
                 var id = $(this).val();
-                var produksi_id = $(this).find('option:selected').text().replace(/ /g,'');
                 var urls = "{{ route('penjualan.getdata') }}";
                 var iterasi = $(this).attr('id');
                 if (id != "") {
@@ -531,7 +516,6 @@
                         type: "POST",
                         data: {
                             id: id,
-                            produksi_id:produksi_id
                         },
                         dataType: "json",
                         success: function(result) {
@@ -556,6 +540,25 @@
             });
         }
 
+        // function select_change() {
+        //     $('.size').change(function() {
+        //         var value = $(this).val();
+        //         var attr = $(this).attr("id")
+        //         $(".size").not(this).each(function() {
+        //             if ($(this).val() == value) {
+        //                 Swal.fire({
+        //                     icon: 'error',
+        //                     title: 'Oops...',
+        //                     text: 'Ukuran tidak boleh sama..!!',
+        //                 })
+        //                 $('#' + attr).val('');
+        //                 return false;
+        //             }
+        //         });
+
+        //     })
+        // }
+
         function select_change2() {
             $('.select3').change(function() {
                 var id_pr = this.id.split("-")[1];
@@ -579,10 +582,5 @@
 
             })
         }
-
-        $(".qty").blur(function() {
-            console.log(this);
-
-        });
     </script>
 @endsection

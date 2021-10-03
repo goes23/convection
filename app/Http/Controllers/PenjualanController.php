@@ -237,12 +237,9 @@ class PenjualanController extends Controller
             return "error request";
             exit;
         }
-        $produksi_id = explode("-", $request['produksi_id'])[0];
-        // dd($produksi_id);
 
         $penjualan = new Penjualan();
-        $data_variant = $penjualan->get_data_variant($request['id'], $produksi_id);
-        //dd($data_variant);
+        $data_variant = $penjualan->get_data_variant($request['id']);
 
         return response()->json($data_variant);
     }

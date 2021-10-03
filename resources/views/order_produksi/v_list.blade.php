@@ -37,7 +37,7 @@
                                 </Form>
                                 <?php endif; ?>
 
-                                <?php /* if (allowed_access(session('user'), 'order_produksi', 'add')): ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?>
+                                <?php /* if (allowed_access(session('user'), 'order_produksi', 'add')): ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?>
                                 <button type="button" class="btn btn-info btn-sm" onclick="add_btn()">Tambah
                                     order_produksi</button>
                                 <?php endif; */?>
@@ -71,6 +71,9 @@
     {{-- MODAL FORM ADD & EDIT --}}
     @include('order_produksi.v_modal')
     {{-- MODAL FORM ADD & EDIT --}}
+    {{-- MODAL FORM ADD & EDIT --}}
+    @include('order_produksi.v_modal_history')
+    {{-- MODAL FORM ADD & EDIT --}}
 
 
     <script src="{{ asset('assets/') }}/main.js"></script>
@@ -80,16 +83,8 @@
             $('#bahan').select2({
                 dropdownParent: $('#modal-default')
             });
-            $('#product').select2({
-                dropdownParent: $('#modal-default')
-            });
-
-            $("#jumlah").inputmask('Regex', {
-                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
-            });
-            $("#sisa").inputmask('Regex', {
-                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
-            });
+            $('#jumlah_pembayaran').val('');
+            mask_number()
 
             $("#example1").DataTable({
                 processing: true,
@@ -269,15 +264,82 @@
                 type: "get",
                 dataType: "json",
                 success: function(result) {
+                    $('#id_order').val(result.id)
+                    $('#total_pembayaran').val(result.total_pembayaran)
                     $('#sisa_pembayaran').val(result.sisa_pembayaran)
                     $('#modal-default').modal('show');
-                   // mask();
+                    // mask();
                 },
                 error: function(xhr, Status, err) {
                     $("Terjadi error : " + Status);
                 }
             });
 
+        }
+
+
+        $('#bayar').submit(function(e) {
+            e.preventDefault();
+
+            var btn = $(this).find("input[type=submit]:focus");
+            var tombol = btn[0].value;
+            var id_order = $('#id_order').val();
+            var total_pembayaran = $('#total_pembayaran').val();
+            var sisa_pembayaran = $('#sisa_pembayaran').val()
+            var jumlah_pembayaran = $('#jumlah_pembayaran').val()
+            var tanggal_pembayaran = $('#tgl_pembayaran').val()
+
+
+            var object = {
+                tombol,
+                id_order,
+                total_pembayaran,
+                sisa_pembayaran,
+                jumlah_pembayaran,
+                tanggal_pembayaran
+            }
+
+            $.ajax({
+                url: "{{ route('order_produksi.bayar') }}",
+                type: "post",
+                data: object,
+                dataType: "json",
+                success: function(result) {
+                    if (result.status == false) {
+                        alert(result.msg);
+                        return false;
+                    }
+                    call_toast(result)
+                    $("#example1").DataTable().ajax.reload()
+                    setTimeout(function() {
+                        $('#modal-default').modal('hide');
+                    }, 1500);
+                },
+                error: function(xhr, Status, err) {
+                    $("Terjadi error : " + Status);
+                }
+            });
+        })
+
+        function history(id) {
+            $.ajax({
+                url: "order_produksi/" + id + "/history",
+                type: "GET",
+                dataType: "json",
+                success: function(result) {
+                    $('#modals').html(result.html);
+                    $('#modal-history').modal('show');
+                },
+                error: function(xhr, Status, err) {
+                    $("Terjadi error : " + Status);
+                }
+            });
+        }
+
+        function mask_number() {
+            $('#jumlah_pembayaran').mask('000.000.000', {
+                reverse: true
+            });
         }
     </script>
 @endsection

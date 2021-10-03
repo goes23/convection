@@ -29,31 +29,27 @@ class Penjualan extends Model
         return DB::select(" SELECT
                             product.id
                             ,product.name
-                            ,variants.produksi_id
                             FROM product
                             JOIN variants ON variants.product_id = product.id
                             -- WHERE variants.jumlah_stock_product IS NOT NULL
                             WHERE variants.jumlah_stock_product > 0
-                            GROUP BY product.id , variants.produksi_id
+                            GROUP BY product.id
                             ");
         //dd($test);
     }
 
 
-    public function get_data_variant($id, $pro)
+    public function get_data_variant($id)
     {
         return DB::select(" SELECT
-                            product.id
-                            ,product.name
-                            ,product.harga_jual
-                            ,variants.size
-                            ,variants.id as v_id
-                            ,variants.jumlah_stock_product
-                            FROM product
-                            JOIN variants ON variants.product_id = product.id
-                            WHERE variants.jumlah_stock_product IS NOT NULL
-                            AND product.id = $id
-                            AND variants.produksi_id = $pro
+                            v.product_id
+                            ,v.size
+                            ,(SELECT harga_jual FROM product as p WHERE p.id = v.product_id LIMIT 1 ) as harga_jual
+                            ,SUM(v.jumlah_stock_product) as jumlah_stock_product
+                             FROM variants as v
+                             WHERE v.product_id = $id
+                             AND v.jumlah_stock_product > 0
+                             GROUP BY v.size
                             ");
     }
 
