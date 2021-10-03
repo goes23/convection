@@ -109,7 +109,7 @@
                                                 <div class="row">
                                                     <input type="hidden" id="id{{ $no }}"
                                                         name="orderitem[{{ $no }}][id]" value="">
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label for="product">Product <a
                                                                     class="tn">*</a></label>
@@ -127,7 +127,7 @@
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label for="harga_jual">Harga Jual Product <a
                                                                     class="tn">*</a></label>
@@ -137,16 +137,57 @@
                                                                 placeholder="0" readonly>
                                                         </div>
                                                     </div>
-                                                    <table class="table table-bordered">
-                                                        <thead>
-                                                          <tr>
-                                                            <th scope="col">#</th>
-                                                            <th scope="col">First</th>
-                                                            <th scope="col">Last</th>
-                                                            <th scope="col">Handle</th>
-                                                          </tr>
-                                                        </thead>
-                                                    </table>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="size">Size <a class="tn">*</a></label>
+                                                            <select class="form-control select3"
+                                                                id="size-{{ $no }}"
+                                                                name="orderitem[{{ $no }}][size]"
+                                                                data-placeholder="Select a size"
+                                                                data-dropdown-css-class="select2-purple" style="width: 100%"
+                                                                required>
+
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="qty_product">Quantity product<a
+                                                                    class="tn">*</a></label>
+                                                            <input type="text" class="form-control qty_product"
+                                                                id="qty_product-{{ $no }}"
+                                                                name="orderitem[{{ $no }}][qty_product]"
+                                                                placeholder="0" readonly>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="qty">Quantity <a
+                                                                    class="tn">*</a></label>
+                                                            <input type="text" class="form-control qty" id="qty"
+                                                                name="orderitem[{{ $no }}][qty]"
+                                                                placeholder="Enter quantity" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="sell_price">Harga jual akhir <a
+                                                                    class="tn">*</a></label>
+                                                            <input type="text" class="form-control sell_price"
+                                                                id="sell_price{{ $no }}"
+                                                                name="orderitem[{{ $no }}][sell_price]"
+                                                                placeholder="Enter harga jual akhir" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="keterangan">Keterangan <a
+                                                                    class="tn">*</a></label>
+                                                            <textarea class="form-control keterangan"
+                                                                name="orderitem[{{ $no }}][keterangan]"
+                                                                id="keterangan{{ $no }}" rows="3"></textarea>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -412,6 +453,27 @@
             $('#item' + i + '').remove();
         }
 
+        function mask() {
+            $("#qty").inputmask('Regex', {
+                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
+            });
+
+            $("#shipping_price").mask('000.000.000', {
+                reverse: true
+            });
+
+            $(".sell_price").mask('000.000.000', {
+                reverse: true
+            });
+
+            $('input[id^="sell_price"]').mask('000.000.000', {
+                reverse: true
+            });
+
+            $('input[id^="qty"]').inputmask('Regex', {
+                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
+            });
+        }
 
         $('#order').submit(function(e) {
             e.preventDefault();
@@ -478,6 +540,25 @@
             });
         }
 
+        // function select_change() {
+        //     $('.size').change(function() {
+        //         var value = $(this).val();
+        //         var attr = $(this).attr("id")
+        //         $(".size").not(this).each(function() {
+        //             if ($(this).val() == value) {
+        //                 Swal.fire({
+        //                     icon: 'error',
+        //                     title: 'Oops...',
+        //                     text: 'Ukuran tidak boleh sama..!!',
+        //                 })
+        //                 $('#' + attr).val('');
+        //                 return false;
+        //             }
+        //         });
+
+        //     })
+        // }
+
         function select_change2() {
             console.log("ok");
             $('.select3').change(function() {
@@ -502,28 +583,6 @@
                 });
 
             })
-        }
-
-        function mask() {
-            $("#qty").inputmask('Regex', {
-                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
-            });
-
-            $("#shipping_price").mask('000.000.000', {
-                reverse: true
-            });
-
-            $(".sell_price").mask('000.000.000', {
-                reverse: true
-            });
-
-            $('input[id^="sell_price"]').mask('000.000.000', {
-                reverse: true
-            });
-
-            $('input[id^="qty"]').inputmask('Regex', {
-                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
-            });
         }
     </script>
 @endsection

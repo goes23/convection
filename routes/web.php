@@ -98,4 +98,7 @@ Route::group(['middleware' => ['ceklogin', 'checkpermission']], function () {
     Route::get('order_produksi/{id}/get_data', 'OrderProduksiController@get_data')->name('order_produksi.get_data');
     Route::post('order_produksi/bayar', 'OrderProduksiController@bayar')->name('order_produksi.bayar');
     Route::get('order_produksi/{id}/history', 'OrderProduksiController@history')->name('get.history');
+
+
+    Route::resource('report', 'ReportController');
 });

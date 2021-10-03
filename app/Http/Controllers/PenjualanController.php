@@ -65,7 +65,7 @@ class PenjualanController extends Controller
     {
 
         $penjualan = new Penjualan();
-        $data_product = $penjualan->get_data_product();
+        $data_product = $penjualan->get_data_products();
         //dd($data_product);
 
         if ($request->id == "") {
@@ -252,11 +252,9 @@ class PenjualanController extends Controller
             exit;
         }
 
-        $data = DB::table('variants')
-            ->select('jumlah_stock_product')
-            ->where('product_id', $request['id'])
-            ->where('size', $request['size'])
-            ->get();
-        return response()->json($data[0]);
+        $penjualan = new Penjualan();
+        $data_variant = $penjualan->jumlah_stock_product($request->all());
+
+        return response()->json($data_variant[0]);
     }
 }

@@ -24,7 +24,7 @@ class Penjualan extends Model
         return $this->belongsTo('App\Channel', 'channel_id');
     }
 
-    public function get_data_product()
+    public function get_data_products()
     {
         return DB::select(" SELECT
                             product.id
@@ -83,7 +83,7 @@ class Penjualan extends Model
 
     public function get_data_item($pc)
     {
-        $test = DB::select(" SELECT i.id
+        $data = DB::select(" SELECT i.id
                                     ,i.purchase_code
                                     ,i.penjualan_id
                                     ,(SELECT harga_jual FROM product WHERE product.id = i.product_id ) as harga_jual
@@ -99,6 +99,18 @@ class Penjualan extends Model
                              WHERE purchase_code = '$pc'
                             ");
 
-        return $test;
+        return $data;
+    }
+
+    public function jumlah_stock_product($param)
+    {
+        $size = $param['size'];
+        $product_id = $param['id'];
+        return DB::select(" SELECT SUM(v.jumlah_stock_product) as jumlah_stock_product
+                             FROM variants v
+                             WHERE v.size = '$size'
+                             AND v.product_id = $product_id
+                             GROUP BY v.product_id
+        ");
     }
 }
