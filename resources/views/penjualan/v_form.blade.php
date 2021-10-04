@@ -115,11 +115,12 @@
                                                             <label for="product">Nama Product <a
                                                                     class="tn">*</a></label>
                                                             <select class="form-control selectp" id="{{ $no }}"
+                                                                onchange="pilih_product(this)"
                                                                 name="orderitem[{{ $no }}][product]"
                                                                 data-placeholder="Select a product"
                                                                 data-dropdown-css-class="select2-purple" style="width: 100%"
                                                                 {{-- onchange="product($(this))" --}} required>
-                                                                <option value="">choose ..</option>
+                                                                <option value="" disabled>choose ..</option>
                                                                 @foreach ($product as $val)
                                                                     <option value="{{ $val->id }}">
                                                                         {{ $val->name }}
@@ -142,7 +143,7 @@
                                                         <div class="form-group">
                                                             <label for="size">Size <a class="tn">*</a></label>
                                                             <select class="form-control select3"
-                                                                id="size-{{ $no }}"
+                                                                id="size-{{ $no }}" onchange="pilih_size(this)"
                                                                 name="orderitem[{{ $no }}][size]"
                                                                 data-placeholder="Select a size"
                                                                 data-dropdown-css-class="select2-purple" style="width: 100%"
@@ -195,137 +196,155 @@
         $(document).ready(function() {
             $('.selectp').val('')
             $('.harga_jual').val('');
-            select_change()
-            select_change2()
             mask()
 
             var pr = 0 + {{ $no }};
             $('#add_order_item').click(function() {
                 pr++
                 $('#items').append(`<div class="container-fluid cont" id="item` + pr + `">
-                        <div class="card card-secondary">
-                            <div class="card-header">
-                                Product
-                                <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" onclick="removeitem(` + pr + `)" style="margin-top: -1px;">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <input type="hidden" id="id_order_item" name="orderitem[` + pr + `][id]" value="">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="product">Nama Product <a class="tn">*</a></label>
-                                            <select class="form-control selectp" id="` + pr + `" name="orderitem[` +
-                    pr + `][product]" data-placeholder="Select a product" data-dropdown-css-class="select2-purple" style="width: 100%;"
-                                                required>
-                                                <option value="">choose ..</option>
-                                                @foreach ($product as $val)
-                                                    <option value="{{ $val->id }}"> {{ $val->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="harga_jual">Harga Jual Product <a
-                                                    class="tn">*</a></label>
-                                            <input type="text" class="form-control harga_jual"
-                                                id="harga_jual` + pr + `"
-                                                name="orderitem[` + pr + `][harga_jual]" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="size">Size <a class="tn">*</a></label>
-                                            <select class="form-control select3"
-                                                id="size-` + pr + `"
-                                                name="orderitem[` + pr + `][size]"
-                                                data-placeholder="Select a size"
-                                                data-dropdown-css-class="select2-purple" style="width: 100%"
-                                                required>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <table class="table table-bordered mysize` + pr + `"
-                                        id="mysize` + pr + `">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Size</th>
-                                                <th scope="col">Stock Product</th>
-                                                <th scope="col">qty input</th>
-                                                <th scope="col">Harga jual akhir</th>
-                                                <th scope="col">Keterangan</th>
-                                                <th scope="col">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-
-                                        </tbody>
-                                    </table>
-                                </div>
+                    <div class="card card-secondary">
+                        <div class="card-header">
+                            Product
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" onclick="removeitem(` + pr + `)" style="margin-top: -1px;">
+                                    <i class="fas fa-times"></i>
+                                </button>
                             </div>
                         </div>
-                    </div>`)
-                mask()
-                select_change()
-                select_change2()
+                        <div class="card-body">
+                            <div class="row">
+                                <input type="hidden" id="id_order_item" name="orderitem[` + pr + `][id]" value="">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="product">Nama Product <a class="tn">*</a></label>
+                                        <select class="form-control selectp" id="` + pr +
+                    `"  onchange="pilih_product(this)" name="orderitem[` +
+                    pr + `][product]" data-placeholder="Select a product" data-dropdown-css-class="select2-purple" style="width: 100%;"
+                                            required>
+                                            <option value="" disabled>choose ..</option>
+                                            @foreach ($product as $val)
+                                                <option value="{{ $val->id }}"> {{ $val->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="harga_jual">Harga Jual Product <a
+                                                class="tn">*</a></label>
+                                        <input type="text" class="form-control harga_jual"
+                                            id="harga_jual` + pr + `"
+                                            name="orderitem[` + pr + `][harga_jual]" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="size">Size <a class="tn">*</a></label>
+                                        <select class="form-control select3"
+                                            id="size-` + pr + `"
+                                            onchange="pilih_size(this)"
+                                            name="orderitem[` + pr + `][size]"
+                                            data-placeholder="Select a size"
+                                            data-dropdown-css-class="select2-purple" style="width: 100%"
+                                            required>
+                                        </select>
+                                    </div>
+                                </div>
+                                <table class="table table-bordered mysize` + pr + `"
+                                    id="mysize` + pr + `">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Size</th>
+                                            <th scope="col">Stock Product</th>
+                                            <th scope="col">qty input</th>
+                                            <th scope="col">Harga jual akhir</th>
+                                            <th scope="col">Keterangan</th>
+                                            <th scope="col">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>`)
+                $('#' + pr).val('')
             })
         })
 
-        function select_change() {
-            $('.selectp').on('change', function() {
-                var id = $(this).val();
-                var urls = "{{ route('penjualan.getdata') }}";
-                var iterasi = $(this).attr('id');
-                $('.mysize' + iterasi + "> tbody > tr").remove();
-                if (id != "") {
-                    $.ajax({
-                        url: urls,
-                        type: "POST",
-                        data: {
-                            id: id,
-                        },
-                        dataType: "json",
-                        success: function(result) {
-                            $('#harga_jual' + iterasi).val(result[0].harga_jual)
-                            var select = "";
-                            select += '<option value="">choose..</option>'
-                            for (var i = 0; i < result.length; i++) {
-                                select += '<option value="' + result[i].size + '">' + result[i].size +
-                                    '</option>';
-                            }
-                            $('#size-' + iterasi).html(select);
-
-                        },
-                        error: function(xhr, Status, err) {
-                            $("Terjadi error : " + Status);
-                        }
-                    });
+        function pilih_product(param) {
+            var iterasi = param.id
+            var id = param.value;
+            var urls = "{{ route('penjualan.getdata') }}";
+            var product = [];
+            var cek = true;
+            $('.selectp').not(this).each(function() {
+                if (product.includes(this.value)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Product sudah di pilih',
+                    })
+                    $('#harga_jual1').val('')
+                    $('#size-1').val('')
+                    $(this).val('')
+                    cek = false
                 } else {
-                    $('#harga_jual' + iterasi).val('')
-                    $('#size' + iterasi).html('');
-                    return false;
+                    product.push(this.value)
                 }
-                var product = [];
-                $('.selectp').not(this).each(function() {
-                    console.log(this);
-                    // product.push()
-                })
-                return
-            });
-        }
 
-        function select_change2() {
+            })
+            if (cek == true) {
+                $.ajax({
+                    url: urls,
+                    type: "POST",
+                    data: {
+                        id: id,
+                    },
+                    dataType: "json",
+                    success: function(result) {
+                        $('#harga_jual' + iterasi).val(result[0].harga_jual)
+                        var select = "";
+                        select += '<option value="" disabled>choose..</option>'
+                        for (var i = 0; i < result.length; i++) {
+                            select += '<option value="' + result[i].size + '">' + result[i].size +
+                                '</option>';
+                        }
+                        $('#size-' + iterasi).html(select);
+                        $('#size-' + iterasi).val('')
+
+                    },
+                    error: function(xhr, Status, err) {
+                        $("Terjadi error : " + Status);
+                    }
+                });
+            }
+        }
+        var td = [];
+
+        function pilih_size(params) {
             var i = 0;
-            $('.select3').change(function() {
+            $('.select3').on('change', function() {
                 i++
-                var id_pr = this.id.split("-")[1];
-                var idp = $("#" + id_pr).val()
-                var size = this.value
+            })
+            var id_pr = params.id.split("-")[1];
+            if (td.includes(params.value + id_pr)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ukuran sudah di pilih',
+                })
+                return false
+            } else {
+                td.push(params.value + id_pr)
+            }
+
+            var idp = $("#" + id_pr).val()
+            var size = params.value;
+            if (idp != '' && size != '') {
                 $.ajax({
                     url: "{{ route('penjualan.variant') }}",
                     type: "post",
@@ -336,93 +355,57 @@
                     dataType: "json",
                     success: function(result) {
 
-
                         $('#mysize' + id_pr).append(`<tr id="sz` + id_pr + i + `">
-                                <td>
-                                    <input type="text" class="form-control sizee"
-                                        name="orderitem[` + id_pr + `][variant][` + i + `][size]"
-                                        value="` + size + `"
-                                        placeholder="0" readonly>
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control qty_product"
-                                        id="qty_product-` + id_pr + i + `"
-                                        name="orderitem[` + id_pr + `][variant][` + i + `][qty_product]"
-                                        placeholder="0" readonly>
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control qty"
-                                        name="orderitem[` + id_pr + `][variant][` + i + `][qty]"
-                                        placeholder="Enter quantity" required>
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control sell_price"
-                                        name="orderitem[` + id_pr + `][variant][` + i + `][sell_price]"
-                                        placeholder="Enter harga jual akhir" required>
-                                </td>
-                                <td>
-                                    <textarea class="form-control keterangan"
-                                        name="orderitem[` + id_pr + `][variant][` + i + `][keterangan]"
-                                        rows="3"></textarea>
-                                </td>
-                                <td> <button type="button" class="btn btn-danger btn-sm" onclick="removesize(` +
+                            <td>
+                                <input type="text" class="form-control sizee"
+                                    name="orderitem[` + id_pr + `][variant][` + i + `][size]"
+                                    value="` + size + `"
+                                    placeholder="0" readonly>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control qty_product"
+                                    id="qty_product-` + id_pr + i + `"
+                                    name="orderitem[` + id_pr + `][variant][` + i + `][qty_product]"
+                                    placeholder="0" readonly>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control qty"
+                                    name="orderitem[` + id_pr + `][variant][` + i + `][qty]"
+                                    placeholder="Enter quantity" required>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control sell_price"
+                                    name="orderitem[` + id_pr + `][variant][` + i + `][sell_price]"
+                                    placeholder="Enter harga jual akhir" required>
+                            </td>
+                            <td>
+                                <textarea class="form-control keterangan"
+                                    name="orderitem[` + id_pr + `][variant][` + i + `][keterangan]"
+                                    rows="3"></textarea>
+                            </td>
+                            <td> <button type="button" class="btn btn-danger btn-sm" onclick="removesize(` +
                             id_pr + `,` + i + `)">remove</button></td>
-                            </tr>`);
-
-                        var td = [];
-                        $("#mysize" + id_pr + " > tbody >  tr ").not(this).each(function() {
-                            if (td.includes($(this).find('td')[0].textContent)) {
-                                // removesize(id_pr, i)
-                                // Swal.fire({
-                                //     icon: 'error',
-                                //     title: 'Oops...',
-                                //     text: 'Ukuran sudah di pilih',
-                                // })
-                                // return false
-                            } else {
-                                td.push($(this).find('td')[0].textContent)
-
-                            }
-
-                        });
-                        console.log(td);
-
+                        </tr>`);
                         $("#qty_product-" + id_pr + i).val(result.jumlah_stock_product)
                         removesize()
+                        mask()
                     },
                     error: function(xhr, Status, err) {
                         $("Terjadi error : " + Status);
                     }
                 });
 
-            })
+            } else {
+                return false
+            }
+        }
+
+        function removeitem(i) {
+            $('#item' + i + '').remove();
         }
 
         function removesize(id, i) {
             $('#sz' + id + i + '').remove();
-        }
-
-
-        function mask() {
-            $("#qty").inputmask('Regex', {
-                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
-            });
-
-            $("#shipping_price").mask('000.000.000', {
-                reverse: true
-            });
-
-            $(".sell_price").mask('000.000.000', {
-                reverse: true
-            });
-
-            $('input[id^="sell_price"]').mask('000.000.000', {
-                reverse: true
-            });
-
-            $('input[id^="qty"]').inputmask('Regex', {
-                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
-            });
         }
 
 
@@ -454,5 +437,32 @@
                 }
             });
         })
+
+
+        function mask() {
+            $(".qty").inputmask('Regex', {
+                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
+            });
+
+            $("#shipping_price").mask('000.000.000', {
+                reverse: true
+            });
+
+            $(".sell_price").mask('000.000.000', {
+                reverse: true
+            });
+
+            $('input[id^="sell_price"]').mask('000.000.000', {
+                reverse: true
+            });
+
+            $('input[id^="qty"]').inputmask('Regex', {
+                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
+            });
+
+            $('input[id^="customer_phone"]').inputmask('Regex', {
+                regex: "^[0-9]{1,12}(\\.\\d{1,2})?$"
+            });
+        }
     </script>
 @endsection
