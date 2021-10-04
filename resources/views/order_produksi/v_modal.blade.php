@@ -10,8 +10,8 @@
                 </div>
 
                 <div class="modal-body">
-                    <input type="hidden" class="form-control byr" id="id_upah" name="id" value="">
-                    <input type="hidden" class="form-control byr" id="total_upah" name="total_upah" value="">
+                    <input type="hidden" class="form-control byr" id="id_order" name="id_order" value="">
+                    <input type="hidden" class="form-control byr" id="total_pembayaran" name="total_pembayaran" value="">
                     <div class="form-group">
                         <label for="sisa_pembayaran">Sisa Pembayaran <a class="tn">*</a></label>
                         <input type="text" class="form-control byr" id="sisa_pembayaran" name="sisa_pembayaran"
@@ -31,8 +31,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <input type="submit" class="btn btn-warning" name='data' value="pembayaran" />
+                    <input type="submit" class="btn btn-success" name='data' value="revisi" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                 </div>
             </form>
         </div>

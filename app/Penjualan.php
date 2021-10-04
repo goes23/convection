@@ -24,7 +24,7 @@ class Penjualan extends Model
         return $this->belongsTo('App\Channel', 'channel_id');
     }
 
-    public function get_data_product()
+    public function get_data_products()
     {
         return DB::select(" SELECT
                             product.id
@@ -42,16 +42,14 @@ class Penjualan extends Model
     public function get_data_variant($id)
     {
         return DB::select(" SELECT
-                            product.id
-                            ,product.name
-                            ,product.harga_jual
-                            ,variants.size
-                            ,variants.id as v_id
-                            ,variants.jumlah_stock_product
-                            FROM product
-                            JOIN variants ON variants.product_id = product.id
-                            WHERE variants.jumlah_stock_product IS NOT NULL
-                            AND product.id = $id
+                            v.product_id
+                            ,v.size
+                            ,(SELECT harga_jual FROM product as p WHERE p.id = v.product_id LIMIT 1 ) as harga_jual
+                            ,SUM(v.jumlah_stock_product) as jumlah_stock_product
+                             FROM variants as v
+                             WHERE v.product_id = $id
+                             AND v.jumlah_stock_product > 0
+                             GROUP BY v.size
                             ");
     }
 
@@ -85,7 +83,7 @@ class Penjualan extends Model
 
     public function get_data_item($pc)
     {
-        $test = DB::select(" SELECT i.id
+        $data = DB::select(" SELECT i.id
                                     ,i.purchase_code
                                     ,i.penjualan_id
                                     ,(SELECT harga_jual FROM product WHERE product.id = i.product_id ) as harga_jual
@@ -98,8 +96,21 @@ class Penjualan extends Model
                                     ,i.total
                                     ,i.keterangan
                              FROM item_penjualan as i
-                             WHERE purchase_code = '$pc'");
+                             WHERE purchase_code = '$pc'
+                            ");
 
-        return $test;
+        return $data;
+    }
+
+    public function jumlah_stock_product($param)
+    {
+        $size = $param['size'];
+        $product_id = $param['id'];
+        return DB::select(" SELECT SUM(v.jumlah_stock_product) as jumlah_stock_product
+                             FROM variants v
+                             WHERE v.size = '$size'
+                             AND v.product_id = $product_id
+                             GROUP BY v.product_id
+        ");
     }
 }

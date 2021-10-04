@@ -130,7 +130,9 @@
                     type: "GET",
                     dataType: "json",
                     success: function(result) {
-                        var currentDate = new Date(result.date_transaksi);
+                        // console.log(result);
+                        // return
+                        var currentDate = new Date(result.data.date_transaksi);
                         var year = currentDate.getFullYear();
                         var month = currentDate.getMonth() + 1 < 10 ? "0" + (parseInt(currentDate.getMonth()) +
                                 1) : currentDate
@@ -139,13 +141,20 @@
                             .getDate();
                         var date_format = year + "-" + month + "-" + date
                         $("#id").val(result.id)
-                        $('#kode_produksi').val(result.produksi_id).change();
-                        //$('#kode_produksi').val(result.produksi_id);
-                        $('#total_upah').val(result.total_upah);
-                        $('#sisa_upah').val(result.sisa_upah);
-                        $('#date_transaksi').val(date_format);
-                        //$('#kode_produksi').attr('disabled');
-                        $('#modal-xl').modal('show');
+                        if (result.history == true) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Upah tidak bisa di edit karna sudah ada pembayaran',
+                            })
+                            return false;
+                        } else {
+                            $('#kode_produksi').val(result.data.produksi_id).change();
+                            $('#total_upah').val(result.data.total_upah);
+                            $('#sisa_upah').val(result.data.sisa_upah);
+                            $('#date_transaksi').val(date_format);
+                            $('#modal-xl').modal('show');
+                        }
                     },
                     error: function(xhr, Status, err) {
                         $("Terjadi error : " + Status);

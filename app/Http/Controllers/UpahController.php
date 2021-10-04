@@ -86,10 +86,20 @@ class UpahController extends Controller
             return "error request";
             exit;
         }
+        $check_history = Pembayaran::where('upah_id', $id)->first();
+
+        $history = false;
+        if ($check_history) {
+            $history = true;
+        }
 
         $data = Upah::where(["id" => $id])->first();
+        $response = [];
+        $response['data']   = $data;
+        $response['history'] = $history;
 
-        return response()->json($data);
+
+        return response()->json($response);
     }
 
     public function destroy(Request $request, $id)

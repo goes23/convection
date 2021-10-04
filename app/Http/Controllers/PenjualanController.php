@@ -65,7 +65,8 @@ class PenjualanController extends Controller
     {
 
         $penjualan = new Penjualan();
-        $data_product = $penjualan->get_data_product();
+        $data_product = $penjualan->get_data_products();
+        //dd($data_product);
 
         if ($request->id == "") {
             $data_view                = [];
@@ -87,7 +88,7 @@ class PenjualanController extends Controller
             $data_order = $penjualan->get_data_order($id);
             $item = new Penjualan();
             $data_item = $item->get_data_item($data_order[0]->purchase_code);
-            //dd($data_item);
+            // dd($data_item);
 
             $data_view                = [];
             $data_view['h1']                     = 'Edit Form Penjualan';
@@ -111,63 +112,71 @@ class PenjualanController extends Controller
             exit;
         }
 
-        foreach ($request['orderitem'] as $value) {
-            if ($value['qty_product'] < $value['qty']) {
-                $res = [
-                    "status" => false,
-                    "msg" => "pastikan input qty tidak 0 dan tidak boleh lebih besar dari qty product ..!!"
-                ];
-                return response()->json($res);
+        foreach ($request['orderitem'] as $varian) {
+            foreach ($varian['variant'] as $val) {
+                if ($val['qty_product'] < $val['qty']) {
+                    $res = [
+                        "status" => false,
+                        "msg" => "qty input lebih besar dari stock product"
+                    ];
+                    return response()->json($res);
+                    exit;
+                }
+
+                // potong di sini
             }
         }
-        // dd($request->all());
 
-        if ($request->purchase_code != "" && $request->id != "") {
-            $purchase_code = $request->purchase_code;
+        if ($request['purchase_code'] != "" && $request['id'] != "") {
+            $purchase_code = $request['purchase_code'];
         } else {
             $purchase_code = generate_purchase_code();
         }
         try {
             DB::beginTransaction();
 
-            $post = Penjualan::UpdateOrCreate(["id" => $request->id, "purchase_code" => $purchase_code], [
-                'purchase_code' => $purchase_code,
-                'kode_pesanan' => $request->kode_pesanan,
-                'customer_name' => $request->customer_name,
-                'customer_phone' => $request->customer_phone,
-                'customer_address' => $request->customer_address,
-                'channel_id' => $request->channel,
-                'purchase_date' => $request->purchase_date,
-                'total_purchase' => 1,
-                'shipping_price' =>  $request->shipping_price,
-                'status' => 1
+            $post = Penjualan::UpdateOrCreate(["id" => $request['id'], "purchase_code" => $purchase_code], [
+                'purchase_code'    => $purchase_code,
+                'kode_pesanan'     => $request['kode_pesanan'],
+                'customer_name'    => $request['customer_name'],
+                'customer_phone'   => $request['customer_phone'],
+                'customer_address' => $request['customer_address'],
+                'channel_id'       => $request['channel'],
+                'purchase_date'    => $request['purchase_date'],
+                'total_purchase'   => 1,
+                'shipping_price'   => $request['shipping_price'],
+                'status'           => 1
             ]);
 
-            if ($request->purchase_code != "" && $request->id != "") :
+            if ($request['purchase_code'] != "" && $request['id'] != "") :
                 $concat = '';
-                foreach ($request->orderitem as $del) {
+                foreach ($request['orderitem'] as $del) {
                     $concat .= "'" . $del['id'] . "',";
                 }
                 $conditon = trim($concat, ",");
-
+                $ids = $request['id'];
                 DB::select("DELETE FROM item_penjualan
-                    WHERE penjualan_id = $request->id
+                    WHERE penjualan_id = $ids
                     AND id NOT IN ($conditon)");
             endif;
+           // dd($request->all());
 
-            foreach ($request->orderitem as $val) {
-                $price = str_replace(".", "", $val['sell_price']);
-                $total = (int) $val['qty'] * (int) $price;
-                ItemPenjualan::UpdateOrCreate(['id' => $val['id']], [
-                    'purchase_code' => $post->purchase_code,
-                    'penjualan_id' => $post->id,
-                    'product_id' => $val['product'],
-                    'sell_price'   => str_replace(".", "", $val['sell_price']),
-                    'qty'   => $val['qty'],
-                    'size'   => $val['size'],
-                    'total'   => $total,
-                    'keterangan'   => $val['keterangan']
-                ]);
+            foreach ($request['orderitem'] as $val) {
+                foreach ($val['variant'] as $vl) {
+                    $price = str_replace(".", "", $vl['sell_price']);
+                    $total = (int) $vl['qty'] * (int) $price;
+
+                    ItemPenjualan::UpdateOrCreate(['id' => $val['id']], [
+                        'purchase_code' => $post->purchase_code,
+                        'penjualan_id' => $post->id,
+                        'product_id' => $val['product'],
+                        'sell_price'   => str_replace(".", "", $vl['sell_price']),
+                        'qty'   => $vl['qty'],
+                        'size'   => $vl['size'],
+                        'total'   => $total,
+                        'keterangan'   => $vl['keterangan']
+                    ]);
+                }
             }
 
             DB::commit();
@@ -251,11 +260,9 @@ class PenjualanController extends Controller
             exit;
         }
 
-        $data = DB::table('variants')
-            ->select('jumlah_stock_product')
-            ->where('product_id', $request['id'])
-            ->where('size', $request['size'])
-            ->get();
-        return response()->json($data[0]);
+        $penjualan = new Penjualan();
+        $data_variant = $penjualan->jumlah_stock_product($request->all());
+
+        return response()->json($data_variant[0]);
     }
 }
