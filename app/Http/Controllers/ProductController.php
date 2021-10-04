@@ -10,6 +10,7 @@ use File;
 use Illuminate\Support\Facades\DB;
 use App\Produksi;
 use App\Variants;
+use Illuminate\Support\Carbon;
 
 class ProductController extends Controller
 {
@@ -90,6 +91,7 @@ class ProductController extends Controller
             $insert['kode']       = $request["kode"];
             $insert['name']       = $request["name"];
             $insert['created_by'] = session('user');
+            $insert['created_at'] = Carbon::now();
 
             $post = Product::insert($insert);
         } else {

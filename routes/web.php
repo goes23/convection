@@ -101,4 +101,5 @@ Route::group(['middleware' => ['ceklogin', 'checkpermission']], function () {
 
 
     Route::resource('report', 'ReportController');
+    Route::post('report/get_repot', 'ReportController@get_repot')->name('report.gets');
 });

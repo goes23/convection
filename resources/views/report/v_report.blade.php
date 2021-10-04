@@ -46,19 +46,19 @@
                                     &nbsp;
                                     <label for="date" class="col-sm-0 col-form-label">Date range</label>
                                     <div class="col-sm-2">
-                                        <input type="date" class="form-control" id="inputEmail3" name="start"
+                                        <input type="date" class="form-control date" id="inputEmail3" name="start"
                                             placeholder="Email">
                                     </div>
                                     <div class="col-sm-0">
                                         <b>-</b>
                                     </div>
                                     <div class="col-sm-2">
-                                        <input type="date" class="form-control" id="inputEmail3" name="end"
+                                        <input type="date" class="form-control date" id="inputEmail3" name="end"
                                             placeholder="Email">
 
                                     </div>
                                     <div class="col-sm-2">
-                                        <button type="button" class="btn btn-primary btn-sm">Submit</button>
+                                        <button type="submit" class="btn btn-primary btn-sm">Submit </button>
                                     </div>
                                 </div>
                             </form>
@@ -77,11 +77,77 @@
     <script>
         $(document).ready(function() {
             $('#report').val('')
+            $('.date').val('')
 
 
             $('#report').change(function() {
-                console.log("ok");
+
             })
+        })
+
+        $('#form_report').submit(function(e) {
+            e.preventDefault();
+
+            var input = new FormData(this)
+
+            $.ajax({
+                url: "{{ route('report.gets') }}",
+                type: "post",
+                data: input,
+                cache: false,
+                contentType: false,
+                processData: false,
+                dataType: "json",
+                beforeSend: function() {
+                    console.log("ok")
+                },
+                success: function(result) {
+                    console.log(result);
+                    return;
+                    call_toast(result)
+                    $(".inputForm").val('');
+                    $("#example1").DataTable().ajax.reload()
+                    setTimeout(function() {
+                        $('#modal-default').modal('hide');
+                    }, 1500);
+                },
+                error: function(xhr, Status, err) {
+                    $("Terjadi error : " + Status);
+                }
+            });
+        })
+
+        $('#form_report').submit(function(e) {
+            e.preventDefault();
+
+            var input = new FormData(this)
+
+            $.ajax({
+                url: "{{ route('report.gets') }}",
+                type: "post",
+                data: input,
+                cache: false,
+                contentType: false,
+                processData: false,
+                dataType: "json",
+                beforeSend: function() {
+                    console.log("ok")
+                },
+                success: function(result) {
+                    $('#table').html(result.html);
+                    console.log(result);
+                    return;
+                    call_toast(result)
+                    $(".inputForm").val('');
+                    $("#example1").DataTable().ajax.reload()
+                    setTimeout(function() {
+                        $('#modal-default').modal('hide');
+                    }, 1500);
+                },
+                error: function(xhr, Status, err) {
+                    $("Terjadi error : " + Status);
+                }
+            });
         })
     </script>
 

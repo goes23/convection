@@ -323,8 +323,8 @@
                 });
             }
         }
-        var td = [];
 
+        var td = [];
         function pilih_size(params) {
             var i = 0;
             $('.select3').on('change', function() {

@@ -13,7 +13,7 @@ class ReportController extends Controller
         // $report = new Report();
         // $data = $report->get_module();
         $module = [
-            "Bahan","Product","Produksi"
+            "Bahan", "Product", "Produksi"
         ];
 
         $data_view            = array();
@@ -26,5 +26,32 @@ class ReportController extends Controller
 
 
         return view('report/v_report', $data_view);
+    }
+
+    public function get_repot(Request $request)
+    {
+        if (!$request->ajax()) {
+            return "error request";
+            exit;
+        }
+
+        $report = new Report();
+        $data = $report->get_report($request->all());
+
+        $data_view = [];
+        if (strtolower($request['report']) == 'bahan') {
+            $data_view['head'] = [
+                'Kode', 'Name', 'Harga', 'Tanggal beli', 'Satuan', 'Panjang', 'Sisa_bahan', 'Harga_satuan', 'Discount',
+            ];
+        } elseif (strtolower($request['report']) == 'product') {
+        } elseif (strtolower($request['report']) == 'produksi') {
+        }
+
+        $data_view['table'] = $request['report'];
+        $data_view['tbody'] = $data;
+
+        $html = view('report/content', $data_view)->render();
+
+        return response()->json(array('html' => $html));
     }
 }
