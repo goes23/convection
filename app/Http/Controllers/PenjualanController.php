@@ -231,7 +231,7 @@ class PenjualanController extends Controller
 
         $penjualan = new Penjualan();
         $detail = $penjualan->detail($id);
-
+           // dd($detail);
         //$data['data_header'] = Penjualan::where('id', $id)->first();
         $data['data_detail'] = $detail;
         //dd($data['data_header']->id);

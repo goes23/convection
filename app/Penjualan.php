@@ -60,7 +60,7 @@ class Penjualan extends Model
                             ,(SELECT name FROM product WHERE product.id = item_penjualan.product_id ) as product_name
                             ,sell_price
                             ,qty
-                            ,(SELECT size FROM variants WHERE variants.id = item_penjualan.size ) as size
+                            ,size
                             ,total
                             FROM item_penjualan
                             WHERE penjualan_id = $id
