@@ -402,6 +402,7 @@
 
         function pilih_product(param) {
             var iterasi = param.id
+            $('#mysize' + iterasi).find('tbody > tr').html('')
             var id = param.value;
             var urls = "{{ route('penjualan.getdata') }}";
             var product = [];
@@ -449,24 +450,26 @@
             }
         }
 
-        var td = [];
+
+
+        var y = 0;
 
         function pilih_size(params) {
-            var i = 0;
-            $('.select3').on('change', function() {
-                i++
-            })
+            y++
             var id_pr = params.id.split("-")[1];
-            if (td.includes(params.value + id_pr)) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Ukuran sudah di pilih',
-                })
-                return false
-            } else {
-                td.push(params.value + id_pr)
-            }
+
+
+            // if (td.includes(params.value + id_pr)) {
+            //     Swal.fire({
+            //         icon: 'error',
+            //         title: 'Oops...',
+            //         text: 'Ukuran sudah di pilih',
+            //     })
+            //     return false
+            // } else {
+            //     td.push(params.value + id_pr)
+            // }
+            // console.log(td);
 
             var idp = $("#" + id_pr).val()
             var size = params.value;
@@ -481,38 +484,55 @@
                     dataType: "json",
                     success: function(result) {
 
-                        $('#mysize' + id_pr).append(`<tr id="sz` + id_pr + i + `">
+                        $('#mysize' + id_pr).append(`<tr id="sz` + id_pr.toString() + y.toString() + `">
                             <td>
                                 <input type="text" class="form-control sizee"
-                                    name="orderitem[` + id_pr + `][variant][` + i + `][size]"
+                                    name="orderitem[` + id_pr + `][variant][` + y + `][size]"
                                     value="` + size + `"
                                     placeholder="0" readonly>
                             </td>
                             <td>
                                 <input type="text" class="form-control qty_product"
-                                    id="qty_product-` + id_pr + i + `"
-                                    name="orderitem[` + id_pr + `][variant][` + i + `][qty_product]"
+                                    id="qty_product-` + id_pr + y + `"
+                                    name="orderitem[` + id_pr + `][variant][` + y + `][qty_product]"
                                     placeholder="0" readonly>
                             </td>
                             <td>
                                 <input type="text" class="form-control qty"
-                                    name="orderitem[` + id_pr + `][variant][` + i + `][qty]"
+                                    name="orderitem[` + id_pr + `][variant][` + y + `][qty]"
                                     placeholder="Enter quantity" required>
                             </td>
                             <td>
                                 <input type="text" class="form-control sell_price"
-                                    name="orderitem[` + id_pr + `][variant][` + i + `][sell_price]"
+                                    name="orderitem[` + id_pr + `][variant][` + y + `][sell_price]"
                                     placeholder="Enter harga jual akhir" required>
                             </td>
                             <td>
                                 <textarea class="form-control keterangan"
-                                    name="orderitem[` + id_pr + `][variant][` + i + `][keterangan]"
+                                    name="orderitem[` + id_pr + `][variant][` + y + `][keterangan]"
                                     rows="3"></textarea>
                             </td>
                             <td> <button type="button" class="btn btn-danger btn-sm" onclick="removesize(` +
-                            id_pr + `,` + i + `)">remove</button></td>
+                            id_pr + `,` + y + `)">remove</button></td>
                         </tr>`);
-                        $("#qty_product-" + id_pr + i).val(result.jumlah_stock_product)
+                        var tr = [];
+                        $('.mysize' + id_pr).find("tbody > tr").not(this).each(function() {
+
+                            if (tr.includes($(this).find('td > input')[0].value)) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Ukuran sudah di pilih',
+                                })
+                                removesize(id_pr, y)
+                                return false
+                            } else {
+                                tr.push($(this).find('td > input')[0].value)
+                            }
+
+                        })
+
+                        $("#qty_product-" + id_pr + y).val(result.jumlah_stock_product)
                         removesize()
                         mask()
                     },
