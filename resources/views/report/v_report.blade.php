@@ -98,22 +98,47 @@
         function modules(p) {
 
 
-            if (p.value == 'Bahan') {
+            if (p.value == 'bahan') {
                 $('#kategori').html(`
                 <option value="" disabled> pilih kategori </option>
-                <option value="1"> Tanggal </option>
-                <option value="2"> Sisa Bahan tersedia </option>
+                <option value="date"> Tanggal </option>
+                <option value="sisa"> Sisa Bahan tersedia </option>
                 `)
-            } else if (p.value == 'Product') {
+            } else if (p.value == 'product') {
                 $('#kategori').html(`
                 <option value="" disabled> pilih kategori </option>
-                <option value="1"> Tanggal </option>
+                <option value="date"> Tanggal </option>
 
                 `)
-            } else if (p.value == 'Produksi') {
+            } else if (p.value == 'produksi') {
                 $('#kategori').html(`
                 <option value="" disabled> pilih kategori </option>
-                <option value="1"> Tanggal </option>
+                <option value="date"> Tanggal </option>
+                `)
+            } else if (p.value == 'produksi') {
+                $('#kategori').html(`
+                <option value="" disabled> pilih kategori </option>
+                <option value="date"> Tanggal </option>
+                `)
+            } else if (p.value == 'produksi') {
+                $('#kategori').html(`
+                <option value="" disabled> pilih kategori </option>
+                <option value="date"> Tanggal </option>
+                `)
+            } else if (p.value == 'produksi') {
+                $('#kategori').html(`
+                <option value="" disabled> pilih kategori </option>
+                <option value="date"> Tanggal </option>
+                `)
+            } else if (p.value == 'produksi') {
+                $('#kategori').html(`
+                <option value="" disabled> pilih kategori </option>
+                <option value="date"> Tanggal </option>
+                `)
+            } else if (p.value == 'produksi') {
+                $('#kategori').html(`
+                <option value="" disabled> pilih kategori </option>
+                <option value="date"> Tanggal </option>
                 `)
             }
             $('#kategori').val('')
@@ -121,7 +146,7 @@
         }
 
         function kategoris(param) {
-            if (param.value == 1) {
+            if (param.value == 'date') {
                 $('#tanggal').show()
             } else {
                 $('#tanggal').hide()

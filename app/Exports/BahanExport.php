@@ -16,22 +16,22 @@ class BahanExport implements FromCollection, WithHeadings
      * @return \Illuminate\Support\Collection
      */
 
-    protected $id;
+    protected $param;
 
-    function __construct($id) {
-           $this->id = $id;
+    function __construct($param)
+    {
+        $this->param = $param;
     }
 
 
     public function collection()
     {
-        dd($this->id);
         $query = DB::table('bahan');
         $query->select(
             'kode',
             'name',
             'harga',
-            'buy_at',
+            DB::Raw('DATE(buy_at)'),
             'satuan',
             'panjang',
             'sisa_bahan',
@@ -39,12 +39,11 @@ class BahanExport implements FromCollection, WithHeadings
             DB::Raw('IFNULL( `discount` , 0 ) as discount')
         );
 
+        if ($this->param['kategori'] == 'date')
+            $query->whereBetween('buy_at', [$this->param['start'], $this->param['end']]);
 
-        //if ($published == true)
-        //$query->whereBetween('buy_at', [$start, $end]);
-
-        // if (isset($year))
-        //     $query->where('year', '>', $year);
+        if ($this->param['kategori'] == 'sisa')
+            $query->where('sisa_bahan', '>', 0);
 
         $result = $query->get();
         return $result;
