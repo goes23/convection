@@ -28,61 +28,130 @@
                             <h3 class="card-title">Data Report</h3>
                         </div>
                         <div class="card-body">
-                            <form id="form_report" name="form_report">
-                                <div class="form-group row">
-                                    <label for="report" class="col-sm-0 col-form-label">Report</label>
-                                    <div class="col-sm-2">
-                                        <select class="form-control report" id="report" name="report"
-                                            data-placeholder="Select a report" data-dropdown-css-class="select2-purple"
-                                            style="width: 100%" required>
-                                            <option value="" disabled selected>Choose ..</option>
-                                            @foreach ($module as $item)
-                                                <option value="{{ $item }}">{{ $item }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    &nbsp;
-                                    &nbsp;
-                                    &nbsp;
-                                    <label for="date" class="col-sm-0 col-form-label">Date range</label>
-                                    <div class="col-sm-2">
-                                        <input type="date" class="form-control" id="inputEmail3" name="start"
-                                            placeholder="Email">
-                                    </div>
-                                    <div class="col-sm-0">
-                                        <b>-</b>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <input type="date" class="form-control" id="inputEmail3" name="end"
-                                            placeholder="Email">
+                            <form action="{{ route('report.export') }}" method="POST">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="product">Nama module <a class="tn">*</a></label>
+                                            <select class="form-control select" onchange="modules(this)" name="module"
+                                                style="width: 100%" required>
+                                                <option value="" disabled> pilih module </option>
+                                                @foreach ($module as $key => $item)
+                                                    <option value="{{ $key }}">{{ $item }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="product">ketegori <a class="tn">*</a></label>
+                                            <select class="form-control select" id="kategori" onchange="kategoris(this)"
+                                                name="kategori" style="width: 100%" required>
+                                                <option value="" disabled> pilih kategori </option>
 
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-2">
-                                        <button type="button" class="btn btn-primary btn-sm">Submit</button>
+                                </div>
+                                <div class="row" id="tanggal">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="product">Dari tanggal <a class="tn">*</a></label>
+                                            <input type="date" class="form-control inputForm" id="start_date" name="start"
+                                                placeholder="Enter purchase date"
+                                                value="{{ isset($data_order[0]->purchase_date) ? explode(' ', $data_order[0]->purchase_date)[0] : '' }}"
+                                                required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="product">Sampai tanggal<a class="tn">*</a></label>
+                                            <input type="date" class="form-control inputForm" id="end_date" name="end"
+                                                placeholder="Enter purchase date"
+                                                value="{{ isset($data_order[0]->purchase_date) ? explode(' ', $data_order[0]->purchase_date)[0] : '' }}"
+                                                required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-success btn-sm ">Export excel
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
-                            <div id="table"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- /.card -->
     </section>
-
-
 
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
         $(document).ready(function() {
-            $('#report').val('')
-
-
-            $('#report').change(function() {
-                console.log("ok");
-            })
+            $('.select').val('')
+            $('#tanggal').hide()
         })
+
+        function modules(p) {
+
+
+            if (p.value == 'bahan') {
+                $('#kategori').html(`
+                <option value="" disabled> pilih kategori </option>
+                <option value="date"> Tanggal </option>
+                <option value="sisa"> Sisa Bahan tersedia </option>
+                `)
+            } else if (p.value == 'product') {
+                $('#kategori').html(`
+                <option value="" disabled> pilih kategori </option>
+                <option value="date"> Tanggal </option>
+
+                `)
+            } else if (p.value == 'produksi') {
+                $('#kategori').html(`
+                <option value="" disabled> pilih kategori </option>
+                <option value="date"> Tanggal </option>
+                `)
+            } else if (p.value == 'produksi') {
+                $('#kategori').html(`
+                <option value="" disabled> pilih kategori </option>
+                <option value="date"> Tanggal </option>
+                `)
+            } else if (p.value == 'produksi') {
+                $('#kategori').html(`
+                <option value="" disabled> pilih kategori </option>
+                <option value="date"> Tanggal </option>
+                `)
+            } else if (p.value == 'produksi') {
+                $('#kategori').html(`
+                <option value="" disabled> pilih kategori </option>
+                <option value="date"> Tanggal </option>
+                `)
+            } else if (p.value == 'produksi') {
+                $('#kategori').html(`
+                <option value="" disabled> pilih kategori </option>
+                <option value="date"> Tanggal </option>
+                `)
+            } else if (p.value == 'produksi') {
+                $('#kategori').html(`
+                <option value="" disabled> pilih kategori </option>
+                <option value="date"> Tanggal </option>
+                `)
+            }
+            $('#kategori').val('')
+
+        }
+
+        function kategoris(param) {
+            if (param.value == 'date') {
+                $('#tanggal').show()
+            } else {
+                $('#tanggal').hide()
+            }
+        }
     </script>
 
 @endsection

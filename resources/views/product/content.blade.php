@@ -26,7 +26,6 @@
                 <td>{{ $item->keterangan }}</td>
                 <td>{{ $item->transfer_date }}</td>
             </tr>
-
         @endforeach
     </tbody>
 </table>

@@ -254,7 +254,7 @@
                                                                         name="variants[{{ $no }}][size]"
                                                                         data-placeholder="Select a size"
                                                                         data-dropdown-css-class="select2-purple"
-                                                                        style="width: 100%" value="XXL" required>
+                                                                        style="width: 100%" disabled>
                                                                         <option value="">Choose ..
                                                                         </option>
                                                                         <option value="S" @php echo $val->size =='S'?'selected="selected"' : ''; @endphp>S</option>
@@ -276,7 +276,7 @@
                                                                         id="jumlah_produksi"
                                                                         name="variants[{{ $no }}][jumlah_produksi]"
                                                                         placeholder="Enter jumlah produksi"
-                                                                        value="{{ $val->jumlah_produksi }}" required>
+                                                                        value="{{ $val->jumlah_produksi }}" readonly>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-3">

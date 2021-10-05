@@ -175,12 +175,135 @@
                                     <div id="items"></div>
                                 </div>
                             @else
+                                <?php $no = 0; ?>
+                                @foreach ($item as $vals)
+                                    <div class="col-md-12">
+                                        <div class="container-fluid cont" id="item{{ $no }}">
+                                            <div class="card card-secondary">
+                                                <div class="card-header">
+                                                    Product
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <label for="product">Nama Product <a
+                                                                        class="tn">*</a></label>
+                                                                <select class="form-control selectp"
+                                                                    id="{{ $no }}" onchange="pilih_product(this)"
+                                                                    name="orderitem[{{ $no }}][product]"
+                                                                    data-placeholder="Select a product"
+                                                                    data-dropdown-css-class="select2-purple"
+                                                                    style="width: 100%" disabled>
+                                                                    <option value="" disabled>choose ..</option>
+                                                                    @foreach ($product as $val)
+                                                                        <option value="{{ $val->id }}"
+                                                                            {{ $vals['product_id'] == $val->id ? 'selected="selected"' : '' }}>
+                                                                            {{ $val->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <label for="harga_jual">Harga Jual Product <a
+                                                                        class="tn">*</a></label>
+                                                                <input type="text" class="form-control harga_jual"
+                                                                    id="harga_jual{{ $no }}"
+                                                                    name="orderitem[{{ $no }}][harga_jual]"
+                                                                    value="{{ $vals['harga_jual'] }}" placeholder="0"
+                                                                    readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <label for="size">Size <a
+                                                                        class="tn">*</a></label>
+                                                                <select class="form-control select3"
+                                                                    id="size-{{ $no }}"
+                                                                    onchange="pilih_size(this)"
+                                                                    name="orderitem[{{ $no }}][size]"
+                                                                    data-placeholder="Select a size"
+                                                                    data-dropdown-css-class="select2-purple"
+                                                                    style="width: 100%" disabled>
 
-
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <table class="table table-bordered mysize{{ $no }}"
+                                                            id="mysize{{ $no }}">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col">Size</th>
+                                                                    <th scope="col">Stock Product</th>
+                                                                    <th scope="col">qty input</th>
+                                                                    <th scope="col">Harga jual akhir</th>
+                                                                    <th scope="col">Keterangan</th>
+                                                                    {{-- <th scope="col">Action</th> --}}
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach ($vals['variant'] as $y => $itm)
+                                                                    <tr id="sz{{ $no }}{{ $y }}">
+                                                                        <input type="hidden" id="id{{ $no }}"
+                                                                            name="orderitem[{{ $no }}][variant][{{ $y }}][product]"
+                                                                            value="{{ $vals['product_id'] }}">
+                                                                        <input type="hidden"
+                                                                            name="orderitem[{{ $no }}][variant][{{ $y }}][id]"
+                                                                            value="{{ $itm['id'] }}">
+                                                                        <td>
+                                                                            <input type="text" class="form-control sizee"
+                                                                                name="orderitem[{{ $no }}][variant][{{ $y }}][size]"
+                                                                                value="{{ $itm['size'] }}" readonly>
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type="text"
+                                                                                class="form-control qty_product"
+                                                                                id="qty_product-{{ $no }}{{ $y }}"
+                                                                                name="orderitem[{{ $no }}][variant][{{ $y }}][qty_product]"
+                                                                                value="{{ $itm['stock_product'] }}"
+                                                                                readonly>
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type="text" class="form-control qty"
+                                                                                name="orderitem[{{ $no }}][variant][{{ $y }}][qty]"
+                                                                                value="{{ $itm['qty'] }}" readonly>
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type="text"
+                                                                                class="form-control sell_price"
+                                                                                name="orderitem[{{ $no }}][variant][{{ $y }}][sell_price]"
+                                                                                placeholder="Enter harga jual akhir"
+                                                                                value="{{ $itm['sell_price'] }}"
+                                                                                required>
+                                                                        </td>
+                                                                        <td>
+                                                                            <textarea class="form-control keterangan"
+                                                                                name="orderitem[{{ $no }}][variant][{{ $y }}][keterangan]"
+                                                                                rows="3">{{ $itm['keterangan'] }}</textarea>
+                                                                        </td>
+                                                                        {{-- <td> <button type="button"
+                                                                                class="btn btn-danger btn-sm"
+                                                                                onclick="removesize({{ $no }},{{ $y }})">remove</button>
+                                                                        </td> --}}
+                                                                    </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="items"></div>
+                                    </div>
+                                @endforeach
                             @endif
                         </div>
-                        <button type="button" class="btn btn-info btn-sm" id="add_order_item">Tambah product
-                        </button>
+                        @if ($status != 1)
+                            <button type="button" class="btn btn-info btn-sm" id="add_order_item">Tambah product
+                            </button>
+                        @endif
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-success btn-sm float-right">save order
@@ -194,8 +317,10 @@
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
         $(document).ready(function() {
-            $('.selectp').val('')
-            $('.harga_jual').val('');
+            if ({{ $status }} == 0) {
+                $('.selectp').val('')
+                $('.harga_jual').val('');
+            }
             mask()
 
             var pr = 0 + {{ $no }};
@@ -323,6 +448,8 @@
                 });
             }
         }
+        var td = [];
+
         var td = [];
 
         function pilih_size(params) {

@@ -7,13 +7,23 @@ use Illuminate\Support\Facades\DB;
 
 class Report extends Model
 {
-    // public function get_module()
-    // {
-    //     return  DB::select("SELECT *
-    //                         FROM produksi
-    //                         WHERE bahan_id='{$bahan}'
-    //                         AND product_id='{$product}'
-    //                         AND deleted_at IS NULL
-    //                         LIMIT 1");
-    // }
+    public function get_report($pram)
+    {
+        $table = strtolower($pram['report']);
+        $condition = '';
+        if ($table == 'bahan') {
+            $condition = 'buy_at';
+        } elseif ($table == 'product') {
+            $condition = 'created_at';
+        } elseif ($table == 'produksi') {
+            $condition = 'created_at';
+        }
+
+        $start = $pram['start'];
+        $end   = $pram['end'];
+        return  DB::select("SELECT *
+                            FROM $table
+                            WHERE $condition BETWEEN '$start' AND '$end'
+                            ");
+    }
 }
