@@ -457,20 +457,6 @@
         function pilih_size(params) {
             y++
             var id_pr = params.id.split("-")[1];
-
-
-            // if (td.includes(params.value + id_pr)) {
-            //     Swal.fire({
-            //         icon: 'error',
-            //         title: 'Oops...',
-            //         text: 'Ukuran sudah di pilih',
-            //     })
-            //     return false
-            // } else {
-            //     td.push(params.value + id_pr)
-            // }
-            // console.log(td);
-
             var idp = $("#" + id_pr).val()
             var size = params.value;
             if (idp != '' && size != '') {
@@ -515,10 +501,13 @@
                             <td> <button type="button" class="btn btn-danger btn-sm" onclick="removesize(` +
                             id_pr + `,` + y + `)">remove</button></td>
                         </tr>`);
+
+
+                        $("#qty_product-" + id_pr + y).val(result.jumlah_stock_product);
                         var tr = [];
                         $('.mysize' + id_pr).find("tbody > tr").not(this).each(function() {
-
-                            if (tr.includes($(this).find('td > input')[0].value)) {
+                            var vl = $(this).find('td > input')[0].value
+                            if (tr.includes(vl)) {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
@@ -527,12 +516,11 @@
                                 removesize(id_pr, y)
                                 return false
                             } else {
-                                tr.push($(this).find('td > input')[0].value)
+                                tr.push(vl)
                             }
 
                         })
 
-                        $("#qty_product-" + id_pr + y).val(result.jumlah_stock_product)
                         removesize()
                         mask()
                     },
