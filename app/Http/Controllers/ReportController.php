@@ -2,20 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\Report;
 use Illuminate\Http\Request;
-use DateTime;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\ReportExport;
+
 use App\Exports\BahanExport;
+use App\Exports\ProduksiExport;
+use App\Exports\ProductExport;
+use App\Exports\PengeluaranExport;
+use App\Exports\PenjualanExport;
+use App\Exports\UpahExport;
+use App\Exports\UtangExport;
+use App\Exports\Order_produksiExport;
 
 class ReportController extends Controller
 {
     public function index()
     {
-        $module = [
-            "Bahan", "Product", "Produksi"
-        ];
+        $module           = [];
+        $module['bahan']          = "Bahan";
+        $module['produksi']       = "Produski";
+        $module['product']        = "Product";
+        $module['pengeluaran']    = "Pengeluaran";
+        $module['penjualan']      = "Penjualan";
+        $module['upah']           = "Upah";
+        $module['utang']          = "Utang";
+        $module['order_produksi'] = "Order produksi";
 
         $data_view            = array();
         $data_view["title_h1"]               = "Data Report";
@@ -29,41 +40,25 @@ class ReportController extends Controller
         return view('report/v_report', $data_view);
     }
 
-    public function get_repot(Request $request)
+    public function export(Request $request)
     {
-        if (!$request->ajax()) {
-            return "error request";
-            exit;
+        if ($request->module == 'Bahan') {
+            return Excel::download(new BahanExport($request->all()), 'bahan.xlsx');
+        } else if ($request->module == 'produksi') {
+            return Excel::download(new ProduksiExport($request->all()), 'produksi.xlsx');
+        } else if ($request->module == 'product') {
+            return Excel::download(new ProductExport($request->all()), 'product.xlsx');
+        } else if ($request->module == 'pengeluaran') {
+            return Excel::download(new PengeluaranExport($request->all()), 'pengeluaran.xlsx');
+        } else if ($request->module == 'penjualan') {
+            return Excel::download(new PenjualanExport($request->all()), 'penjualan.xlsx');
+        } else if ($request->module == 'upah') {
+            return Excel::download(new UpahExport($request->all()), 'upah.xlsx');
+        } else if ($request->module == 'utang') {
+            return Excel::download(new UtangExport($request->all()), 'utang.xlsx');
+        } else if ($request->module == 'order_produksi') {
+            return Excel::download(new Order_produksiExport($request->all()), 'order_produksi.xlsx');
         }
-
-        $start = new DateTime($request['start']);
-        $end = new DateTime($request['end']);
-        $diff = date_diff($start, $end);
-        if ($diff->d > 15) {
-        }
-
-        $report = new Report();
-        $data = $report->get_report($request->all());
-
-        $data_view = [];
-        if (strtolower($request['report']) == 'bahan') {
-            $data_view['head'] = [
-                'Kode', 'Name', 'Harga', 'Tanggal beli', 'Satuan', 'Panjang', 'Sisa_bahan', 'Harga_satuan', 'Discount',
-            ];
-        } elseif (strtolower($request['report']) == 'product') {
-        } elseif (strtolower($request['report']) == 'produksi') {
-        }
-
-        $data_view['table'] = $request['report'];
-        $data_view['tbody'] = $data;
-
-        $html = view('report/content', $data_view)->render();
-
-        return response()->json(array('html' => $html));
-    }
-
-    public function create()
-    {
-        return Excel::download(new BahanExport, 'bahan.xlsx');
+        // return Excel::download(new BahanExport, 'bahan.xlsx');
     }
 }
