@@ -484,7 +484,7 @@
                     dataType: "json",
                     success: function(result) {
 
-                        $('#mysize' + id_pr).append(`<tr id="sz` + id_pr.toString() + y.toString() + `">
+                        $('#mysize' + id_pr).append(`<tr id="sz` + id_pr + y + `">
                             <td>
                                 <input type="text" class="form-control sizee"
                                     name="orderitem[` + id_pr + `][variant][` + y + `][size]"
