@@ -64,8 +64,6 @@ class ReportController extends Controller
 
     public function create()
     {
-        // return (new BahanExport)->download('Bahan.xlsx', \Maatwebsite\Excel\Excel::XLSX);
-        // return Excel::download(new UsersExport, 'users.xlsx');
-        return Excel::download(new BahanExport, 'siswa.xlsx');
+        return Excel::download(new BahanExport, 'bahan.xlsx');
     }
 }

@@ -185,8 +185,6 @@
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="row">
-                                                        <input type="hidden" id="id{{ $no }}"
-                                                            name="orderitem[{{ $no }}][id]" value="">
                                                         <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <label for="product">Nama Product <a
@@ -214,7 +212,8 @@
                                                                 <input type="text" class="form-control harga_jual"
                                                                     id="harga_jual{{ $no }}"
                                                                     name="orderitem[{{ $no }}][harga_jual]"
-                                                                    placeholder="0" readonly>
+                                                                    value="{{ $vals['harga_jual'] }}" placeholder="0"
+                                                                    readonly>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
@@ -247,6 +246,12 @@
                                                             <tbody>
                                                                 @foreach ($vals['variant'] as $y => $itm)
                                                                     <tr id="sz{{ $no }}{{ $y }}">
+                                                                        <input type="hidden" id="id{{ $no }}"
+                                                                            name="orderitem[{{ $no }}][variant][{{ $y }}][product]"
+                                                                            value="{{ $vals['product_id'] }}">
+                                                                        <input type="hidden"
+                                                                            name="orderitem[{{ $no }}][variant][{{ $y }}][id]"
+                                                                            value="{{ $itm['id'] }}">
                                                                         <td>
                                                                             <input type="text" class="form-control sizee"
                                                                                 name="orderitem[{{ $no }}][variant][{{ $y }}][size]"
@@ -257,13 +262,13 @@
                                                                                 class="form-control qty_product"
                                                                                 id="qty_product-{{ $no }}{{ $y }}"
                                                                                 name="orderitem[{{ $no }}][variant][{{ $y }}][qty_product]"
-                                                                                placeholder="0" readonly>
+                                                                                value="{{ $itm['stock_product'] }}"
+                                                                                readonly>
                                                                         </td>
                                                                         <td>
                                                                             <input type="text" class="form-control qty"
                                                                                 name="orderitem[{{ $no }}][variant][{{ $y }}][qty]"
-                                                                                value="{{ $itm['qty'] }}"
-                                                                                placeholder="Enter quantity" readonly>
+                                                                                value="{{ $itm['qty'] }}" readonly>
                                                                         </td>
                                                                         <td>
                                                                             <input type="text"

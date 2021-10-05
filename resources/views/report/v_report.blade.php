@@ -58,7 +58,7 @@
 
                                     </div>
                                     <div class="col-sm-2">
-                                        <button type="submit" class="btn btn-primary btn-sm">Submit </button>
+                                        <a href="report/create" class="btn btn-success" target="_blank">EXPORT EXCEL</a>
                                     </div>
                                 </div>
                             </form>
@@ -68,86 +68,15 @@
                 </div>
             </div>
         </div>
-        <!-- /.card -->
     </section>
-
-
 
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
         $(document).ready(function() {
             $('#report').val('')
             $('.date').val('')
-
-
             $('#report').change(function() {
-
             })
-        })
-
-        $('#form_report').submit(function(e) {
-            e.preventDefault();
-
-            var input = new FormData(this)
-
-            $.ajax({
-                url: "{{ route('report.gets') }}",
-                type: "post",
-                data: input,
-                cache: false,
-                contentType: false,
-                processData: false,
-                dataType: "json",
-                beforeSend: function() {
-                    console.log("ok")
-                },
-                success: function(result) {
-                    console.log(result);
-                    return;
-                    call_toast(result)
-                    $(".inputForm").val('');
-                    $("#example1").DataTable().ajax.reload()
-                    setTimeout(function() {
-                        $('#modal-default').modal('hide');
-                    }, 1500);
-                },
-                error: function(xhr, Status, err) {
-                    $("Terjadi error : " + Status);
-                }
-            });
-        })
-
-        $('#form_report').submit(function(e) {
-            e.preventDefault();
-
-            var input = new FormData(this)
-
-            $.ajax({
-                url: "{{ route('report.gets') }}",
-                type: "post",
-                data: input,
-                cache: false,
-                contentType: false,
-                processData: false,
-                dataType: "json",
-                beforeSend: function() {
-                    console.log("ok")
-                },
-                success: function(result) {
-                    $('#table').html(result.html);
-                    console.log(result);
-                    return;
-                    call_toast(result)
-                    $(".inputForm").val('');
-                    $("#example1").DataTable().ajax.reload()
-                    setTimeout(function() {
-                        $('#modal-default').modal('hide');
-                    }, 1500);
-                },
-                error: function(xhr, Status, err) {
-                    $("Terjadi error : " + Status);
-                }
-            });
         })
     </script>
 

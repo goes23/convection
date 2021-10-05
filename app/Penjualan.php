@@ -85,8 +85,28 @@ class Penjualan extends Model
 
     public function get_data_item($pc)
     {
-        $data = DB::select(" SELECT * FROM item_penjualan ip WHERE ip.penjualan_id = $pc ");
-
+        $data = DB::select(" SELECT ip.id
+                                    ,ip.purchase_code
+                                    ,ip.penjualan_id
+                                    ,ip.product_id
+                                    ,(
+                                        SELECT p.harga_jual
+                                        FROM product as p
+                                        WHERE p.id = ip.product_id
+                                     ) as harga_jual
+                                    ,(
+                                        SELECT SUM(v.jumlah_stock_product)
+                                        FROM variants as v
+                                        WHERE v.product_id = ip.product_id
+                                        AND v.size = ip.size
+                                        GROUP BY v.size
+                                    )as stock_product
+                                    ,ip.sell_price
+                                    ,ip.qty
+                                    ,ip.size
+                                    ,ip.keterangan
+                             FROM item_penjualan ip
+                             WHERE ip.penjualan_id = $pc ");
         return $data;
     }
 

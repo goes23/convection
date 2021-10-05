@@ -85,19 +85,20 @@ class PenjualanController extends Controller
             $data_item = $item->get_data_item($id);
 
             $dataitem = [];
-            foreach($data_item as $key => $val){
-               //dd($val);
-                $dataitem[$val->product_id]['penjualan_id']                = $val->penjualan_id;
-                $dataitem[$val->product_id]['purchase_code']               = $val->purchase_code;
-                $dataitem[$val->product_id]['product_id']                  = $val->product_id;
-                $dataitem[$val->product_id]['variant'][$key]['id']         = $val->id;
-                $dataitem[$val->product_id]['variant'][$key]['size']       = $val->size;
-                $dataitem[$val->product_id]['variant'][$key]['sell_price'] = $val->sell_price;
-                $dataitem[$val->product_id]['variant'][$key]['qty']        = $val->qty;
-                $dataitem[$val->product_id]['variant'][$key]['keterangan'] = $val->keterangan;
-
+            foreach ($data_item as $key => $val) {
+                $dataitem[$val->product_id]['penjualan_id']                   = $val->penjualan_id;
+                $dataitem[$val->product_id]['purchase_code']                  = $val->purchase_code;
+                $dataitem[$val->product_id]['product_id']                     = $val->product_id;
+                $dataitem[$val->product_id]['harga_jual']                     = $val->harga_jual;
+                $dataitem[$val->product_id]['variant'][$key]['id']            = $val->id;
+                $dataitem[$val->product_id]['variant'][$key]['size']          = $val->size;
+                $dataitem[$val->product_id]['variant'][$key]['stock_product'] = $val->stock_product;
+                $dataitem[$val->product_id]['variant'][$key]['sell_price']    = $val->sell_price;
+                $dataitem[$val->product_id]['variant'][$key]['qty']           = $val->qty;
+                $dataitem[$val->product_id]['variant'][$key]['keterangan']    = $val->keterangan;
             }
 
+            // dd($dataitem);
             $data_view                = [];
             $data_view['h1']                     = 'Edit Form Penjualan';
             $data_view['breadcrumb_item']        = 'Edit Penjualan List';
@@ -120,79 +121,125 @@ class PenjualanController extends Controller
             exit;
         }
 
-        foreach ($request['orderitem'] as $varian) {
-            foreach ($varian['variant'] as $val) {
-                if ($val['qty_product'] < $val['qty']) {
-                    $res = [
-                        "status" => false,
-                        "msg" => "qty input lebih besar dari stock product"
-                    ];
-                    return response()->json($res);
-                    exit;
-                }
-
-                // potong di sini
-            }
-        }
-
         if ($request['purchase_code'] != "" && $request['id'] != "") {
             $purchase_code = $request['purchase_code'];
         } else {
             $purchase_code = generate_purchase_code();
         }
-        try {
-            DB::beginTransaction();
 
-            $post = Penjualan::UpdateOrCreate(["id" => $request['id'], "purchase_code" => $purchase_code], [
-                'purchase_code'    => $purchase_code,
-                'kode_pesanan'     => $request['kode_pesanan'],
-                'customer_name'    => $request['customer_name'],
-                'customer_phone'   => $request['customer_phone'],
-                'customer_address' => $request['customer_address'],
-                'channel_id'       => $request['channel'],
-                'purchase_date'    => $request['purchase_date'],
-                'total_purchase'   => 1,
-                'shipping_price'   => $request['shipping_price'],
-                'status'           => 1
-            ]);
+        if ($request['purchase_code'] != "" && $request['id'] != "") {
+            try {
+                DB::beginTransaction();
+                $post = Penjualan::UpdateOrCreate(["id" => $request['id'], "purchase_code" => $purchase_code], [
+                    'purchase_code'    => $purchase_code,
+                    'kode_pesanan'     => $request['kode_pesanan'],
+                    'customer_name'    => $request['customer_name'],
+                    'customer_phone'   => $request['customer_phone'],
+                    'customer_address' => $request['customer_address'],
+                    'channel_id'       => $request['channel'],
+                    'purchase_date'    => $request['purchase_date'],
+                    'total_purchase'   => 1,
+                    'shipping_price'   => $request['shipping_price'],
+                    'status'           => 1
+                ]);
 
-            if ($request['purchase_code'] != "" && $request['id'] != "") :
-                $concat = '';
-                foreach ($request['orderitem'] as $del) {
-                    $concat .= "'" . $del['id'] . "',";
+
+                foreach ($request['orderitem'] as $val) {
+                    foreach ($val['variant'] as $vl) {
+                        $price = str_replace(".", "", $vl['sell_price']);
+                        $total = (int) $vl['qty'] * (int) $price;
+
+                        ItemPenjualan::UpdateOrCreate(['id' => $vl['id']], [
+                            'purchase_code' => $post->purchase_code,
+                            'penjualan_id'  => $post->id,
+                            'product_id'    => $vl['product'],
+                            'sell_price'    => str_replace(".", "", $vl['sell_price']),
+                            'qty'           => $vl['qty'],
+                            'size'          => $vl['size'],
+                            'total'         => $total,
+                            'keterangan'    => $vl['keterangan']
+                        ]);
+                    }
                 }
-                $conditon = trim($concat, ",");
-                $ids = $request['id'];
-                DB::select("DELETE FROM item_penjualan
-                    WHERE penjualan_id = $ids
-                    AND id NOT IN ($conditon)");
-            endif;
-           // dd($request->all());
+                DB::commit();
+                return response()->json($post);
+                exit;
+            } catch (\PDOException $e) {
+                DB::rollBack();
+                return response()->json($e);
+            }
+        } else {
 
-            foreach ($request['orderitem'] as $val) {
-                foreach ($val['variant'] as $vl) {
-                    $price = str_replace(".", "", $vl['sell_price']);
-                    $total = (int) $vl['qty'] * (int) $price;
+            foreach ($request['orderitem'] as $varian) {
+                foreach ($varian['variant'] as $val) {
+                    if ($val['qty_product'] < $val['qty']) {
+                        $res = [
+                            "status" => false,
+                            "msg" => "qty input lebih besar dari stock product"
+                        ];
+                        return response()->json($res);
+                        exit;
+                    }
 
-                    ItemPenjualan::UpdateOrCreate(['id' => $val['id']], [
-                        'purchase_code' => $post->purchase_code,
-                        'penjualan_id' => $post->id,
-                        'product_id' => $val['product'],
-                        'sell_price'   => str_replace(".", "", $vl['sell_price']),
-                        'qty'   => $vl['qty'],
-                        'size'   => $vl['size'],
-                        'total'   => $total,
-                        'keterangan'   => $vl['keterangan']
-                    ]);
+                    // potong di sini
                 }
             }
 
-            DB::commit();
+            try {
+                DB::beginTransaction();
 
-            return response()->json($post);
-        } catch (\PDOException $e) {
-            DB::rollBack();
-            return response()->json($e);
+                $post = Penjualan::UpdateOrCreate(["id" => $request['id'], "purchase_code" => $purchase_code], [
+                    'purchase_code'    => $purchase_code,
+                    'kode_pesanan'     => $request['kode_pesanan'],
+                    'customer_name'    => $request['customer_name'],
+                    'customer_phone'   => $request['customer_phone'],
+                    'customer_address' => $request['customer_address'],
+                    'channel_id'       => $request['channel'],
+                    'purchase_date'    => $request['purchase_date'],
+                    'total_purchase'   => 1,
+                    'shipping_price'   => $request['shipping_price'],
+                    'status'           => 1
+                ]);
+
+                if ($request['purchase_code'] != "" && $request['id'] != "") :
+                    $concat = '';
+                    foreach ($request['orderitem'] as $del) {
+                        $concat .= "'" . $del['id'] . "',";
+                    }
+                    $conditon = trim($concat, ",");
+                    $ids = $request['id'];
+                    DB::select("DELETE FROM item_penjualan
+                    WHERE penjualan_id = $ids
+                    AND id NOT IN ($conditon)");
+                endif;
+                // dd($request->all());
+
+                foreach ($request['orderitem'] as $val) {
+                    foreach ($val['variant'] as $vl) {
+                        $price = str_replace(".", "", $vl['sell_price']);
+                        $total = (int) $vl['qty'] * (int) $price;
+
+                        ItemPenjualan::UpdateOrCreate(['id' => $val['id']], [
+                            'purchase_code' => $post->purchase_code,
+                            'penjualan_id'  => $post->id,
+                            'product_id'    => $val['product'],
+                            'sell_price'    => str_replace(".", "", $vl['sell_price']),
+                            'qty'           => $vl['qty'],
+                            'size'          => $vl['size'],
+                            'total'         => $total,
+                            'keterangan'    => $vl['keterangan']
+                        ]);
+                    }
+                }
+
+                DB::commit();
+
+                return response()->json($post);
+                exit;
+            } catch (\PDOException $e) {
+                DB::rollBack();
+                return response()->json($e);
+            }
         }
     }
 
@@ -239,7 +286,7 @@ class PenjualanController extends Controller
 
         $penjualan = new Penjualan();
         $detail = $penjualan->detail($id);
-           // dd($detail);
+        // dd($detail);
         //$data['data_header'] = Penjualan::where('id', $id)->first();
         $data['data_detail'] = $detail;
         //dd($data['data_header']->id);
