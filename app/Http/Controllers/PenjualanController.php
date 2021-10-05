@@ -79,16 +79,24 @@ class PenjualanController extends Controller
             $data_view['data_order']             = [];
             $data_view['status']                 = 0; //add
         } else {
-            // $data_order = Penjualan::with('item_penjualan', 'channel')
-            //     ->where('penjualan.id', $id)
-            //     ->get();
-
-
             $penjualan = new Penjualan();
             $data_order = $penjualan->get_data_order($id);
             $item = new Penjualan();
-            $data_item = $item->get_data_item($data_order[0]->purchase_code);
-            // dd($data_item);
+            $data_item = $item->get_data_item($id);
+
+            $dataitem = [];
+            foreach($data_item as $key => $val){
+               //dd($val);
+                $dataitem[$val->product_id]['penjualan_id']                = $val->penjualan_id;
+                $dataitem[$val->product_id]['purchase_code']               = $val->purchase_code;
+                $dataitem[$val->product_id]['product_id']                  = $val->product_id;
+                $dataitem[$val->product_id]['variant'][$key]['id']         = $val->id;
+                $dataitem[$val->product_id]['variant'][$key]['size']       = $val->size;
+                $dataitem[$val->product_id]['variant'][$key]['sell_price'] = $val->sell_price;
+                $dataitem[$val->product_id]['variant'][$key]['qty']        = $val->qty;
+                $dataitem[$val->product_id]['variant'][$key]['keterangan'] = $val->keterangan;
+
+            }
 
             $data_view                = [];
             $data_view['h1']                     = 'Edit Form Penjualan';
@@ -98,7 +106,7 @@ class PenjualanController extends Controller
             $data_view['channel']                = Channel::all();
             $data_view['product']                = $data_product;
             $data_view['data_order']             = $data_order;
-            $data_view['item']                   = $data_item;
+            $data_view['item']                   = $dataitem;
             $data_view['status']                 = 1;                      // edit
         }
 

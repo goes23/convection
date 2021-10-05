@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Report;
 use Illuminate\Http\Request;
+use DateTime;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ReportExport;
+use App\Exports\BahanExport;
 
 class ReportController extends Controller
 {
     public function index()
     {
-
-        // $report = new Report();
-        // $data = $report->get_module();
         $module = [
             "Bahan", "Product", "Produksi"
         ];
@@ -35,6 +36,12 @@ class ReportController extends Controller
             exit;
         }
 
+        $start = new DateTime($request['start']);
+        $end = new DateTime($request['end']);
+        $diff = date_diff($start, $end);
+        if ($diff->d > 15) {
+        }
+
         $report = new Report();
         $data = $report->get_report($request->all());
 
@@ -53,5 +60,12 @@ class ReportController extends Controller
         $html = view('report/content', $data_view)->render();
 
         return response()->json(array('html' => $html));
+    }
+
+    public function create()
+    {
+        // return (new BahanExport)->download('Bahan.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+        // return Excel::download(new UsersExport, 'users.xlsx');
+        return Excel::download(new BahanExport, 'siswa.xlsx');
     }
 }

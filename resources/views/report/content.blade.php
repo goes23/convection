@@ -31,7 +31,8 @@
 </table>
 {{-- {{ $data->links() }} --}}
 <div class="modal-footer">
-    <button type="button" class="btn btn-success" data-dismiss="modal">export</button>
+    <a href="report/create" class="btn btn-success my-3" target="_blank">EXPORT EXCEL</a>
+    {{-- <button type="button" class="btn btn-success" data-dismiss="modal">export</button> --}}
 </div>
 
 <script>
