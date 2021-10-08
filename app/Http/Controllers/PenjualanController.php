@@ -169,8 +169,10 @@ class PenjualanController extends Controller
                 return response()->json($e);
             }
         } else {
-
+            //dd($request->all());
+            $update_va = [];
             foreach ($request['orderitem'] as $varian) {
+                $sisa_kurang = 0;
                 foreach ($varian['variant'] as $val) {
                     if ($val['qty_product'] < $val['qty']) {
                         $res = [
@@ -180,9 +182,44 @@ class PenjualanController extends Controller
                         return response()->json($res);
                         exit;
                     }
+                    //dd($val);
+                    $data_v = Variants::where('size', $val['size'])
+                        ->where('product_id', $varian['product'])
+                        ->where('jumlah_stock_product', '>', 0)
+                        ->orderBy('created_at', 'asc')
+                        ->get();
 
-                    // potong di sini
+                    //dd($data_v);
+                    foreach ($data_v as $key => $itm) {
+                        if ($key == 0) {
+                            $sisa_kurang =  $itm->jumlah_stock_product - $val['qty'];
+                            $sisa = $sisa_kurang < 0 ? 0 : $sisa_kurang;
+                            $sisa_kurang =  abs($sisa_kurang);
+                        } else {
+                            $sisa_kurang =  $itm->jumlah_stock_product - $sisa_kurang;
+                            $sisa = $sisa_kurang < 0 ? 0 : $sisa_kurang;
+                            $sisa_kurang =  abs($sisa_kurang);
+                        }
+
+                        $update_va[$itm->id]['id']          = $itm->id;
+                        $update_va[$itm->id]['product_id']  = $itm->product_id;
+                        $update_va[$itm->id]['size']        = $itm->size;
+                        $update_va[$itm->id]['produksi_id'] = $itm->produksi_id;
+                        $update_va[$itm->id]['sisa']        = $sisa;
+                        if ($sisa > 0) {
+                            break;
+                        }
+                    }
                 }
+            }
+
+            foreach ($update_va as $vls) {
+
+                $updates = [];
+                $updates["jumlah_stock_product"] = $vls['sisa'];
+
+                $update = Variants::where(['id' => $vls['id']])
+                    ->update($updates);
             }
 
             try {
