@@ -169,8 +169,10 @@ class PenjualanController extends Controller
                 return response()->json($e);
             }
         } else {
-
+            //dd($request->all());
+            $update_va = [];
             foreach ($request['orderitem'] as $varian) {
+                $sisa_kurang = 0;
                 foreach ($varian['variant'] as $val) {
                     if ($val['qty_product'] < $val['qty']) {
                         $res = [
@@ -180,10 +182,35 @@ class PenjualanController extends Controller
                         return response()->json($res);
                         exit;
                     }
+                    //dd($val);
+                    $data_v = Variants::where('size', $val['size'])
+                        ->where('product_id', $varian['product'])
+                        ->where('jumlah_stock_product', '>', 0)
+                        ->orderBy('created_at', 'asc')
+                        ->get();
 
-                    // potong di sini
+
+                    foreach ($data_v as $itm) {
+                        if ($sisa_kurang == 0) {
+                            $h = $itm->jumlah_stock_product - $val['qty'];
+echo $h;
+                            // $update_va[$itm->id]['jumlah_stock_product'] =  $h < 0 ? 0 : $h;
+                            // $sisa_kurang = abs($h);
+                        }
+                        if ($h <> 0) {
+                            // $hasil = $itm->jumlah_stock_product  - $sisa_kurang;
+                            // $update_va[$itm->id]['jumlah_stock_product'] =  $hasil;
+                        }
+                        //continue;
+                        // echo $sisa_kurang.'<br>';
+                        $update_va[$itm->id]['product_id']  = $itm->product_id;
+                        $update_va[$itm->id]['size']        = $itm->size;
+                        $update_va[$itm->id]['produksi_id'] = $itm->produksi_id;
+                    }
                 }
             }
+            dd($update_va);
+            die;
 
             try {
                 DB::beginTransaction();
