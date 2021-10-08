@@ -189,28 +189,38 @@ class PenjualanController extends Controller
                         ->orderBy('created_at', 'asc')
                         ->get();
 
+                    //dd($data_v);
+                    foreach ($data_v as $key => $itm) {
+                        if ($key == 0) {
+                            $sisa_kurang =  $itm->jumlah_stock_product - $val['qty'];
+                            $sisa = $sisa_kurang < 0 ? 0 : $sisa_kurang;
+                            $sisa_kurang =  abs($sisa_kurang);
+                        } else {
+                            $sisa_kurang =  $itm->jumlah_stock_product - $sisa_kurang;
+                            $sisa = $sisa_kurang < 0 ? 0 : $sisa_kurang;
+                            $sisa_kurang =  abs($sisa_kurang);
+                        }
 
-                    foreach ($data_v as $itm) {
-                        if ($sisa_kurang == 0) {
-                            $h = $itm->jumlah_stock_product - $val['qty'];
-echo $h;
-                            // $update_va[$itm->id]['jumlah_stock_product'] =  $h < 0 ? 0 : $h;
-                            // $sisa_kurang = abs($h);
-                        }
-                        if ($h <> 0) {
-                            // $hasil = $itm->jumlah_stock_product  - $sisa_kurang;
-                            // $update_va[$itm->id]['jumlah_stock_product'] =  $hasil;
-                        }
-                        //continue;
-                        // echo $sisa_kurang.'<br>';
+                        $update_va[$itm->id]['id']          = $itm->id;
                         $update_va[$itm->id]['product_id']  = $itm->product_id;
                         $update_va[$itm->id]['size']        = $itm->size;
                         $update_va[$itm->id]['produksi_id'] = $itm->produksi_id;
+                        $update_va[$itm->id]['sisa']        = $sisa;
+                        if ($sisa > 0) {
+                            break;
+                        }
                     }
                 }
             }
-            dd($update_va);
-            die;
+
+            foreach ($update_va as $vls) {
+
+                $updates = [];
+                $updates["jumlah_stock_product"] = $vls['sisa'];
+
+                $update = Variants::where(['id' => $vls['id']])
+                    ->update($updates);
+            }
 
             try {
                 DB::beginTransaction();
