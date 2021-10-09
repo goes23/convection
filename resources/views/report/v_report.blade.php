@@ -134,6 +134,7 @@
                 $('#kategori').html(`
                 <option value="" disabled> pilih kategori </option>
                 <option value="date"> Tanggal </option>
+                <option value="date_pembayaran"> Tanggal Pembayaran </option>
                 `)
             } else if (p.value == 'upah') {
                 $('#kategori').html(`
