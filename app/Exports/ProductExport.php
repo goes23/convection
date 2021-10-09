@@ -32,7 +32,7 @@ class ProductExport implements FromCollection, WithHeadings
             'product.kode',
             'variants.size',
             'variants.jumlah_stock_product',
-            'variants.created_at'
+            DB::Raw('DATE(variants.created_at)')
         );
 
         if ($this->param['kategori'] == 'date')

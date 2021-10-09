@@ -10,31 +10,37 @@ use Illuminate\Support\Facades\DB;
 
 class UpahExport implements FromCollection, WithHeadings
 {
+    use Exportable;
     /**
      * @return \Illuminate\Support\Collection
      */
+
+    protected $param;
+
+    function __construct($param)
+    {
+        $this->param = $param;
+    }
     public function collection()
     {
         $query = DB::table('upah');
+        $query->leftJoin('pembayaran', 'pembayaran.upah_id', '=', 'upah.id');
         $query->select(
-            "id",
-            DB::Raw('(SELECT name FROM product WHERE product.id = produksi.product_id) as product'),
-            DB::Raw('(SELECT name FROM bahan WHERE bahan.id = produksi.bahan_id) bahan'),
-            "panjang_bahan",
-            "bidang",
-            "total_stock",
-            "pemakaian",
-            "harga_potong_satuan",
-            "harga_jait_satuan",
-            "harga_finishing_satuan",
-            "harga_aksesoris",
-            "harga_modal_bahan_satuan",
-            "created_at"
+            'upah.produksi_id',
+            'upah.total_upah',
+            'upah.sisa_upah',
+            DB::Raw('DATE(upah.date_transaksi)'),
+            'pembayaran.jumlah_pembayaran',
+            DB::Raw('DATE(pembayaran.tanggal_pembayaran)'),
+            'pembayaran.keterangan'
         );
         // $query->selectRaw('SELECT name FROM product WHERE product.id = produksi.product_id');
 
         if ($this->param['kategori'] == 'date')
-            $query->whereBetween('created_at', [$this->param['start'], $this->param['end']]);
+            $query->whereBetween('upah.date_transaksi', [$this->param['start'], $this->param['end']]);
+
+        if ($this->param['kategori'] == 'date')
+            $query->whereBetween('pembayaran.tanggal_pembayaran', [$this->param['start'], $this->param['end']]);
 
         $result = $query->get();
         return $result;
@@ -42,7 +48,7 @@ class UpahExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
-            "KODE", "NAMA", "HARGA", "TANGGAL PEMBELIAN", "SATUAN", "PANJANG", "SISA BAHAN", "HARGA SATUAN", "DISKON"
+            "PRODUKSI", "TOTAL UPAH", "SISA UPAH", "TANGGAL TRANSAKSI", "JUMLAH PEMBAYARAN", "TANGGAL PEMBAYARAN", "KETERANGAN"
         ];
     }
 }

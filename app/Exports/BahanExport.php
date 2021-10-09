@@ -26,6 +26,7 @@ class BahanExport implements FromCollection, WithHeadings
 
     public function collection()
     {
+        //dd( $this->param);
         $query = DB::table('bahan');
         $query->select(
             'kode',

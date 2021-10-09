@@ -25,7 +25,7 @@ class ReportController extends Controller
         $module['pengeluaran']    = "Pengeluaran";
         $module['penjualan']      = "Penjualan";
         $module['upah']           = "Upah";
-        $module['utang']          = "Utang";
+        $module['utang']          = "Hutang";
         $module['order_produksi'] = "Order produksi";
 
         $data_view            = array();

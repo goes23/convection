@@ -6,6 +6,7 @@ use App\LogOrderProduksi;
 use App\OrderProduksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
 class OrderProduksiController extends Controller
 {
@@ -102,6 +103,7 @@ class OrderProduksiController extends Controller
             $insert['qty']                = $request['qty'];
             $insert['total_pembayaran']   = str_replace(".", "", $request['total_pembayaran']);
             $insert['sisa_pembayaran']    = str_replace(".", "", $request['total_pembayaran']);
+            $insert['created_at']         = Carbon::now();
 
             $insert = OrderProduksi::insert($insert);
 
@@ -115,6 +117,7 @@ class OrderProduksiController extends Controller
             $update['qty']                = $request['qty'];
             $update['total_pembayaran']   = str_replace(".", "", $request['total_pembayaran']);
             $update['sisa_pembayaran']    = str_replace(".", "", $request['total_pembayaran']);
+            $insert['updated_at']         = Carbon::now();
 
             $update = OrderProduksi::where(['id' => $request['id']])
                 ->update($update);

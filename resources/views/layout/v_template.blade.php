@@ -11,7 +11,8 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="{{ asset('assets/') }}/plugins/fontawesome-free/css/all.min.css">
-    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    {{-- <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> --}}
+    <link rel="stylesheet" href="{{ asset('assets/') }}/plugins/iconframework.css">
     <link rel="stylesheet"
         href="{{ asset('assets/') }}/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
     <link rel="stylesheet" href="{{ asset('assets/') }}/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
@@ -39,7 +40,6 @@
     <script src="{{ asset('assets/') }}/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js">
         < /> <
         script src = "{{ asset('assets/') }}/plugins/datatables-responsive/js/responsive.bootstrap4.min.js" >
-
     </script>
     <script src="{{ asset('assets/') }}/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
     <script src="{{ asset('assets/') }}/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
@@ -53,7 +53,7 @@
     <div class="loading">
         <img alt="Loading.." src="{{ asset('assets/') }}/img/loader.gif">
     </div>
-    
+
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
