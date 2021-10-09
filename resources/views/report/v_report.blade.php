@@ -59,7 +59,7 @@
                                             <input type="date" class="form-control inputForm" id="start_date" name="start"
                                                 placeholder="Enter purchase date"
                                                 value="{{ isset($data_order[0]->purchase_date) ? explode(' ', $data_order[0]->purchase_date)[0] : '' }}"
-                                                required>
+                                                >
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -68,7 +68,7 @@
                                             <input type="date" class="form-control inputForm" id="end_date" name="end"
                                                 placeholder="Enter purchase date"
                                                 value="{{ isset($data_order[0]->purchase_date) ? explode(' ', $data_order[0]->purchase_date)[0] : '' }}"
-                                                required>
+                                                >
                                         </div>
                                     </div>
                                 </div>
@@ -101,11 +101,13 @@
             if (p.value == 'bahan') {
                 $('#kategori').html(`
                 <option value="" disabled> pilih kategori </option>
+                <option value="all"> Semua Data </option>
                 <option value="date"> Tanggal </option>
-                <option value="sisa"> Sisa Bahan tersedia </option>
+                <option value="sisa"> Sisa Bahan Tersedia </option>
                 `)
             } else if (p.value == 'product') {
                 $('#kategori').html(`
+                <option value="all"> Semua Data </option>
                 <option value="" disabled> pilih kategori </option>
                 <option value="date"> Tanggal </option>
 
@@ -113,32 +115,38 @@
             } else if (p.value == 'produksi') {
                 $('#kategori').html(`
                 <option value="" disabled> pilih kategori </option>
+                <option value="all"> Semua Data </option>
                 <option value="date"> Tanggal </option>
                 `)
             } else if (p.value == 'penjualan') {
                 $('#kategori').html(`
                 <option value="" disabled> pilih kategori </option>
+                <option value="all"> Semua Data </option>
                 <option value="date"> Tanggal </option>
                 `)
             } else if (p.value == 'utang') {
                 $('#kategori').html(`
                 <option value="" disabled> pilih kategori </option>
+                <option value="all"> Semua Data </option>
                 <option value="date"> Tanggal </option>
                 `)
             } else if (p.value == 'pengeluaran') {
                 $('#kategori').html(`
                 <option value="" disabled> pilih kategori </option>
+                <option value="all"> Semua Data </option>
                 <option value="date"> Tanggal </option>
                 `)
             } else if (p.value == 'order_produksi') {
                 $('#kategori').html(`
                 <option value="" disabled> pilih kategori </option>
+                <option value="all"> Semua Data </option>
                 <option value="date"> Tanggal </option>
                 <option value="date_pembayaran"> Tanggal Pembayaran </option>
                 `)
             } else if (p.value == 'upah') {
                 $('#kategori').html(`
                 <option value="" disabled> pilih kategori </option>
+                <option value="all"> Semua Data </option>
                 <option value="date"> Tanggal Transaksi </option>
                 <option value="date_pembayaran"> Tanggal Pembayaran </option>
                 `)
