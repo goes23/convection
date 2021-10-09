@@ -115,30 +115,31 @@
                 <option value="" disabled> pilih kategori </option>
                 <option value="date"> Tanggal </option>
                 `)
-            } else if (p.value == 'produksi') {
+            } else if (p.value == 'penjualan') {
                 $('#kategori').html(`
                 <option value="" disabled> pilih kategori </option>
                 <option value="date"> Tanggal </option>
                 `)
-            } else if (p.value == 'produksi') {
+            } else if (p.value == 'utang') {
                 $('#kategori').html(`
                 <option value="" disabled> pilih kategori </option>
                 <option value="date"> Tanggal </option>
                 `)
-            } else if (p.value == 'produksi') {
+            } else if (p.value == 'pengeluaran') {
                 $('#kategori').html(`
                 <option value="" disabled> pilih kategori </option>
                 <option value="date"> Tanggal </option>
                 `)
-            } else if (p.value == 'produksi') {
+            } else if (p.value == 'order_produksi') {
                 $('#kategori').html(`
                 <option value="" disabled> pilih kategori </option>
                 <option value="date"> Tanggal </option>
                 `)
-            } else if (p.value == 'produksi') {
+            } else if (p.value == 'upah') {
                 $('#kategori').html(`
                 <option value="" disabled> pilih kategori </option>
-                <option value="date"> Tanggal </option>
+                <option value="date"> Tanggal Transaksi </option>
+                <option value="date_pembayaran"> Tanggal Pembayaran </option>
                 `)
             }
             $('#kategori').val('')
@@ -146,7 +147,7 @@
         }
 
         function kategoris(param) {
-            if (param.value == 'date') {
+            if (param.value == 'date' || param.value == 'date_pembayaran') {
                 $('#tanggal').show()
             } else {
                 $('#tanggal').hide()

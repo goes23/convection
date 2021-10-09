@@ -37,7 +37,7 @@ class ProduksiExport implements FromCollection, WithHeadings
             "harga_finishing_satuan",
             "harga_aksesoris",
             "harga_modal_bahan_satuan",
-            "created_at"
+            DB::Raw('DATE(created_at)')
         );
         // $query->selectRaw('SELECT name FROM product WHERE product.id = produksi.product_id');
 
