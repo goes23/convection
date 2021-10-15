@@ -50,10 +50,18 @@ class BaseSeeder extends Seeder
         ]);
 
         Module::create([
+            'parent_id' => 0,
+            'name' => 'Transaksi',
+            'controller' => '',
+            'order_no' => 3,
+            'status' => 1
+        ]);
+
+        Module::create([
             'parent_id' => 1,
             'name' => 'Module',
             'controller' => 'module',
-            'order_no' => 1,
+            'order_no' => 3,
             'status' => 1
         ]);
 
@@ -109,8 +117,49 @@ class BaseSeeder extends Seeder
 
         Module::create([
             'parent_id' => 2,
-            'name' => 'Order Header',
+            'name' => 'Report',
+            'controller' => 'report',
+            'order_no' => 5,
+            'status' => 1
+        ]);
+
+        Module::create([
+            'parent_id' => 3,
+            'name' => 'Penjualan',
             'controller' => 'penjualan',
+            'order_no' => 1,
+            'status' => 1
+        ]);
+
+        Module::create([
+            'parent_id' => 3,
+            'name' => 'Upah',
+            'controller' => 'upah',
+            'order_no' => 2,
+            'status' => 1
+        ]);
+
+
+        Module::create([
+            'parent_id' => 3,
+            'name' => 'Pengeluaran',
+            'controller' => 'pengeluaran',
+            'order_no' => 3,
+            'status' => 1
+        ]);
+
+        Module::create([
+            'parent_id' => 3,
+            'name' => 'Order Produksi',
+            'controller' => 'order_produksi',
+            'order_no' => 4,
+            'status' => 1
+        ]);
+
+        Module::create([
+            'parent_id' => 3,
+            'name' => 'Hutang',
+            'controller' => 'hutang',
             'order_no' => 5,
             'status' => 1
         ]);
