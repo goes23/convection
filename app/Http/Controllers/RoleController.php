@@ -28,23 +28,26 @@ class RoleController extends Controller
         $data_view["module"]                 = $data_module;
 
         if ($request->ajax()) {
-            return datatables()->of(Role::where('id', '!=', 1)->get())
+            return datatables()->of(Role::all())
                 ->addColumn('status', function ($data) {
-                    if ($data->status == 1) {
-                        $button = '<center><button type="button" class="btn btn-warning btn-sm" onclick="active(' . $data->id . ',0)"> Active </button> </center>';
-                    } else {
-                        $button = '<center><button type="button" class="btn btn-sm" style="background-color: #cccccc;" onclick="active(' . $data->id . ',1)"> Not Active </button> </center>';
+                    $button = '';
+                    if ($data->id != 1) {
+                        if ($data->status == 1) {
+                            $button = '<center><button type="button" class="btn btn-warning btn-sm" onclick="active(' . $data->id . ',0)"> Active </button> </center>';
+                        } else {
+                            $button = '<center><button type="button" class="btn btn-sm" style="background-color: #cccccc;" onclick="active(' . $data->id . ',1)"> Not Active </button> </center>';
+                        }
                     }
                     return $button;
                 })
                 ->rawColumns(['status'])
                 ->addColumn('action', function ($data) {
                     $button = '<center>';
-                    if (allowed_access(session('user'), 'role', 'edit')) :
+                    if (allowed_access(session('user'), 'role', 'edit') && $data->id != 1) :
                         $button = '<center><button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
                     endif;
                     $button .= '&nbsp;&nbsp;';
-                    if (allowed_access(session('user'), 'role', 'delete')) :
+                    if (allowed_access(session('user'), 'role', 'delete') && $data->id != 1) :
                         $button .= '<button type="button" class="btn btn-danger btn-sm" onClick="my_delete(' . $data->id . ')">Delete</button></center>';
                     endif;
                     return $button;
