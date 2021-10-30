@@ -62,12 +62,13 @@
     @include('hutang.v_modal')
     {{-- MODAL FORM ADD & EDIT --}}
     @include('hutang.v_pembayaran')
+    @include('hutang.v_modal_history')
 
 
     <script src="{{ asset('assets/') }}/main.js"></script>
     <script>
         $(document).ready(function() {
-
+            $('.inputForm').val('');
             $('#jumlah_hutang').mask('000.000.000', {
                 reverse: true
             });
@@ -237,8 +238,8 @@
                 dataType: "json",
                 success: function(result) {
                     $("#id_hutang").val(result.data.id)
-                    $('#total_hutang').val(result.data.total_hutang);
-                    $('#sisa_hutang').val(result.data.sisa_hutang);
+                    $('#jumlah_hutang').val(result.data.jumlah_hutang);
+                    $('#sisa').val(result.data.sisa);
                     $('#modal-pembayaran').modal('show');
                 },
                 error: function(xhr, Status, err) {
@@ -262,5 +263,48 @@
                 }
             });
         }
+
+        $('#pembayaran').submit(function(e) {
+            e.preventDefault();
+
+            var btn = $(this).find("input[type=submit]:focus");
+            var tombol = btn[0].value;
+            var id_hutang = $('#id_hutang').val();
+            var jumlah_hutang = $('#jumlah_hutang').val();
+            var sisa = $('#sisa').val()
+            var jumlah_pembayaran = $('#jumlah_pembayaran').val()
+            var tanggal_pembayaran = $('#tgl_pembayaran').val()
+
+
+            var object = {
+                tombol,
+                id_hutang,
+                jumlah_hutang,
+                sisa,
+                jumlah_pembayaran,
+                tanggal_pembayaran
+            }
+
+            $.ajax({
+                url: "{{ route('hutang.bayar') }}",
+                type: "post",
+                data: object,
+                dataType: "json",
+                success: function(result) {
+                    if (result.status == false) {
+                        alert(result.msg);
+                        return false;
+                    }
+                    call_toast(result)
+                    $("#example1").DataTable().ajax.reload()
+                    setTimeout(function() {
+                        $('#modal-pembayaran').modal('hide');
+                    }, 1500);
+                },
+                error: function(xhr, Status, err) {
+                    $("Terjadi error : " + Status);
+                }
+            });
+        })
     </script>
 @endsection

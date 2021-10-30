@@ -84,6 +84,8 @@ Route::group(['middleware' => ['ceklogin', 'checkpermission']], function () {
 
 
     Route::resource('hutang', 'HutangController');
+    Route::post('hutang/bayar', 'HutangController@bayar')->name('hutang.bayar');
+    Route::get('hutang/{id}/history', 'HutangController@history')->name('get.history');
 
     Route::resource('pengeluaran', 'PengeluaranController');
 

@@ -10,10 +10,10 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" class="form-control byr" id="id_hutang" name="id" value="">
-                    <input type="hidden" class="form-control byr" id="total_hutang" name="total_hutang" value="">
+                    <input type="hidden" class="form-control byr" id="jumlah_hutang" name="jumlah_hutang" value="">
                     <div class="form-group">
-                        <label for="sisa_hutang">Sisa Hutang <a class="tn">*</a></label>
-                        <input type="text" class="form-control byr" id="sisa_hutang" name="sisa_hutang"
+                        <label for="sisa">Sisa Hutang <a class="tn">*</a></label>
+                        <input type="text" class="form-control byr" id="sisa" name="sisa"
                             aria-describedby="emailHelp" readonly>
                     </div>
 

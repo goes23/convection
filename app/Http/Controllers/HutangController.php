@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Hutang;
 use App\LogHutang;
+use Illuminate\Support\Facades\DB;
 
 class HutangController extends Controller
 {
@@ -150,5 +151,110 @@ class HutangController extends Controller
         $delete = Hutang::find($id)->delete();
 
         return response()->json($delete);
+    }
+
+    public function bayar(Request $request)
+    {
+        if (!$request->ajax()) {
+            return "error request";
+            exit;
+        }
+       // dd($_POST);
+
+
+        if ($request['tombol'] == 'pembayaran') {
+            $jumlah_pembayaran = str_replace(".", "", $request['jumlah_pembayaran']);
+            $sisa = $request['sisa'];
+
+
+            if ($sisa < $jumlah_pembayaran) {
+                $res = [
+                    "status" => false,
+                    "msg" => "jumlah pembayaran lebih besar dari sisa..."
+                ];
+                return response()->json($res);
+                exit;
+            }
+
+            try {
+                DB::beginTransaction();
+
+                $sisa = $sisa - $jumlah_pembayaran < 0 ? 0 : $sisa - $jumlah_pembayaran;
+
+                $log = [];
+                $log['hutang_id'] = $request['id_hutang'];
+                $log['jumlah_pembayaran'] =  str_replace(".", "", $request['jumlah_pembayaran']);
+                $log['tanggal_pembayaran'] = $request['tanggal_pembayaran'];
+                $log['keterangan'] = $request['tombol'];
+
+
+                LogHutang::insert($log);
+
+
+                $post = Hutang::where('id', $request['id_hutang'])
+                    ->update(['sisa' => $sisa]);
+
+                DB::commit();
+                return response()->json($post);
+                exit;
+            } catch (\PDOException $e) {
+                DB::rollBack();
+                return response()->json($e);
+            }
+        } else {
+            //print_r($_POST);die;
+            // Array ( [tombol] => revisi [id_hutang] => 1 [jumlah_hutang] => [sisa] => 66643 [jumlah_pembayaran] => 234 [tanggal_pembayaran] => 2021-10-30 )
+            // Array ( [tombol] => revisi [id_hutang] => 1 [jumlah_hutang] => 66666 [sisa] => 66643 [jumlah_pembayaran] => 23 [tanggal_pembayaran] => 2021-10-30 )
+            $sisa = $request['jumlah_hutang'] -  str_replace(".", "", $request['jumlah_pembayaran']);
+            if ($sisa < 0) {
+                $res = [
+                    "status" => false,
+                    "msg" => "jumlah pembayaran lebih besar dari sisa..."
+                ];
+                return response()->json($res);
+                exit;
+            }
+
+            try {
+                DB::beginTransaction();
+
+                $log = [];
+                $log['hutang_id'] = $request['id_hutang'];
+                $log['jumlah_pembayaran'] =  str_replace(".", "", $request['jumlah_pembayaran']);
+                $log['tanggal_pembayaran'] = $request['tanggal_pembayaran'];
+                $log['keterangan'] = $request['tombol'];
+
+
+                LogHutang::insert($log);
+
+
+                $post = Hutang::where('id', $request['id_hutang'])
+                    ->update(['sisa' => $sisa]);
+
+                DB::commit();
+                return response()->json($post);
+                exit;
+            } catch (\PDOException $e) {
+                DB::rollBack();
+                return response()->json($e);
+            }
+        }
+    }
+
+    public function history(Request $request, $id)
+    {
+        if (!$request->ajax()) {
+            return "error request";
+            exit;
+        }
+
+        $product = new Hutang();
+        $data = $product->history($id);
+
+        $data_view = [];
+        $data_view['history'] = $data;
+        $html = view('hutang/content', $data_view)->render();
+
+        return response()->json(array('html' => $html));
     }
 }
