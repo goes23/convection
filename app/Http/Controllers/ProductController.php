@@ -86,6 +86,8 @@ class ProductController extends Controller
             exit;
         }
 
+        //Array ( [_token] => iKKZBZ4mK5Jw6coRAs1QTtCuKfAo6Wdv2fMPBtqC [id] => 1 [kode] => BG [name] => Baju Gual [harga_jual] => [harga_modal_product] => 10.000 )
+
         if ($request["id"] == '') {
             $insert       = [];
             $insert['kode']       = $request["kode"];
@@ -99,8 +101,8 @@ class ProductController extends Controller
             if ($_FILES['file']['name'] == '') {
                 $update['kode']                = $request["kode"];
                 $update['name']                = $request["name"];
-                $update['harga_jual']          = str_replace(".", "", $request["harga_jual"]);
-                $update['harga_modal_product'] = str_replace(".", "", $request["harga_modal_product"]);
+                $update['harga_jual']          = $request["harga_jual"] != '' ? str_replace(".", "", $request["harga_jual"]) : null;
+                $update['harga_modal_product'] = $request["harga_modal_product"] != '' ? str_replace(".", "", $request["harga_modal_product"]) : null;
                 $update['created_by']          = session('user');
             } else {
 

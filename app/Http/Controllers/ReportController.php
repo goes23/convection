@@ -42,6 +42,7 @@ class ReportController extends Controller
 
     public function export(Request $request)
     {
+        //print_r($request->all());die;
         if ($request->module == 'bahan') {
             return Excel::download(new BahanExport($request->all()), 'bahan.xlsx');
         } else if ($request->module == 'produksi') {

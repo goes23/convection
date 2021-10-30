@@ -42,14 +42,15 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="form-group">
+                                        <input type="hidden" value="date" name="kategori"/>
+                                        {{-- <div class="form-group">
                                             <label for="product">ketegori <a class="tn">*</a></label>
                                             <select class="form-control select" id="kategori" onchange="kategoris(this)"
                                                 name="kategori" style="width: 100%" required>
                                                 <option value="" disabled> pilih kategori </option>
 
                                             </select>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                                 <div class="row" id="tanggal">
@@ -92,76 +93,74 @@
     <script>
         $(document).ready(function() {
             $('.select').val('')
-            $('#tanggal').hide()
+            // $('#tanggal').hide()
         })
 
-        function modules(p) {
+        // function modules(p) {
+        //     if (p.value == 'bahan') {
+        //         $('#kategori').html(`
+        //         <option value="" disabled> pilih kategori </option>
+        //         <option value="all"> Semua Data </option>
+        //         <option value="date"> Tanggal </option>
+        //         <option value="sisa"> Sisa Bahan Tersedia </option>
+        //         `)
+        //     } else if (p.value == 'product') {
+        //         $('#kategori').html(`
+        //         <option value="all"> Semua Data </option>
+        //         <option value="" disabled> pilih kategori </option>
+        //         <option value="date"> Tanggal </option>
 
+        //         `)
+        //     } else if (p.value == 'produksi') {
+        //         $('#kategori').html(`
+        //         <option value="" disabled> pilih kategori </option>
+        //         <option value="all"> Semua Data </option>
+        //         <option value="date"> Tanggal </option>
+        //         `)
+        //     } else if (p.value == 'penjualan') {
+        //         $('#kategori').html(`
+        //         <option value="" disabled> pilih kategori </option>
+        //         <option value="all"> Semua Data </option>
+        //         <option value="date"> Tanggal </option>
+        //         `)
+        //     } else if (p.value == 'utang') {
+        //         $('#kategori').html(`
+        //         <option value="" disabled> pilih kategori </option>
+        //         <option value="all"> Semua Data </option>
+        //         <option value="date"> Tanggal </option>
+        //         `)
+        //     } else if (p.value == 'pengeluaran') {
+        //         $('#kategori').html(`
+        //         <option value="" disabled> pilih kategori </option>
+        //         <option value="all"> Semua Data </option>
+        //         <option value="date"> Tanggal </option>
+        //         `)
+        //     } else if (p.value == 'order_produksi') {
+        //         $('#kategori').html(`
+        //         <option value="" disabled> pilih kategori </option>
+        //         <option value="all"> Semua Data </option>
+        //         <option value="date"> Tanggal </option>
+        //         <option value="date_pembayaran"> Tanggal Pembayaran </option>
+        //         `)
+        //     } else if (p.value == 'upah') {
+        //         $('#kategori').html(`
+        //         <option value="" disabled> pilih kategori </option>
+        //         <option value="all"> Semua Data </option>
+        //         <option value="date"> Tanggal Transaksi </option>
+        //         <option value="date_pembayaran"> Tanggal Pembayaran </option>
+        //         `)
+        //     }
+        //     $('#kategori').val('')
 
-            if (p.value == 'bahan') {
-                $('#kategori').html(`
-                <option value="" disabled> pilih kategori </option>
-                <option value="all"> Semua Data </option>
-                <option value="date"> Tanggal </option>
-                <option value="sisa"> Sisa Bahan Tersedia </option>
-                `)
-            } else if (p.value == 'product') {
-                $('#kategori').html(`
-                <option value="all"> Semua Data </option>
-                <option value="" disabled> pilih kategori </option>
-                <option value="date"> Tanggal </option>
+        // }
 
-                `)
-            } else if (p.value == 'produksi') {
-                $('#kategori').html(`
-                <option value="" disabled> pilih kategori </option>
-                <option value="all"> Semua Data </option>
-                <option value="date"> Tanggal </option>
-                `)
-            } else if (p.value == 'penjualan') {
-                $('#kategori').html(`
-                <option value="" disabled> pilih kategori </option>
-                <option value="all"> Semua Data </option>
-                <option value="date"> Tanggal </option>
-                `)
-            } else if (p.value == 'utang') {
-                $('#kategori').html(`
-                <option value="" disabled> pilih kategori </option>
-                <option value="all"> Semua Data </option>
-                <option value="date"> Tanggal </option>
-                `)
-            } else if (p.value == 'pengeluaran') {
-                $('#kategori').html(`
-                <option value="" disabled> pilih kategori </option>
-                <option value="all"> Semua Data </option>
-                <option value="date"> Tanggal </option>
-                `)
-            } else if (p.value == 'order_produksi') {
-                $('#kategori').html(`
-                <option value="" disabled> pilih kategori </option>
-                <option value="all"> Semua Data </option>
-                <option value="date"> Tanggal </option>
-                <option value="date_pembayaran"> Tanggal Pembayaran </option>
-                `)
-            } else if (p.value == 'upah') {
-                $('#kategori').html(`
-                <option value="" disabled> pilih kategori </option>
-                <option value="all"> Semua Data </option>
-                <option value="date"> Tanggal Transaksi </option>
-                <option value="date_pembayaran"> Tanggal Pembayaran </option>
-                `)
-            }
-            $('#kategori').val('')
-
-        }
-
-        function kategoris(param) {
-            if (param.value == 'date' || param.value == 'date_pembayaran') {
-                $('#tanggal').show()
-            } else {
-                $('#tanggal').hide()
-            }
-        }
+        // function kategoris(param) {
+        //     if (param.value == 'date' || param.value == 'date_pembayaran') {
+        //         $('#tanggal').show()
+        //     } else {
+        //         $('#tanggal').hide()
+        //     }
+        // }
     </script>
 
 @endsection
