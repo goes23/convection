@@ -24,28 +24,6 @@ class UtangExport implements FromCollection, WithHeadings
 
     public function collection()
     {
-    //     $query = DB::table('hutang');
-    //     $query->select(
-    //         'name',
-    //         'jumlah_hutang',
-    //         DB::Raw('DATE(tanggal_hutang)')
-    //     );
-
-    //     if ($this->param['kategori'] == 'date')
-    //         $query->whereBetween('tanggal_hutang', [$this->param['start'], $this->param['end']]);
-
-    //     $result = $query->get();
-    //     return $result;
-    // }
-    // public function headings(): array
-    // {
-    //     return [
-    //         "NAMA", "JUMLAH HUTANG", "TANGGAL HUTANG"
-    //     ];
-    // }
-
-    // public function collection()
-    // {
         $query = DB::table('hutang');
         $query->leftJoin('log_hutang', 'log_hutang.hutang_id', '=', 'hutang.id');
         $query->select(
