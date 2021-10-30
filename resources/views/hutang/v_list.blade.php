@@ -42,6 +42,7 @@
                                         <th>No</th>
                                         <th>Name Hutang</th>
                                         <th>Jumlah Hutang</th>
+                                        <th>Sisa</th>
                                         <th>Tanggal Hutang</th>
                                         <th>Action</th>
                                     </tr>
@@ -60,6 +61,7 @@
     {{-- MODAL FORM ADD & EDIT --}}
     @include('hutang.v_modal')
     {{-- MODAL FORM ADD & EDIT --}}
+    @include('hutang.v_pembayaran')
 
 
     <script src="{{ asset('assets/') }}/main.js"></script>
@@ -94,6 +96,11 @@
                         render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
                     },
                     {
+                        data: 'sisa',
+                        name: 'sisa',
+                        render: $.fn.dataTable.render.number('.', ',', 2, 'Rp. ')
+                    },
+                    {
                         data: 'tanggal_hutang',
                         name: 'tanggal_hutang',
                     },
@@ -121,7 +128,7 @@
                     type: "GET",
                     dataType: "json",
                     success: function(result) {
-                        var currentDate = new Date(result.tanggal_hutang);
+                        var currentDate = new Date(result.data.tanggal_hutang);
                         var year = currentDate.getFullYear();
                         var month = currentDate.getMonth() + 1 < 10 ? "0" + (parseInt(currentDate.getMonth()) +
                                 1) : currentDate
@@ -129,11 +136,21 @@
                         var date = currentDate.getDate() < 10 ? "0" + currentDate.getDate() : currentDate
                             .getDate();
                         var date_format = year + "-" + month + "-" + date
-                        $("#id").val(result.id)
-                        $('#name').val(result.name);
-                        $("#jumlah_hutang").val(result.jumlah_hutang);
-                        $("#tanggal_hutang").val(date_format);
-                        $('#modal-default').modal('show');
+                        $("#id").val(result.data.id)
+
+                        if (result.history == true) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Upah tidak bisa di edit karna sudah ada pembayaran',
+                            })
+                            return false;
+                        } else {
+                            $('#name').val(result.data.name);
+                            $("#jumlah_hutang").val(result.data.jumlah_hutang);
+                            $("#tanggal_hutang").val(date_format);
+                            $('#modal-default').modal('show');
+                        }
                     },
                     error: function(xhr, Status, err) {
                         $("Terjadi error : " + Status);
@@ -209,6 +226,41 @@
                 $(".inputForm").val('');
             }
             $('#modal-default').modal('show');
+        }
+
+        function bayar(id) {
+
+            $('.byr').val('')
+            $.ajax({
+                url: "hutang/" + id + "/edit",
+                type: "GET",
+                dataType: "json",
+                success: function(result) {
+                    $("#id_hutang").val(result.data.id)
+                    $('#total_hutang').val(result.data.total_hutang);
+                    $('#sisa_hutang').val(result.data.sisa_hutang);
+                    $('#modal-pembayaran').modal('show');
+                },
+                error: function(xhr, Status, err) {
+                    $("Terjadi error : " + Status);
+                }
+            });
+
+        }
+
+        function history(id) {
+            $.ajax({
+                url: "hutang/" + id + "/history",
+                type: "GET",
+                dataType: "json",
+                success: function(result) {
+                    $('#modals').html(result.html);
+                    $('#modal-history').modal('show');
+                },
+                error: function(xhr, Status, err) {
+                    $("Terjadi error : " + Status);
+                }
+            });
         }
     </script>
 @endsection

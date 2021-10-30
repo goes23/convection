@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Hutang;
+use App\LogHutang;
 
 class HutangController extends Controller
 {
@@ -26,7 +27,11 @@ class HutangController extends Controller
                 ->addColumn('action', function ($data) {
                     $button = '<center>';
                     if (allowed_access(session('user'), 'hutang', 'edit')) :
-                        $button = '<center><button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
+                        $button = '<center><button type="button" class="btn btn-info btn-sm" onclick="history(' . $data->id . ')">History Pembayaran</button>';
+                        $button .= '&nbsp;';
+                        $button .= '<button type="button" class="btn btn-warning btn-sm" onclick="bayar(' . $data->id . ')">Pembayaran</button>';
+                        $button .= '&nbsp;';
+                        $button .= '<button type="button" class="btn btn-success btn-sm" onclick="edit(' . $data->id . ')">Edit</button>';
                     endif;
                     $button .= '&nbsp;&nbsp;';
                     if (allowed_access(session('user'), 'hutang', 'delete')) :
@@ -69,6 +74,7 @@ class HutangController extends Controller
         $post = Hutang::UpdateOrCreate(["id" => $request['id']], [
             'name' => $request["name"],
             'jumlah_hutang' => str_replace(".", "", $request["jumlah_hutang"]),
+            'sisa' => str_replace(".", "", $request["jumlah_hutang"]),
             'tanggal_hutang' => $request["tanggal_hutang"]
         ]);
 
@@ -100,9 +106,21 @@ class HutangController extends Controller
             exit;
         }
 
-        $data = Hutang::where(["id" => $id])->first();
+        $check_history = LogHutang::where('hutang_id', $id)->first();
 
-        return response()->json($data);
+        $history = false;
+        if ($check_history) {
+            $history = true;
+        }
+
+
+        $data = Hutang::where(["id" => $id])->first();
+        $response = [];
+        $response['data']   = $data;
+        $response['history'] = $history;
+
+
+        return response()->json($response);
     }
 
     /**

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateHutangTable extends Migration
+class CreateLogHutangTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,13 @@ class CreateHutangTable extends Migration
      */
     public function up()
     {
-        Schema::create('hutang', function (Blueprint $table) {
+        Schema::create('log_hutang', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('jumlah_hutang');
-            $table->integer('sisa');
-            $table->dateTime('tanggal_hutang');
+            $table->integer('hutang_id');
+            $table->integer('jumlah_pembayaran');
+            $table->dateTime('tanggal_pembayaran');
+            $table->string('keterangan');
             $table->timestamps();
-            $table->softDeletes();
-
         });
     }
 
@@ -32,6 +30,6 @@ class CreateHutangTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hutang');
+        Schema::dropIfExists('log_hutang');
     }
 }
