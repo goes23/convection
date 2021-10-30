@@ -67,19 +67,25 @@ class BahanController extends Controller
 
         $id = $request["id"];
         $harga = str_replace(".", "", $request["data"]["harga"]);
+        try {
 
-        $post = Bahan::UpdateOrCreate(["id" => $id], [
-            'kode' => $request["data"]["kode"],
-            'name' => $request["data"]["name"],
-            'buy_at' => $request["data"]["buy_at"],
-            'harga' => str_replace(".", "", $harga),
-            'panjang' => $request["data"]["panjang"],
-            'satuan' => $request["data"]["satuan"],
-            'sisa_bahan' => $request["data"]["panjang"],
-            'harga_satuan' => str_replace(".", "", $request["data"]["harga_satuan"]),
-            'discount' => $request["data"]["discount"],
-            'created_by' => session('user')
-        ]);
+            $post = Bahan::UpdateOrCreate(["id" => $id], [
+                'kode'         => $request["data"]["kode"],
+                'name'         => $request["data"]["name"],
+                'buy_at'       => $request["data"]["buy_at"],
+                'harga'        => str_replace(".", "", $harga),
+                'panjang'      => $request["data"]["panjang"],
+                'satuan'       => $request["data"]["satuan"],
+                'sisa_bahan'   => $request["data"]["panjang"],
+                'harga_satuan' => str_replace(".", "", $request["data"]["harga_satuan"]),
+                'discount'     => $request["data"]["discount"],
+                'created_by'   => session('user')
+            ]);
+        } catch (\PDOException $e) {
+            //dd($e);
+            return response()->json($e);
+        }
+
 
 
         return response()->json($post);

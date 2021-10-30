@@ -274,17 +274,17 @@
         }
 
         function bayar(id) {
+            // console.log('oke');
+            // return;
             $('.byr').val('')
             $.ajax({
                 url: "upah/" + id + "/edit",
                 type: "GET",
                 dataType: "json",
                 success: function(result) {
-                    // console.log(result);
-                    // return
-                    $("#id_upah").val(result.id)
-                    $('#total_upah').val(result.total_upah);
-                    $('#sisa_upah').val(result.sisa_upah);
+                    $("#id_upah").val(result.data.id)
+                    $('#total_upah').val(result.data.total_upah);
+                    $('#sisa_upah').val(result.data.sisa_upah);
                     $('#modal-pembayaran').modal('show');
                 },
                 error: function(xhr, Status, err) {

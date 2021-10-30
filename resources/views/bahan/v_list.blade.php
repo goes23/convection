@@ -172,7 +172,7 @@
 
         $('#form_add_edit').submit(function(e) {
             e.preventDefault();
-
+           // console.log("ok");
             var id = $('#id').val();
             var kode = $('#kode').val();
             var name = $('#name').val();
