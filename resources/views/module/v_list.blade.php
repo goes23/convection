@@ -320,7 +320,7 @@
                         order_no: order,
                     },
                     success: function(result) {
-                        $("#example1").DataTable().ajax.reload();
+                        $("#order-" + rowValue).html(order);
                     },
                     error: function(xhr, Status, err) {
                         $("Terjadi error : " + Status);
@@ -344,7 +344,7 @@
                     order_no: order,
                 },
                 success: function(result) {
-                    $("#example1").DataTable().ajax.reload();
+                    $("#order-" + rowValue).html(order);
                 },
                 error: function(xhr, Status, err) {
                     $("Terjadi error : " + Status);

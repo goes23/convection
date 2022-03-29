@@ -127,7 +127,7 @@ function get_menu_build($id)
                                 -- AND a.status = 1
                                 -- AND a.deleted_at IS NULL
                                 -- AND u.id = $id
-                                ORDER BY m.order_no, orders ASC
+                                ORDER BY orders, m.order_no ASC
                             ");
     } else {
         $module = DB::select("  SELECT m.name
@@ -145,7 +145,7 @@ function get_menu_build($id)
                             AND a.status = 1
                             AND a.deleted_at IS NULL
                             AND u.id = $id
-                            ORDER BY m.order_no, orders ASC
+                            ORDER BY orders,m.order_no ASC
                         ");
     }
 

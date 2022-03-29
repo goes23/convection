@@ -17,10 +17,11 @@ class Module extends Model
     public function data_module()
     {
         return DB::select("SELECT m.*,(SELECT name
-                                FROM module m2 
-                                WHERE m2.id = m.parent_id) as parent_name 
-                    FROM module m 
-                    ORDER BY m.parent_id, order_no ASC");
+                                FROM module m2
+                                WHERE m2.id = m.parent_id) as parent_name
+                    FROM module m
+                    -- ORDER BY m.parent_id, order_no ASC
+                    ");
     }
 
     public function access()
@@ -29,5 +30,5 @@ class Module extends Model
         return $this->hasMany('App\Access');
     }
 
-   
+
 }
